@@ -47,7 +47,7 @@ for pat in bad:
 
 # ---- pnl allowlist (no balance/equity/account/ticket) ----
 PNL_KEYS = {'today_usc', 'today_points', 'win_rate', 'mark_price', 'note', 'trades', 'trade_count', 'open_count', 'pending', 'note_en'}
-TRADE_KEYS = {'time', 'side', 'lot', 'entry', 'exit', 'pl_usc', 'pl_points', 'status', 'by'}
+TRADE_KEYS = {'time', 'side', 'lot', 'entry', 'exit', 'sl', 'tp', 'pl_usc', 'pl_points', 'status', 'by'}
 pnl = d.get('pnl')
 if pnl is not None:
     extra = set(pnl) - PNL_KEYS

@@ -50,6 +50,8 @@ svg text{font-family:var(--mono)}
 @keyframes tk{to{transform:translateX(-100%)}}
 .at{display:flex;align-items:center;gap:10px}.led{width:12px;height:12px;border-radius:50%;background:#333}.led.on{background:var(--gr);box-shadow:0 0 10px var(--gr);animation:bl 1.6s infinite}.led.off{background:var(--rd);box-shadow:0 0 8px var(--rd)}
 @keyframes bl{50%{opacity:.45}}
+.wide{display:flex;flex-direction:column;gap:10px;padding:0 14px 10px}.wide2{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:10px}
+@media (max-width:900px){.wide2{grid-template-columns:1fr}}@media (max-width:680px){.wide{padding:0 8px 10px}}
 .foot{color:var(--mu);font-size:10px;padding:0 14px 18px;letter-spacing:.5px}
 .flash{animation:fl .9s}@keyframes fl{0%{box-shadow:0 0 0 1px var(--cy) inset}100%{box-shadow:none}}
 @media (max-width:1100px){.grid{grid-template-columns:1fr 1fr}.mid{grid-column:1/-1;order:-1}#sphereWrap{min-height:440px}}
@@ -93,8 +95,10 @@ svg text{font-family:var(--mono)}
   <div class="pn" id="pAt"><h3><span id="hAt">AUTO-TRADE</span><em id="atMode">STATUS ONLY</em></h3><div class="at"><div class="led" id="atLed"></div><div><div id="atTxt" style="font-size:14px">-</div><div class="sub" id="atSub">-</div></div></div></div>
  </div>
 </div>
+<div class="wide"><div class="pn" id="cMtf"></div><div class="wide2"><div class="pn" id="cMk"></div><div class="pn" id="cEdge"></div></div><div class="pn" id="cSmc"></div></div>
 <div class="ticker"><div class="lab">NEWS</div><div style="overflow:hidden;flex:1"><div class="mv" id="tick">-</div></div></div>
 <div class="foot" id="foot">-</div>
+<script src="pgx.js"></script>
 <script>
 const EN = window.LANG === "en", T = (th, en) => EN ? en : th, $ = id => document.getElementById(id);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
@@ -291,6 +295,7 @@ async function initSphere() {
   })(last);
 }
 
+["cMtf:mtf", "cMk:markets", "cEdge:edge", "cSmc:smc"].forEach(x => { const [id, k] = x.split(":"); PGX.mount($(id), k, {compact: true}); });
 chips(); renderPrice(); pollData(); pollPrice(); initSphere();
 setInterval(pollData, 10000); setInterval(pollPrice, 10000);
 </script>
