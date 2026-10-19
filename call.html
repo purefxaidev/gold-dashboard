@@ -37,11 +37,11 @@ function ui() { const t = $("mode").value === "tr" || /translate/.test($("model"
 function log(c, t) { const d = document.createElement("div"); d.className = c; d.textContent = t; $("log").appendChild(d); $("log").scrollTop = 1e9; return d; }
 
 async function sysPrompt() {
-  if ($("mode").value === "tr") return `คุณคือ 'เลขา' ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) ทำหน้าที่ล่ามแปลภาษาแบบเรียลไทม์ ฟังสิ่งที่ผู้ใช้พูดแล้วพูดคำแปลเป็นภาษา ${$("lang").value} ทันที ถ้าผู้ใช้พูดภาษา ${$("lang").value} อยู่แล้ว ให้แปลเป็นภาษาไทย ห้ามเพิ่มความเห็น`;
+  if ($("mode").value === "tr") return `คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) ทำหน้าที่ล่ามแปลภาษาแบบเรียลไทม์ ฟังสิ่งที่ผู้ใช้พูดแล้วพูดคำแปลเป็นภาษา ${$("lang").value} ทันที ถ้าผู้ใช้พูดภาษา ${$("lang").value} อยู่แล้ว ให้แปลเป็นภาษาไทย ห้ามเพิ่มความเห็น`;
   let ctx = "";
   try { const [v, p] = await Promise.all([fetch("view.json?t=" + Date.now()).then(r => r.json()), fetch("https://api.gold-api.com/price/XAU").then(r => r.json()).catch(() => null)]);
     ctx = JSON.stringify({live_price: p, dashboard: v}).slice(0, 15000); } catch (e) {}
-  return "คุณคือ 'เลขา' ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + "\nข้อมูล: " + ctx;
+  return "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + "\nข้อมูล: " + ctx;
 }
 
 // mic -> 16 kHz PCM16 via AudioWorklet

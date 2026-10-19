@@ -321,7 +321,7 @@ function context() {
     ev_plans: (D.ev_plans || []).map(({name, side, entry, sl, tp, p_win, rr, ev, decision, status}) => ({name, side, entry, sl, tp, p_win, rr, ev, decision, status})), ev_formula: "EV(R)=p*RR-(1-p); เข้าเมื่อ EV>0", news: D.news, note: D.note},
     live_xauusd_spot: live.price ?? D?.price_num, live_time: live.time, thai_gold_thb: thaiGold && thaiGold.map(x => ({type: x.GoldType, purity: x.GoldCode, buy: x.Buy, sell: x.Sell, change: x.BuyChange, time: x.TimeUpdate})),
     now_bangkok: new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"})};
-  return "คุณคือ 'เลขา' ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
+  return "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
 }
 let mode = localStorage.getItem("gd_mode") || "ana";
 const LN = {en:"English",th:"Thai",zh:"Chinese (Simplified)",ja:"Japanese",ko:"Korean",vi:"Vietnamese",lo:"Lao",my:"Burmese",fr:"French",de:"German"};
@@ -394,7 +394,7 @@ if (location.hash === "#call") openCall();
 window.addEventListener("hashchange", () => { if (location.hash === "#call") openCall(); });
 // init
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text.replace(/\*\*/g, "")));
-if (!hist.length) bubble("a", "สวัสดีครับ 👋 ดิฉันคือ "เลขา" ผู้ช่วยวิเคราะห์ทองค่ะ ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ต้องใส่ Gemini API key ใน ⚙️ ตั้งค่า ก่อนใช้ครั้งแรก)");
+if (!hist.length) bubble("a", "สวัสดีค่ะ 👋 ดิฉันคือ เลขา ผู้ช่วยวิเคราะห์ทองค่ะ ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ต้องใส่ Gemini API key ใน ⚙️ ตั้งค่า ก่อนใช้ครั้งแรก)");
 syncSet(); setMode(mode); render(); tv(localStorage.getItem("gd_tf") || "15");
 pollPrice(); pollThai(); setInterval(pollPrice, 15000); setInterval(pollThai, 30000); setInterval(pollData, 300000);
 </script>
