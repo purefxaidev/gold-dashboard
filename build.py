@@ -48,12 +48,12 @@ for pat in bad:
 
 # ---- pnl allowlist (no balance/equity/account/ticket) ----
 PNL_KEYS = {'today_usc', 'today_points', 'win_rate', 'mark_price', 'note', 'trades', 'trade_count', 'open_count', 'pending', 'note_en'}
-TRADE_KEYS = {'time', 'side', 'lot', 'entry', 'exit', 'sl', 'tp', 'pl_usc', 'pl_points', 'status', 'by'}
+TRADE_KEYS = {'time', 'symbol', 'side', 'lot', 'entry', 'exit', 'sl', 'tp', 'pl_usc', 'pl_points', 'status', 'by'}
 pnl = d.get('pnl')
 if pnl is not None:
     extra = set(pnl) - PNL_KEYS
     for t in pnl.get('trades', []): extra |= set(t) - TRADE_KEYS
-    for t in pnl.get('pending', []): extra |= set(t) - {'type', 'lot', 'entry', 'sl', 'tp'}
+    for t in pnl.get('pending', []): extra |= set(t) - {'symbol', 'type', 'lot', 'entry', 'sl', 'tp'}
     if extra: sys.exit(f'build.py: pnl has non-allowlisted fields {sorted(extra)}')
 
 # ---- history files guard ----
@@ -109,3 +109,27 @@ open('view.json', 'w', encoding='utf-8').write(json.dumps(v, ensure_ascii=False,
 tpl = open('template.html', encoding='utf-8').read()
 open('index.html', 'w', encoding='utf-8').write(tpl.replace('/*__DATA__*/null', js))
 print('built index.html + view.json', v['built'])
+
+# ---- compact AI context (site chat, live call, LINE bot) : ai_context.txt ----
+def _ctx():
+    L = []; f = lambda v, dp=2: ('-' if v is None else (f"{v:,.{dp}f}" if isinstance(v, (int, float)) else str(v)))
+    L.append(f"GOLD XAUUSD (สปอต) ราคา {f(v.get('price_num'))} · อัปเดต {d.get('updated', '-')} · AI ขึ้น {d.get('ai_up_pct', '-')}% / ลง {v.get('ai_down_pct', '-')}%")
+    L.append("bias: " + str(d.get('bias', '-'))[:400])
+    L.append("indicators: " + str(d.get('indicators', '-'))[:300])
+    L.append("แนวต้าน: " + " | ".join(d.get('resistance', [])) + " · แนวรับ: " + " | ".join(d.get('support', [])))
+    for p in v.get('ev_plans', []):
+        L.append(f"แผน {p.get('name')} {p.get('side')} เข้า {p.get('entry')} SL {p.get('sl')} TP {p.get('tp')} " + ("ไม่มีความเสี่ยงแล้ว (กันหน้าไม้)" if p.get('risk_free') else f"RR {p.get('rr')} EV {p.get('ev')}R ตัดสินใจ {p.get('decision')}") + f" · {p.get('status', '')}")
+    pn = d.get('pnl') or {}
+    if pn: L.append(f"ผลวันนี้: {pn.get('trade_count', '-')} ไม้ปิด ชนะ {pn.get('win_rate', '-')}% กำไร {pn.get('today_usc', '-')} USC ({pn.get('today_points', '-')} จุด) · เปิดอยู่ {pn.get('open_count', '-')} · ออเดอร์รอ " + ", ".join(f"{o.get('type')} {o.get('entry')} SL {o.get('sl')} TP {o.get('tp')}" for o in pn.get('pending', [])))
+    if d.get('mtf'): L.append("ทองหลายไทม์เฟรม: " + " ".join(f"{m['tf']}={m['trend']}(RSI {m.get('rsi')})" for m in d['mtf']) + " · " + str(d.get('mtf_align', '')))
+    for k, n in (d.get('smc_notes') or {}).items(): L.append(f"SMC {k}: {n}")
+    for n in d.get('correlations_notes', []): L.append("ความสัมพันธ์ " + n)
+    L.append("ตลาดอื่น (วิเคราะห์อย่างเดียว ไม่ได้เทรด, ข้อมูล " + str(d.get('mtf_updated', '-')) + "):")
+    for m in d.get('markets', []):
+        L.append(f"{m['symbol']} {f(m.get('price'), m.get('dp') or 0)} ({'+' if (m.get('chg_pct') or 0) >= 0 else ''}{m.get('chg_pct')}% วันนี้) " + " ".join(f"{t['tf']}={t['trend']}(RSI {t.get('rsi')})" for t in m.get('tfs', [])) + f" · bias {m.get('bias')} · S {f(m.get('support'), m.get('dp') or 0)} R {f(m.get('resistance'), m.get('dp') or 0)} · {m.get('setup', '')}")
+    e = d.get('edge') or {}
+    for n in e.get('notes', []): L.append("Edge: " + n)
+    for n in (d.get('news') or [])[:4]: L.append("ข่าว: " + str(n[0])[:300])
+    L.append("หมายเหตุ: " + str(d.get('note', '')))
+    return "\n".join(noemo(L))[:14000]
+open('ai_context.txt', 'w', encoding='utf-8').write(_ctx())

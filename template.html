@@ -11,6 +11,7 @@
 <link rel="alternate" hreflang="th" href="https://purefxaidev.github.io/gold-dashboard/?lang=th"><link rel="alternate" hreflang="en" href="https://purefxaidev.github.io/gold-dashboard/?lang=en"><link rel="alternate" hreflang="x-default" href="https://purefxaidev.github.io/gold-dashboard/">
 <script src="i18n.js"></script>
 <script src="gkey.js"></script>
+<script src="pgai.js"></script>
 <link rel="icon" type="image/svg+xml" href="logo.svg"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#0a0b10">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&family=Noto+Sans+Thai:wght@300;400;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -255,12 +256,6 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
   <b>Gemini API key</b>
   <input type="password" id="keyIn" placeholder="วาง API key ของคุณที่นี่" autocomplete="off" spellcheck="false">
   <small id="keyErr" role="alert" style="color:#ff6b81;min-height:14px;display:block"></small>
-  <select id="modelIn">
-   <option value="gemini-3.8-flash">gemini-3.8-flash (แนะนำ)</option>
-   <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite (เร็ว/ประหยัด)</option>
-   <option value="gemini-flash-latest">gemini-flash-latest</option>
-   <option value="gemini-2.5-flash">gemini-2.5-flash</option>
-  </select>
   <div style="display:flex;gap:8px"><button class="btn pri" id="saveKey">บันทึก</button><button class="btn" id="delKey"> ลบ key</button></div>
   <div class="warn"> key จะถูกเก็บไว้ <b>เฉพาะในเบราว์เซอร์ของเครื่องนี้</b> (localStorage) เท่านั้น ไม่ถูกส่งขึ้น GitHub หรือเซิร์ฟเวอร์อื่น ส่งตรงไปที่ Google เท่านั้น · อย่าใช้บนเครื่องสาธารณะ · กด “ลบ key” เมื่อเลิกใช้ · หากเคยแปะ key ในแชทหรือที่สาธารณะ ให้ลบแล้วสร้างใหม่ที่ Google AI Studio</div>
  </div>
@@ -415,8 +410,7 @@ function saveHist() { localStorage.setItem("gd_hist", JSON.stringify(hist.slice(
 async function summarizeOld() {
   const users = hist.filter(h => h.role === "user").length; if (users < 40 || !getKey()) return; // keep last 30 turns, fold older ones
   const old = hist.slice(0, hist.length - 60), keep = hist.slice(-60); if (!old.length) return;
-  try { const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(getModel())}:generateContent`, {method: "POST", headers: {"Content-Type": "application/json", "x-goog-api-key": getKey()},
-    body: JSON.stringify({contents: [{role: "user", parts: [{text: "สรุปบทสนทนาต่อไปนี้เป็นบันทึกความจำภาษาไทยสั้นๆ (ไม่เกิน 10 บรรทัด) เน้นสิ่งที่ผู้ใช้สนใจ ตัดสินใจ หรือขอไว้ รวมกับบันทึกเดิม:\nบันทึกเดิม: " + MEM.notes() + "\n\nบทสนทนา:\n" + old.map(h => (h.role === "user" ? "ผู้ใช้: " : "เลขา: ") + h.parts[0].text).join("\n").slice(0, 20000)}]}], generationConfig: {temperature: 0.2, maxOutputTokens: 600}})});
+  try { const r = await gfetch("generateContent", {contents: [{role: "user", parts: [{text: "สรุปบทสนทนาต่อไปนี้เป็นบันทึกความจำภาษาไทยสั้นๆ (ไม่เกิน 10 บรรทัด) เน้นสิ่งที่ผู้ใช้สนใจ ตัดสินใจ หรือขอไว้ รวมกับบันทึกเดิม:\nบันทึกเดิม: " + MEM.notes() + "\n\nบทสนทนา:\n" + old.map(h => (h.role === "user" ? "ผู้ใช้: " : "เลขา: ") + h.parts[0].text).join("\n").slice(0, 20000)}]}], generationConfig: {temperature: 0.2, maxOutputTokens: 600}});
     if (!r.ok) { await GKEY.handleResponse(r); return; }
     const j = await r.json(); const t = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("").trim();
     if (t) { MEM.setNotes(t); hist = keep; saveHist(); renderMem(); } } catch (e) {}
@@ -427,7 +421,17 @@ function renderMem() {
   $("memNotes").value = MEM.notes();
 }
 const getKey = () => localStorage.getItem(KEY) || "";
-const getModel = () => localStorage.getItem(MODEL) || "gemini-3.8-flash";
+const MODELS = ["gemini-3.8-flash", "gemini-3.5-flash-lite", "gemini-flash-latest", "gemini-2.5-flash"]; // internal only, never shown
+const getModel = () => { const m = localStorage.getItem(MODEL); return MODELS.includes(m) ? m : MODELS[0]; };
+async function gfetch(method, body, key) { // automatic model fallback; returns the last Response
+  let i0 = Math.max(0, MODELS.indexOf(getModel())), r = null;
+  for (let k = 0; k < MODELS.length; k++) { const m = MODELS[(i0 + k) % MODELS.length];
+    r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:${method}`, {method: "POST", headers: {"Content-Type": "application/json", "x-goog-api-key": key || getKey()}, body: JSON.stringify(body)});
+    if (r.ok) { localStorage.setItem(MODEL, m); return r; }
+    let txt = ""; try { txt = await r.clone().text(); } catch (e) {}
+    if (GKEY.classify(r.status, txt) === "auth") return r;
+    if (![400, 404, 429, 500, 503].includes(r.status)) return r; }
+  return r; }
 function md(t) { // safe plain-text rendering of model output (escape first, then minimal formatting)
   let h = esc(String(t || "")).replace(/\r/g, "");
   h = h.replace(/^\s*(-{3,}|\*{3,}|_{3,})\s*$/gm, "").replace(/^\s*#{1,6}\s*/gm, "").replace(/^\s*&gt;\s?/gm, "")
@@ -471,15 +475,16 @@ async function ask(q, audio) {
   const key = getKey();
   if (!key) { GKEY.prompt("first", {onSaved: () => { syncSet(); bubble("a", EN() ? "Key saved. You can ask again now." : "บันทึกคีย์แล้วค่ะ ถามใหม่ได้เลย"); }}); bubble("e", EN() ? "Please add a Gemini API key first" : "กรุณาใส่ Gemini API key ก่อน"); return; }
   const tr = mode === "tr";
+  if (!tr && q && PGAI.intent(q)) PGAI.showSignup({force: true});
   const parts = []; if (audio) parts.push({inlineData: audio}); parts.push({text: q || (tr ? "(แปลเสียงนี้)" : "(ฟังคำถามจากเสียงนี้แล้วตอบ)")});
   bubble("u", audio ? "[ข้อความเสียง]" + (q ? " · " + q : "") : q);
   const turn = {role: "user", parts}; if (!tr) hist.push({role: "user", parts: [{text: audio ? "[เสียง] " + q : q}]});
   const out = bubble("a", ""); out.classList.add("typing"); $("send").disabled = true;
   let text = "";
   try {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(getModel())}:streamGenerateContent?alt=sse`, {
-      method: "POST", headers: {"Content-Type": "application/json", "x-goog-api-key": key},
-      body: JSON.stringify({systemInstruction: {parts: [{text: tr ? trPrompt() : context() + memText() + MEM_RULE}]}, contents: tr ? [turn] : hist.slice(-61, -1).concat([turn]), generationConfig: {temperature: tr ? 0.2 : 0.6, maxOutputTokens: 1200}})});
+    const mctx = tr ? "" : await PGAI.context();
+    window.__lastSys = tr ? "" : context() + "\n" + mctx + PGAI.rules();
+    const r = await gfetch("streamGenerateContent?alt=sse", {systemInstruction: {parts: [{text: tr ? trPrompt() : context() + (mctx ? "\n\nบริบทตลาดทั้งหมดล่าสุด (ทองคำ + FX + BTC + MTF + SMC + ความสัมพันธ์ + Edge):\n" + mctx : "") + PGAI.rules() + memText() + MEM_RULE}]}, contents: tr ? [turn] : hist.slice(-61, -1).concat([turn]), generationConfig: {temperature: tr ? 0.2 : 0.6, maxOutputTokens: 1200}});
     if (!r.ok) { const h = await GKEY.handleResponse(r); throw new Error(h.kind ? GKEY.message(h.kind) : h.msg); }
     const rd = r.body.getReader(), dec = new TextDecoder(); let buf = "";
     for (;;) {
@@ -489,10 +494,11 @@ async function ask(q, audio) {
         const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
         if (!line.startsWith("data:")) continue;
         try { const j = JSON.parse(line.slice(5)); const parts = j.candidates?.[0]?.content?.parts || []; for (const p of parts) if (p.text && !p.thought) text += p.text; } catch (e) {}
-        out.innerHTML = md(text); $("msgs").scrollTop = 1e9;
+        out.innerHTML = md(PGAI.strip(text).text); $("msgs").scrollTop = 1e9;
       }
     }
     if (!text) text = "(ไม่มีคำตอบ ลองถามใหม่)";
+    { const sp = PGAI.strip(text); text = sp.text || text; if (sp.signup && !tr) PGAI.showSignup(); }
     if (!tr) text = takeMem(text) || "(บันทึกแล้วค่ะ)";
     out.innerHTML = md(text);
     if (!tr) { hist.push({role: "model", parts: [{text}]}); saveHist(); summarizeOld(); }
@@ -508,7 +514,7 @@ $("memAdd").onclick = () => { const v = $("memNew").value.trim(); if (!v) return
 $("memFacts").addEventListener("click", e => { const i = e.target.dataset && e.target.dataset.del; if (i != null) { const f = MEM.facts(); f.splice(+i, 1); MEM.setFacts(f); renderMem(); } });
 $("memSave").onclick = () => { const f = [...document.querySelectorAll(".memEd")].map(x => x.value.trim()).filter(Boolean); MEM.setFacts(f); MEM.setNotes($("memNotes").value); renderMem(); bubble("a", "บันทึกความจำแล้วค่ะ "); };
 $("memClear").onclick = () => { if (!confirm("ล้างความจำและประวัติแชททั้งหมด?")) return; ["gd_facts", "gd_notes", "gd_hist"].forEach(k => localStorage.removeItem(k)); sessionStorage.removeItem("gd_hist"); hist = []; $("msgs").innerHTML = ""; renderMem(); bubble("a", "ล้างความจำเรียบร้อยค่ะ"); };
-$("saveKey").onclick = async () => { const k = $("keyIn").value.trim(); localStorage.setItem(MODEL, $("modelIn").value); $("keyErr").textContent = "";
+$("saveKey").onclick = async () => { const k = $("keyIn").value.trim(); $("keyErr").textContent = "";
   if (k) { $("keyErr").style.color = "#aab"; $("keyErr").textContent = EN() ? "Checking the key with Google..." : "กำลังตรวจคีย์กับ Google..."; const v = await GKEY.save(k);
     if (!v.ok) { $("keyErr").style.color = "#ff6b81"; $("keyErr").textContent = v.msg; return; } $("keyErr").textContent = ""; }
   $("keyIn").value = ""; syncSet(); bubble("a", EN() ? "Settings saved (the key stays in this browser only)" : "บันทึกการตั้งค่าแล้ว (คีย์อยู่ในเครื่องนี้เท่านั้น)"); };
