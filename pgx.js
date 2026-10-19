@@ -18,10 +18,10 @@
 .pgx .mk{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}.pgx .mc{border:1px solid var(--pl);border-radius:10px;padding:8px 10px;background:rgba(0,0,0,.25);min-width:0}
 .pgx .mc .r1{display:flex;justify-content:space-between;align-items:baseline;gap:6px}.pgx .mc .px{font:700 15px ui-monospace,Menlo,monospace}.pgx .tfs{display:flex;gap:4px;flex-wrap:wrap;margin:5px 0}.pgx .tfs span{font-size:10px;border:1px solid;border-radius:4px;padding:0 4px}
 .pgx .hint{font-size:11.5px;line-height:1.4}.pgx table{width:100%;border-collapse:collapse;font-size:11.5px}.pgx td,.pgx th{padding:5px 6px;border-bottom:1px solid var(--pl);text-align:left;vertical-align:top}.pgx th{color:var(--pmu);font-weight:500}
-.pgx .tw{overflow-x:auto}.pgx .two{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:14px}.pgx .help{display:none;border:1px solid #36e2ff55;background:#05121a;border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.5;margin-bottom:10px}.pgx .help.on{display:block}.pgx .help b{color:var(--pc)}
+.pgx .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}.pgx .tw table{min-width:720px}.pgx .two{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:14px}.pgx .help{display:none;border:1px solid #36e2ff55;background:#05121a;border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.5;margin-bottom:10px}.pgx .help.on{display:block}.pgx .help b{color:var(--pc)}
 .pgx .note{font-size:12px;line-height:1.5;margin:3px 0}.pgx .warn{color:var(--pg);font-size:11.5px}.pgx ul{margin:4px 0 8px;padding-left:18px}.pgx li{margin:3px 0;font-size:12.5px;line-height:1.45}
 .pgx.cp .g5{gap:5px}.pgx.cp .ch{padding:4px;border-radius:4px}.pgx.cp .mc{border-radius:4px}.pgx.cp .hd b{font-size:11px;letter-spacing:2px;color:#8a93a6;font-weight:600}
-@media(max-width:980px){.pgx .g5{grid-template-columns:repeat(3,minmax(0,1fr))}.pgx .two{grid-template-columns:1fr}}
+@media(max-width:980px){.pgx .g5{grid-template-columns:repeat(3,minmax(0,1fr))}.pgx .two{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:620px){.pgx .g5{grid-template-columns:repeat(2,minmax(0,1fr))}.pgx .g5 .ch:first-child{grid-column:1/-1}}
 @media(max-width:360px){.pgx .g5{grid-template-columns:1fr}}`;
   const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
