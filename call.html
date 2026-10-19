@@ -1,5 +1,6 @@
 <!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PUREGOLD AI · คุยสด</title><meta name="description" content="PUREGOLD AI live voice call: talk with the gold (XAUUSD) AI assistant in Thai or English."><link rel="alternate" hreflang="th" href="https://purefxaidev.github.io/gold-dashboard/call.html?lang=th"><link rel="alternate" hreflang="en" href="https://purefxaidev.github.io/gold-dashboard/call.html?lang=en"><script src="i18n.js"></script><link rel="icon" type="image/svg+xml" href="logo.svg">
+<title>PUREGOLD AI · คุยสด</title><meta name="description" content="PUREGOLD AI live voice call: talk with the gold (XAUUSD) AI assistant in Thai or English."><link rel="alternate" hreflang="th" href="https://purefxaidev.github.io/gold-dashboard/call.html?lang=th"><link rel="alternate" hreflang="en" href="https://purefxaidev.github.io/gold-dashboard/call.html?lang=en"><script src="i18n.js"></script>
+<script src="gkey.js"></script><link rel="icon" type="image/svg+xml" href="logo.svg">
 <style>
 body{margin:0;font-family:system-ui,"Noto Sans Thai",sans-serif;background:radial-gradient(circle at 50% 0,#2a1f05,#07080c 60%);color:#eee;min-height:100vh}
 .w{max-width:640px;margin:auto;padding:16px}h1{font-size:20px;color:#f5c542;margin:6px 0}
@@ -34,8 +35,11 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
 const ICON_PHONE = `<svg class="ic" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`, ICON_STOP = `<svg class="ic" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
 const $ = id => document.getElementById(id);
 const LC = {English:"en",Thai:"th",Chinese:"zh",Japanese:"ja",Korean:"ko",Vietnamese:"vi",Lao:"lo",Burmese:"my",French:"fr",German:"de"};
-const KEY = localStorage.getItem("gd_gemini_key") || "";
-$("keyst").textContent = KEY ? "● พบ Gemini key ในเครื่องนี้ (…" + KEY.slice(-4) + ")" : "○ ยังไม่มี key — ไปตั้งค่าที่แชทในหน้าแดชบอร์ดก่อน";
+let KEY = GKEY.get();
+const CEN = () => window.LANG === "en";
+function keyst() { $("keyst").textContent = KEY ? (CEN() ? "Gemini key found in this browser (..." : "พบ Gemini key ในเครื่องนี้ (...") + KEY.slice(-4) + ")" : (CEN() ? "No key yet, press Add key" : "ยังไม่มีคีย์ กด ใส่คีย์ ด้านขวา"); }
+keyst(); GKEY.onChange(k => { KEY = k || ""; keyst(); });
+{ const w = document.createElement("span"); w.style.cssText = "margin-left:8px;display:inline-flex;gap:6px;vertical-align:middle"; $("keyst").after(w); GKEY.button(w); }
 const P = new URLSearchParams(location.search);
 for (const k of ["mode", "lang", "model", "voice"]) { const v = P.get(k) || localStorage.getItem("gc_" + k); if (v) $(k).value = v; if (k === "voice" && !$(k).value) $(k).value = "Sulafat"; $(k).onchange = () => { localStorage.setItem("gc_" + k, $(k).value); ui(); }; }
 function ui() { const t = $("mode").value === "tr" || /translate/.test($("model").value); $("lw").style.visibility = t ? "visible" : "hidden"; if (/translate/.test($("model").value) && !localStorage.getItem("gc_lang")) $("lang").value = "Thai"; } ui();
@@ -48,6 +52,7 @@ async function saveCallMemory() {
   if (t.length < 40 || !KEY || $("mode").value === "tr") return;
   try { const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent", {method: "POST", headers: {"Content-Type": "application/json", "x-goog-api-key": KEY},
     body: JSON.stringify({contents: [{role: "user", parts: [{text: "รวมบันทึกความจำเดิมกับสาระจากการคุยด้วยเสียงนี้ เป็นบันทึกภาษาไทยไม่เกิน 10 บรรทัด:\nบันทึกเดิม: " + (localStorage.getItem("gd_notes") || "") + "\n\nบทสนทนา:\n" + t}]}], generationConfig: {temperature: 0.2, maxOutputTokens: 600}})});
+    if (!r.ok) { await GKEY.handleResponse(r); return; }
     const j = await r.json(); const s = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("").trim();
     if (s) { localStorage.setItem("gd_notes", s.slice(0, 4000)); log("a", "บันทึกสรุปการคุยไว้ในความจำแล้วค่ะ"); } } catch (e) {}
 }
@@ -114,7 +119,7 @@ function startCapture() {
 function start() {
   // ---- synchronous part (must stay inside the user gesture for iOS) ----
   if (!window.isSecureContext) { log("e", "หน้านี้ไม่ได้เปิดผ่าน https จึงใช้ไมค์ไม่ได้ค่ะ"); return; }
-  if (!KEY) { log("e", "ยังไม่มี Gemini key — เปิดหน้าแดชบอร์ด > แชท > ตั้งค่า แล้ววาง key ก่อนค่ะ"); return; }
+  if (!KEY) { log("e", CEN() ? "No Gemini key yet, please add one first" : "ยังไม่มี Gemini key กรุณาใส่คีย์ก่อนค่ะ"); GKEY.prompt("first"); return; }
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { log("e", "เบราว์เซอร์นี้ไม่รองรับไมค์ค่ะ" + (INAPP ? " (กำลังเปิดในแอป ให้เปิดในเบราว์เซอร์ภายนอก)" : "")); return; }
   const AC = window.AudioContext || window.webkitAudioContext;
   try { ac = new AC(); } catch (e) { log("e", "สร้างระบบเสียงไม่ได้: " + e.message); return; }
@@ -147,7 +152,7 @@ function start() {
       if (sc.turnComplete) { aLine = null; uLine = null; }
     };
     ws.onerror = () => dbg("ws error");
-    ws.onclose = e => { dbg("ws close " + e.code + " " + e.reason); if (inCall && e.code !== 1000) log("e", "ปิดการเชื่อมต่อ (" + e.code + "): " + (/api key/i.test(e.reason || "") ? "Gemini key ไม่ถูกต้องหรือถูกปิดใช้งาน — ตั้งค่า key ใหม่ในหน้าแดชบอร์ด" : /model|not found|unsupported/i.test(e.reason || "") ? "โมเดลนี้ใช้ไม่ได้กับ key นี้ ลองเลือกโมเดลอื่น" : /quota|exhaust|rate/i.test(e.reason || "") ? "โควตาฟรีหมดชั่วคราว ลองใหม่ภายหลังหรือเปลี่ยนโมเดล" : (WS_CLOSE[e.code] || "")) + (e.reason ? " · " + e.reason : "")); stop(true); };
+    ws.onclose = e => { dbg("ws close " + e.code + " " + e.reason); const gk = e.code !== 1000 ? GKEY.classify(0, e.reason) : null; if (gk) { const was = inCall; GKEY.handle(gk); if (was) log("e", GKEY.message(gk)); stop(true); return; } if (inCall && e.code !== 1000) log("e", "ปิดการเชื่อมต่อ (" + e.code + "): " + (/api key/i.test(e.reason || "") ? "Gemini key ไม่ถูกต้องหรือถูกปิดใช้งาน — ตั้งค่า key ใหม่ในหน้าแดชบอร์ด" : /model|not found|unsupported/i.test(e.reason || "") ? "โมเดลนี้ใช้ไม่ได้กับ key นี้ ลองเลือกโมเดลอื่น" : /quota|exhaust|rate/i.test(e.reason || "") ? "โควตาฟรีหมดชั่วคราว ลองใหม่ภายหลังหรือเปลี่ยนโมเดล" : (WS_CLOSE[e.code] || "")) + (e.reason ? " · " + e.reason : "")); stop(true); };
   }).catch(e => { dbg("start error " + (e && e.name) + " " + (e && e.message)); log("e", micError(e)); window.__callState = {mic: false, err: e && e.name}; stop(true, true); });
 }
 function stop(fromClose, quiet) {
