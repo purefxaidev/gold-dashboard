@@ -16,6 +16,13 @@ data.json fields (Thai text unless noted):
   ev_plans                                     : list of {name, side("buy"|"sell"), entry, sl, tp,
                                                  p_win (0..1), status (optional text)}
 
+English (optional, same shape as the Thai field, suffix _en; the site falls back to Thai when missing):
+  updated_en, price_en, bias_en, indicators_en, note_en, ai_method_en, ev_method_en : strings
+  resistance_en, support_en : list of strings   plans_en : list of string lists
+  news_en : list of [english_summary, url]       ai_reasons_en : list of [direction, english_reason]
+  ev_plans[i].name_en / status_en, pnl.note_en, auto_trade.interval_en
+  Full docs: README_DATA.md.  Emoji are stripped from all strings at build time.
+
 EV decision model (computed here, do not hand-edit rr/ev):
   risk   = |entry - sl|            reward = |tp - entry|
   RR     = reward / risk
@@ -39,7 +46,7 @@ for pat in bad:
         sys.exit(f'build.py: refusing to build, data.json matches forbidden pattern {pat!r}')
 
 # ---- pnl allowlist (no balance/equity/account/ticket) ----
-PNL_KEYS = {'today_usc', 'today_points', 'win_rate', 'mark_price', 'note', 'trades', 'trade_count', 'open_count', 'pending'}
+PNL_KEYS = {'today_usc', 'today_points', 'win_rate', 'mark_price', 'note', 'trades', 'trade_count', 'open_count', 'pending', 'note_en'}
 TRADE_KEYS = {'time', 'side', 'lot', 'entry', 'exit', 'pl_usc', 'pl_points', 'status', 'by'}
 pnl = d.get('pnl')
 if pnl is not None:
@@ -57,12 +64,22 @@ for fn in glob.glob('history/*.jsonl') + ['lessons.md']:
         if re.search(pat, txt): sys.exit(f'build.py: {fn} matches forbidden pattern {pat!r}')
 
 at = d.get('auto_trade')
-if at is not None and set(at) - {'enabled', 'interval', 'lot'}: sys.exit('build.py: auto_trade has unexpected fields')
+if at is not None and set(at) - {'enabled', 'interval', 'interval_en', 'lot'}: sys.exit('build.py: auto_trade has unexpected fields')
 
 def first_num(s):
     m = re.search(r'\d[\d,]*\.?\d*', str(s))
     return float(m.group().replace(',', '')) if m else None
 
+EMO = re.compile('[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F\u200D]')
+def noemo(x):
+    if isinstance(x, str): return re.sub(r'\s{2,}', ' ', EMO.sub('', x)).strip()
+    if isinstance(x, list): return [noemo(i) for i in x]
+    if isinstance(x, dict): return {k: noemo(i) for k, i in x.items()}
+    return x
+d = noemo(d)
+for k in list(d):
+    if k.endswith('_en') and k[:-3] in d and type(d[k]) is not type(d[k[:-3]]):
+        sys.exit(f'build.py: {k} must have the same type as {k[:-3]}')
 v = dict(d)
 v['price_num'] = first_num(d.get('price', ''))
 v['res_nums'] = [first_num(x) for x in d.get('resistance', [])]
