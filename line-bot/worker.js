@@ -13,7 +13,7 @@ const SYSTEM_PROMPT = [
   'ใช้ข้อมูลบริบท (ราคาสด แนวรับแนวต้าน แผนเทรด % ความมั่นใจ AI ค่า EV และข่าว) ที่แนบมาเป็นหลัก ถ้าข้อมูลไม่พอให้บอกตรงๆ',
   'ถ้าผู้ใช้ส่งภาพกราฟ ให้อ่านเทรนด์ แนวรับแนวต้านจากภาพ ถ้าส่งเสียง ให้ฟังคำถามแล้วตอบ',
   'ทุกครั้งที่แนะนำจุดเข้า ต้องระบุ Buy/Sell จุดเข้า SL และ TP พร้อมเหตุผลสั้นๆ',
-  'ห้ามรับประกันกำไร ปิดท้ายด้วยคำเตือนความเสี่ยง 1 บรรทัด ห้ามขอหรือเปิดเผยรหัสผ่าน/API key'
+  'ห้ามใช้อีโมจิ ห้ามรับประกันกำไร ปิดท้ายด้วยคำเตือนความเสี่ยง 1 บรรทัด ห้ามขอหรือเปิดเผยรหัสผ่าน/API key'
 ].join('\n');
 
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json' } });
@@ -29,6 +29,11 @@ async function verifySig(env, body, sig) {
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
+    if (req.method === 'GET' && url.pathname === '/autotrade') {
+      if (!env.ALERT_SECRET || url.searchParams.get('secret') !== env.ALERT_SECRET) return json({ ok: false, error: 'unauthorized' }, 401);
+      const v = env.MODES ? await env.MODES.get('auto_trade') : null;
+      return json({ ok: true, enabled: (v || 'on') === 'on' });
+    }
     if (req.method !== 'POST') return new Response('LINE gold bot OK');
     const raw = await req.text();
     if (url.pathname === '/alert' || url.pathname === '/tts') {
@@ -55,7 +60,7 @@ async function getMode(env, uid) { return uid && env.MODES ? (await env.MODES.ge
 async function setMode(env, uid, v) { if (!uid || !env.MODES) return; v ? await env.MODES.put('m:' + uid, v) : await env.MODES.delete('m:' + uid); }
 function quick() {
   return { items: Object.keys(LANGS).map(k => ({ type: 'action', action: { type: 'message', label: k + ' ' + LANGS[k].split(' ')[0], text: '/แปล ' + k } }))
-    .concat([{ type: 'action', action: { type: 'message', label: '📈 วิเคราะห์ทอง', text: '/วิเคราะห์' } }]) };
+    .concat([{ type: 'action', action: { type: 'message', label: 'วิเคราะห์ทอง', text: '/วิเคราะห์' } }]) };
 }
 const reply = (env, ev, messages) => line(env, 'reply', { replyToken: ev.replyToken, messages });
 
@@ -64,21 +69,31 @@ async function handleEvent(env, ev) {
   const m = ev.message, uid = ev.source && ev.source.userId;
   if (m.type === 'text' && m.text.startsWith('/')) {
     const t = m.text.trim();
+    const so = /^\/ตั้งเจ้าของ\s+(\S+)/.exec(t);
+    if (so) { const okS = env.ALERT_SECRET && so[1] === env.ALERT_SECRET && env.MODES; if (okS) await env.MODES.put('owner', uid);
+      return reply(env, ev, [{ type: 'text', text: okS ? 'ตั้งคุณเป็นเจ้าของบอทแล้วค่ะ' : 'ตั้งไม่สำเร็จค่ะ (รหัสผิด หรือยังไม่ผูก KV)' }]); }
+    if (/^\/(เปิดเทรด|ปิดเทรด)/.test(t)) {
+      const owner = env.OWNER_USER_ID || (env.MODES && await env.MODES.get('owner'));
+      if (!uid || uid !== owner) return reply(env, ev, [{ type: 'text', text: 'คำสั่งนี้ใช้ได้เฉพาะเจ้าของบอทค่ะ' }]);
+      if (!env.MODES) return reply(env, ev, [{ type: 'text', text: 'ยังไม่ได้ผูก KV MODES จึงบันทึกไม่ได้ค่ะ' }]);
+      const on = /^\/เปิดเทรด/.test(t); await env.MODES.put('auto_trade', on ? 'on' : 'off');
+      return reply(env, ev, [{ type: 'text', text: on ? 'เปิดเทรดอัตโนมัติแล้วค่ะ (มีผลรอบถัดไป)' : 'ปิดเทรดอัตโนมัติแล้วค่ะ ระบบจะวิเคราะห์และแจ้งเตือนอย่างเดียว' }]);
+    }
     const mj = /^\/จำ\s+([\s\S]+)/.exec(t);
     if (mj || /^\/(ลืม|ความจำ)/.test(t)) {
-      if (!env.MODES) return reply(env, ev, [{ type: 'text', text: '⚠️ ยังไม่ได้ผูก KV MODES จึงจำไม่ได้ค่ะ' }]);
+      if (!env.MODES) return reply(env, ev, [{ type: 'text', text: 'ยังไม่ได้ผูก KV MODES จึงจำไม่ได้ค่ะ' }]);
       const mm0 = await getMem(env, uid);
-      if (mj) { mm0.facts.push(mj[1].trim().slice(0, 200)); await setMem(env, uid, mm0); return reply(env, ev, [{ type: 'text', text: '🧠 จำไว้แล้วค่ะ: ' + mj[1].trim() }]); }
-      if (/^\/ลืม/.test(t)) { await env.MODES.delete('mem:' + uid); return reply(env, ev, [{ type: 'text', text: '🗑️ ล้างความจำทั้งหมดแล้วค่ะ' }]); }
-      return reply(env, ev, [{ type: 'text', text: '🧠 ความจำของเลขา\n' + (mm0.facts.map((x, i) => (i + 1) + '. ' + x).join('\n') || '(ยังไม่มี)') + '\n/จำ ข้อความ = เพิ่ม · /ลืม = ล้าง' }]);
+      if (mj) { mm0.facts.push(mj[1].trim().slice(0, 200)); await setMem(env, uid, mm0); return reply(env, ev, [{ type: 'text', text: 'จำไว้แล้วค่ะ: ' + mj[1].trim() }]); }
+      if (/^\/ลืม/.test(t)) { await env.MODES.delete('mem:' + uid); return reply(env, ev, [{ type: 'text', text: 'ล้างความจำทั้งหมดแล้วค่ะ' }]); }
+      return reply(env, ev, [{ type: 'text', text: 'ความจำของเลขา\n' + (mm0.facts.map((x, i) => (i + 1) + '. ' + x).join('\n') || '(ยังไม่มี)') + '\n/จำ ข้อความ = เพิ่ม · /ลืม = ล้าง' }]);
     }
-    if (/^\/(วิเคราะห์|analyst)/i.test(t)) { await setMode(env, uid, ''); return reply(env, ev, [{ type: 'text', text: '📈 กลับสู่โหมดวิเคราะห์ทองแล้วค่ะ' }]); }
+    if (/^\/(วิเคราะห์|analyst)/i.test(t)) { await setMode(env, uid, ''); return reply(env, ev, [{ type: 'text', text: 'กลับสู่โหมดวิเคราะห์ทองแล้วค่ะ' }]); }
     const mm = /^\/(แปล|translate|tr)\s*([a-z]{2})?/i.exec(t);
     if (mm) {
       const c = (mm[2] || '').toLowerCase();
-      if (!LANGS[c]) return reply(env, ev, [{ type: 'text', text: '🌐 เลือกภาษาปลายทาง:', quickReply: quick() }]);
+      if (!LANGS[c]) return reply(env, ev, [{ type: 'text', text: 'เลือกภาษาปลายทาง:', quickReply: quick() }]);
       await setMode(env, uid, c);
-      return reply(env, ev, [{ type: 'text', text: `🌐 โหมดแปล → ${LANGS[c]}\nพิมพ์ /วิเคราะห์ เพื่อกลับ` + (env.MODES ? '' : '\n(⚠️ ยังไม่ผูก KV MODES — โหมดจะไม่ถูกจำ)'), quickReply: quick() }]);
+      return reply(env, ev, [{ type: 'text', text: `โหมดแปล → ${LANGS[c]}\nพิมพ์ /วิเคราะห์ เพื่อกลับ` + (env.MODES ? '' : '\n( ยังไม่ผูก KV MODES — โหมดจะไม่ถูกจำ)'), quickReply: quick() }]);
     }
   }
   const tr = await getMode(env, uid), parts = [];
@@ -99,7 +114,7 @@ async function handleEvent(env, ev) {
     const out = await gemini(env, CHAT_MODEL, {
       systemInstruction: { parts: [{ text: `You are a professional translator. Translate into ${lang}. If audio, transcribe first. Reply exactly:\nต้นฉบับ: <original>\nแปล: <translation in ${lang}>\nNo commentary.` }] },
       contents: [{ role: 'user', parts }], generationConfig: { temperature: 0.2, maxOutputTokens: 1200 } });
-    return reply(env, ev, [{ type: 'text', text: ('🌐 ' + out).slice(0, 4500), quickReply: quick() }]);
+    return reply(env, ev, [{ type: 'text', text: (' ' + out).slice(0, 4500), quickReply: quick() }]);
   }
   const now = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' });
   const mem = await getMem(env, uid);
@@ -109,7 +124,7 @@ async function handleEvent(env, ev) {
     contents: [...mem.hist.map(h => ({ role: h.r, parts: [{ text: h.t }] })), { role: 'user', parts: [{ text: 'เวลาไทยตอนนี้: ' + now + '\n\nบริบทตลาด:\n' + await context() }, ...parts] }],
     generationConfig: { temperature: 0.4, maxOutputTokens: 1200 } });
   const add = []; out = out.replace(/\[\[\s*จำ\s*:\s*([^\]]+)\]\]/g, (_, x) => { add.push(x.trim()); return ''; }).trim();
-  add.forEach(x => { if (!mem.facts.includes(x)) mem.facts.push(x); }); if (add.length) out += '\n\n🧠 จำไว้แล้วค่ะ: ' + add.join(' · ');
+  add.forEach(x => { if (!mem.facts.includes(x)) mem.facts.push(x); }); if (add.length) out += '\n\nจำไว้แล้วค่ะ: ' + add.join(' · ');
   mem.hist.push({ r: 'user', t: (m.type === 'text' ? m.text : '[' + m.type + ']').slice(0, 400) }, { r: 'model', t: out.slice(0, 600) });
   await setMem(env, uid, mem);
   return reply(env, ev, [{ type: 'text', text: out.slice(0, 4500) }]);

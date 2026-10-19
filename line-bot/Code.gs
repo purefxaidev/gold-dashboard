@@ -28,7 +28,7 @@ var SYSTEM_PROMPT = [
   'ใช้ข้อมูลบริบท (ราคาสด แนวรับแนวต้าน แผนเทรด % ความมั่นใจ AI ค่า EV และข่าว) ที่แนบมาเป็นหลัก ถ้าข้อมูลไม่พอให้บอกตรงๆ',
   'ถ้าผู้ใช้ส่งภาพกราฟ ให้อ่านเทรนด์ แนวรับแนวต้าน และรูปแบบแท่งเทียนจากภาพ ถ้าส่งเสียง ให้ฟังคำถามแล้วตอบ',
   'ทุกครั้งที่แนะนำจุดเข้า ต้องระบุ ฝั่ง (Buy/Sell) จุดเข้า SL และ TP ชัดเจน พร้อมเหตุผลสั้นๆ',
-  'ห้ามรับประกันหรือสัญญาว่าจะได้กำไร ปิดท้ายทุกคำตอบด้วยคำเตือนความเสี่ยงสั้นๆ 1 บรรทัด',
+  'ห้ามใช้อีโมจิ ห้ามรับประกันหรือสัญญาว่าจะได้กำไร ปิดท้ายทุกคำตอบด้วยคำเตือนความเสี่ยงสั้นๆ 1 บรรทัด',
   'ห้ามขอหรือเปิดเผยรหัสผ่าน เลขบัญชี หรือ API key ใดๆ'
 ].join('\n');
 
@@ -67,7 +67,15 @@ function doPost(e) {
   });
   return json_({ ok: true });
 }
-function doGet() { return ContentService.createTextOutput('LINE gold bot OK'); }
+function doGet(e) {
+  var q = (e && e.parameter) || {};
+  if (q.action === 'autotrade') {
+    var sec = prop_('ALERT_SECRET');
+    if (!sec || q.secret !== sec) return json_({ ok: false, error: 'unauthorized' });
+    return json_({ ok: true, enabled: (prop_('AUTO_TRADE') || 'on') === 'on' });
+  }
+  return ContentService.createTextOutput('LINE gold bot OK');
+}
 function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
 
 function handleAlert_(text, wantVoice) {
@@ -97,7 +105,7 @@ function takeMem_(text, m) {
   var add = [];
   text = text.replace(/\[\[\s*จำ\s*:\s*([^\]]+)\]\]/g, function (_, x) { add.push(x.trim()); return ''; }).trim();
   add.forEach(function (x) { if (m.facts.indexOf(x) < 0) m.facts.push(x); });
-  return { text: text + (add.length ? '\n\n🧠 จำไว้แล้วค่ะ: ' + add.join(' · ') : ''), added: add.length };
+  return { text: text + (add.length ? '\n\nจำไว้แล้วค่ะ: ' + add.join(' · ') : ''), added: add.length };
 }
 
 // ===== โหมดแปลภาษา (เก็บต่อผู้ใช้ใน Script Properties) =====
@@ -111,32 +119,41 @@ function setMode_(uid, v) {
 function langQuickReply_() {
   return { items: Object.keys(LANGS).slice(0, 12).map(function (k) {
     return { type: 'action', action: { type: 'message', label: k + ' ' + LANGS[k].split(' ')[0], text: '/แปล ' + k } };
-  }).concat([{ type: 'action', action: { type: 'message', label: '📈 วิเคราะห์ทอง', text: '/วิเคราะห์' } }]) };
+  }).concat([{ type: 'action', action: { type: 'message', label: 'วิเคราะห์ทอง', text: '/วิเคราะห์' } }]) };
 }
 function handleCommand_(ev, t) {
   var uid = ev.source && ev.source.userId, rt = ev.replyToken;
+  // --- เจ้าของ + เปิด/ปิดเทรดอัตโนมัติ ---
+  var so = /^\/ตั้งเจ้าของ\s+(\S+)/.exec(t);
+  if (so && uid) { var okS = prop_('ALERT_SECRET') && so[1] === prop_('ALERT_SECRET');
+    if (okS) PropertiesService.getScriptProperties().setProperty('OWNER_USER_ID', uid);
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: okS ? 'ตั้งคุณเป็นเจ้าของบอทแล้วค่ะ' : 'รหัสไม่ถูกต้องค่ะ' }] }); return true; }
+  if (/^\/(เปิดเทรด|ปิดเทรด)/.test(t)) {
+    if (!uid || uid !== prop_('OWNER_USER_ID')) { lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'คำสั่งนี้ใช้ได้เฉพาะเจ้าของบอทค่ะ' }] }); return true; }
+    var on = /^\/เปิดเทรด/.test(t); PropertiesService.getScriptProperties().setProperty('AUTO_TRADE', on ? 'on' : 'off');
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: on ? 'เปิดเทรดอัตโนมัติแล้วค่ะ (มีผลรอบถัดไป)' : 'ปิดเทรดอัตโนมัติแล้วค่ะ ระบบจะวิเคราะห์และแจ้งเตือนอย่างเดียว' }] }); return true; }
   var mj = /^\/จำ\s+([\s\S]+)/.exec(t);
   if (mj && uid) { var m1 = getMem_(uid); m1.facts.push(mj[1].trim().slice(0, 200)); setMem_(uid, m1);
-    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: '🧠 จำไว้แล้วค่ะ: ' + mj[1].trim() }] }); return true; }
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'จำไว้แล้วค่ะ: ' + mj[1].trim() }] }); return true; }
   if (/^\/ลืม/.test(t) && uid) { PropertiesService.getScriptProperties().deleteProperty('MEM_' + uid);
-    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: '🗑️ ล้างความจำทั้งหมดแล้วค่ะ' }] }); return true; }
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'ล้างความจำทั้งหมดแล้วค่ะ' }] }); return true; }
   if (/^\/ความจำ/.test(t) && uid) { var m2 = getMem_(uid);
-    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: '🧠 ความจำของเลขา\n' + (m2.facts.length ? m2.facts.map(function (x, i) { return (i + 1) + '. ' + x; }).join('\n') : '(ยังไม่มี)') +
-      '\nประวัติแชท: ' + m2.hist.length / 2 + ' รอบล่าสุด\n/จำ ข้อความ = เพิ่ม · /ลืม = ล้างทั้งหมด' }] }); return true; }
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'ความจำของเลขา\n' + (m2.facts.length ? m2.facts.map(function (x, i) { return (i + 1) + '. ' + x; }).join('\n') : '(ยังไม่มี)') +
+      '\nประวัติแชท: ' + m2.hist.length / 2 + 'รอบล่าสุด\n/จำ ข้อความ = เพิ่ม · /ลืม = ล้างทั้งหมด' }] }); return true; }
   if (/^\/(วิเคราะห์|analyst)/i.test(t)) {
     setMode_(uid, '');
-    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: '📈 กลับสู่โหมดวิเคราะห์ทองแล้วค่ะ' }] });
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'กลับสู่โหมดวิเคราะห์ทองแล้วค่ะ' }] });
     return true;
   }
   var mm = /^\/(แปล|translate|tr)\s*([a-z]{2})?/i.exec(t);
   if (mm) {
     var code = (mm[2] || '').toLowerCase();
     if (!LANGS[code]) {
-      lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: '🌐 เลือกภาษาปลายทาง (หรือพิมพ์ /แปล en):', quickReply: langQuickReply_() }] });
+      lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'เลือกภาษาปลายทาง (หรือพิมพ์ /แปล en):', quickReply: langQuickReply_() }] });
     } else {
       setMode_(uid, code);
       lineSend_('reply', { replyToken: rt, messages: [{ type: 'text',
-        text: '🌐 โหมดแปลภาษา → ' + LANGS[code] + '\nส่งข้อความหรือเสียงมาได้เลย · พิมพ์ /วิเคราะห์ เพื่อกลับ', quickReply: langQuickReply_() }] });
+        text: 'โหมดแปลภาษา → ' + LANGS[code] + '\nส่งข้อความหรือเสียงมาได้เลย · พิมพ์ /วิเคราะห์ เพื่อกลับ', quickReply: langQuickReply_() }] });
     }
     return true;
   }
@@ -176,7 +193,7 @@ function handleEvent_(ev) {
   }
   if (trCode) {
     var tr = translate_(parts, trCode);
-    var tm = [{ type: 'text', text: ('🌐 ' + tr.full).slice(0, MAX_REPLY_CHARS), quickReply: langQuickReply_() }];
+    var tm = [{ type: 'text', text: (' ' + tr.full).slice(0, MAX_REPLY_CHARS), quickReply: langQuickReply_() }];
     try { var tv = buildVoiceMessage_(tr.translation, true); if (tv) tm.push(tv); } catch (err) { console.warn('TTS skipped: ' + err); }
     var c2 = lineSend_('reply', { replyToken: ev.replyToken, messages: tm });
     if (c2 === 400 && tm.length > 1) lineSend_('reply', { replyToken: ev.replyToken, messages: [tm[0]] });

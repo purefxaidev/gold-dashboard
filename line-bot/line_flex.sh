@@ -16,7 +16,7 @@ def tx(t,**k): return {"type":"text","text":str(t) if str(t) else "-","wrap":Tru
 def row(k,v,c=None): return {"type":"box","layout":"horizontal","contents":[tx(k,size="sm",color=GR,flex=4),tx(v,size="sm",align="end",weight="bold",flex=6,**({"color":c} if c else {}))]}
 def sep(): return {"type":"separator","margin":"md"}
 def bubble(title,color,body,sub=None,extra_btn=None):
-    hdr=[tx(title,color="#FFFFFF",weight="bold",size="lg")]+([tx(sub,color="#FFFFFFCC",size="xs")] if sub else [])
+    hdr=[tx("PUREGOLD AI",color="#FFFFFFB3",size="xxs",weight="bold"),tx(title,color="#FFFFFF",weight="bold",size="lg")]+([tx(sub,color="#FFFFFFCC",size="xs")] if sub else [])
     btns=([extra_btn] if extra_btn else [])+[{"type":"button","style":"primary","color":"#C9A227","height":"sm","action":{"type":"uri","label":"ดูแดชบอร์ด","uri":DASH}}]
     return {"type":"bubble","header":{"type":"box","layout":"vertical","backgroundColor":color,"contents":hdr,"paddingAll":"14px"},
             "body":{"type":"box","layout":"vertical","spacing":"sm","contents":body},
@@ -29,10 +29,10 @@ if T=="trade":
     if "rr" in d: body.append(row("RR",d["rr"]))
     if "ev" in d: body.append(row("EV",sg(d["ev"])+"R",G if d["ev"]>0 else R))
     if d.get("reason"): body+= [sep(),tx("เหตุผล: "+d["reason"],size="sm")]
-    b=bubble(("🟢 BUY" if buy else "🔴 SELL")+" XAUUSD"+(" (รอ Limit)" if d.get("pending") else ""),c,body,d.get("time"))
+    b=bubble(("BUY" if buy else "SELL")+" XAUUSD"+(" (รอ Limit)" if d.get("pending") else ""),c,body,d.get("time"))
     alt=f'{"BUY" if buy else "SELL"} XAUUSD @{f(d["entry"])} SL {f(d["sl"])} TP {f(d["tp"])}'
 elif T=="close":
-    r=str(d.get("result","manual")).lower(); lab={"tp":"✅ ชน TP","sl":"❌ ชน SL"}.get(r,"✋ ปิดเอง")
+    r=str(d.get("result","manual")).lower(); lab={"tp":"ชน TP (รับกำไร)","sl":"ชน SL (ตัดขาดทุน)"}.get(r,"ปิดเอง")
     pl=d["pl_usc"]; c=G if pl>=0 else R
     body=[row("ฝั่ง",str(d.get("side","")).upper()),row("เข้า → ออก",f"{f(d.get('entry','-'))} → {f(d.get('exit','-'))}"),row("ล็อต",d.get("lot",0.1)),
           row("กำไร/ขาดทุน",sg(pl)+" USC",c),row("จุด",sg(d.get("pl_points",0)),c)]
@@ -40,21 +40,21 @@ elif T=="close":
     b=bubble("ปิดออเดอร์ · "+lab,c,body,d.get("time")); alt=f"ปิดออเดอร์ {lab} {sg(pl)} USC"
 elif T=="hourly":
     up=d.get("trend","").lower() in("up","ขึ้น"); dn=d.get("trend","").lower() in("down","ลง")
-    arrow="⬆️ ขาขึ้น" if up else "⬇️ ขาลง" if dn else "↔️ ไซด์เวย์"; c=G if up else R if dn else B
+    arrow="▲ ขาขึ้น" if up else "▼ ขาลง" if dn else "◆ ไซด์เวย์"; c=G if up else R if dn else B
     body=[{"type":"box","layout":"horizontal","contents":[tx(f(d["price"]),size="xxl",weight="bold",flex=5),tx(arrow+(f' {d["confidence"]}%' if "confidence" in d else ""),size="sm",align="end",gravity="center",color=c,flex=5)]},sep(),tx("แนวต้าน",size="xs",color=R,weight="bold")]
     body+=[row("R"+str(i+1),f(x)) for i,x in enumerate(d.get("resistance",[])[:3])]
     body+=[tx("แนวรับ",size="xs",color=G,weight="bold",margin="md")]+[row("S"+str(i+1),f(x)) for i,x in enumerate(d.get("support",[])[:3])]
     p=d.get("plan")
     if p: body+=[sep(),tx("แผน: "+str(p.get("side","")).upper(),size="sm",weight="bold"),row("เข้า",f(p["entry"])),row("SL",f(p["sl"]),R),row("TP",f(p["tp"]),G)]+([row("EV",sg(p["ev"])+"R")] if "ev" in p else [])
-    if d.get("events"): body+=[sep(),tx("📅 ข่าวถัดไป",size="xs",weight="bold")]+[tx("• "+e,size="xs",color=GR) for e in d["events"][:4]]
-    b=bubble("⏰ สรุปทองรายชั่วโมง",c,body,d.get("time")); alt=f"สรุปทอง {f(d['price'])} {arrow}"
+    if d.get("events"): body+=[sep(),tx("ข่าวถัดไป",size="xs",weight="bold")]+[tx("• "+e,size="xs",color=GR) for e in d["events"][:4]]
+    b=bubble("สรุปทองรายชั่วโมง",c,body,d.get("time")); alt=f"สรุปทอง {f(d['price'])} {arrow}"
 elif T=="news":
     imp=str(d.get("impact","medium")).lower(); ic={"high":R,"medium":"#FB8C00","low":GR}.get(imp,GR); il={"high":"ผลกระทบสูง","medium":"ผลกระทบกลาง","low":"ผลกระทบต่ำ"}.get(imp,imp)
-    eff=str(d.get("effect","")).lower(); el={"up":"⬆️ หนุนทองขึ้น","down":"⬇️ กดดันทองลง"}.get(eff,"↔️ กลางๆ")
+    eff=str(d.get("effect","")).lower(); el={"up":"▲ หนุนทองขึ้น","down":"▼ กดดันทองลง"}.get(eff,"◆ กลางๆ")
     body=[{"type":"box","layout":"horizontal","contents":[{"type":"box","layout":"vertical","backgroundColor":ic,"cornerRadius":"8px","paddingAll":"4px","contents":[tx(il,color="#FFFFFF",size="xs",align="center")],"flex":0},tx(el,size="sm",align="end",weight="bold",color=G if eff=="up" else R if eff=="down" else GR)]},
           tx(d["headline"],weight="bold",size="md",margin="md")]+([tx(d["summary"],size="sm",color=GR)] if d.get("summary") else [])
     btn={"type":"button","style":"secondary","height":"sm","action":{"type":"uri","label":"อ่านข่าว","uri":d["url"]}} if str(d.get("url","")).startswith("https://") else None
-    b=bubble("📰 ข่าวทองคำ",ic,body,d.get("time"),btn); alt="ข่าวทอง: "+d["headline"]
+    b=bubble("ข่าวทองคำ",ic,body,d.get("time"),btn); alt="ข่าวทอง: "+d["headline"]
 elif T=="portfolio":
     net=d.get("today_usc",0); c=G if net>=0 else R
     body=[tx("กำไร/ขาดทุนวันนี้",size="xs",color=GR),tx(sg(net)+" USC",size="xxl",weight="bold",color=c),
@@ -62,14 +62,14 @@ elif T=="portfolio":
     if "balance" in d or "equity" in d:
         body+=[sep()]+([row("Balance",f(d["balance"])+" USC")] if "balance" in d else [])+([row("Equity",f(d["equity"])+" USC")] if "equity" in d else [])
     op=d.get("open",[])
-    body+=[sep(),tx(f"📂 ไม้ที่เปิดอยู่ ({len(op)})",size="sm",weight="bold")]
-    body+=[row(f'{"🟢" if str(o["side"]).lower()=="buy" else "🔴"} {str(o["side"]).upper()} {o.get("lot",0.1)} @{f(o["entry"])}',sg(o.get("pl_usc",0))+" USC",G if o.get("pl_usc",0)>=0 else R) for o in op[:8]] or [tx("ไม่มี",size="xs",color=GR)]
+    body+=[sep(),tx(f"ไม้ที่เปิดอยู่ ({len(op)})",size="sm",weight="bold")]
+    body+=[row(f'{str(o["side"]).upper()} {o.get("lot",0.1)} @{f(o["entry"])}',sg(o.get("pl_usc",0))+" USC",G if o.get("pl_usc",0)>=0 else R) for o in op[:8]] or [tx("ไม่มี",size="xs",color=GR)]
     pe=d.get("pending",[])
-    body+=[sep(),tx(f"⏳ ออเดอร์รอ ({len(pe)})",size="sm",weight="bold")]
+    body+=[sep(),tx(f"ออเดอร์รอ ({len(pe)})",size="sm",weight="bold")]
     body+=[row(f'{o.get("type","")} {o.get("lot",0.1)} @{f(o["entry"])}',f'SL {f(o.get("sl","-"))} · TP {f(o.get("tp","-"))}') for o in pe[:6]] or [tx("ไม่มี",size="xs",color=GR)]
-    b=bubble("💼 สรุปพอร์ต",c,body,d.get("time")+" · ส่วนตัว" if d.get("time") else "ข้อมูลส่วนตัว"); alt=f"พอร์ตวันนี้ {sg(net)} USC · เปิด {len(op)} ไม้"
+    b=bubble("สรุปพอร์ต",c,body,d.get("time")+" · ส่วนตัว" if d.get("time") else "ข้อมูลส่วนตัว"); alt=f"พอร์ตวันนี้ {sg(net)} USC · เปิด {len(op)} ไม้"
 elif T=="status":
-    lv=str(d.get("level","info")).lower(); c={"warning":"#FB8C00","error":R}.get(lv,B); t={"warning":"⚠️ แจ้งเตือน","error":"❌ ปัญหา"}.get(lv,"ℹ️ สถานะระบบ")
+    lv=str(d.get("level","info")).lower(); c={"warning":"#FB8C00","error":R}.get(lv,B); t={"warning":"แจ้งเตือน","error":"ปัญหา"}.get(lv,"ℹ สถานะระบบ")
     body=[tx(d["text"],size="md")]+[row(k,v) for k,v in (d.get("rows") or {}).items()]
     b=bubble(t,c,body,d.get("time")); alt=t+": "+d["text"]
 else: sys.exit("unknown type")

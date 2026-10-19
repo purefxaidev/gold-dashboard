@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07080d">
 <meta name="referrer" content="no-referrer">
-<title>GOLD AI · วิเคราะห์ทองคำ XAUUSD</title>
+<title>PUREGOLD AI · วิเคราะห์ทองคำ XAUUSD</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#0a0b10">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&family=Noto+Sans+Thai:wght@300;400;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -133,30 +134,47 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
 .zp{position:absolute;top:-6px;width:4px;height:26px;background:#ffd36b;box-shadow:0 0 12px #ffd36b;border-radius:2px;transform:translateX(-2px);transition:left 1s}.zp span{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;color:#ffd36b}
 .zl{display:flex;justify-content:space-between;font-size:11.5px}
 @media(max-width:600px){.updb{top:auto;bottom:8px;left:8px;transform:none;font-size:10.5px}}
+.atp{display:inline-flex;align-items:center;gap:8px;font-size:12px;padding:4px 10px;border-radius:999px;background:#2a2a2a;color:#aaa;margin-bottom:10px}.atp.on{background:#1db95422;color:#5ee08f;border:1px solid #1db95455}.dotp{width:8px;height:8px;border-radius:50%;background:currentColor}.atp.on .dotp{animation:pulse 1.6s infinite}
 .legend{margin-top:10px;font-size:12.5px;color:#bbb;line-height:1.7}.legend summary{cursor:pointer;color:#f5c542}
 #lv3d{position:relative;height:300px;border-radius:14px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#1a1405,#06070a)}
 #lv3d canvas{display:block;width:100%!important;height:100%!important;touch-action:pan-y}
 @media(max-width:600px){#lv3d{height:240px}}
+.pglogo .sweep{animation:pgsweep 3.2s linear infinite}@keyframes pgsweep{from{transform:skewX(-20deg) translateX(0)}to{transform:skewX(-20deg) translateX(130px)}}
+.pglogo{filter:drop-shadow(0 0 8px #f5c54288)}
+.pgword{font-weight:900;font-size:20px;letter-spacing:3px;background:linear-gradient(90deg,#a8740a,#fff4c2,#f5c542,#a8740a);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.card,.m{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 <canvas id="fx" aria-hidden="true" style="position:fixed;inset:0;z-index:-1;pointer-events:none"></canvas>
 <div id="liveUpd" class="updb">กำลังโหลดข้อมูล…</div>
-<header><div class="wrap"><div class="logo" style="display:flex;align-items:center;gap:8px"><svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".5" stop-color="#f5c542"/><stop offset="1" stop-color="#b8860b"/></linearGradient></defs><g class="lgspin"><circle cx="32" cy="32" r="29" fill="none" stroke="url(#lg)" stroke-width="3" stroke-dasharray="12 6"/></g><path d="M14 42 L22 24 H42 L50 42 Z" fill="url(#lg)"/><path d="M22 24 H42 L38 30 H26 Z" fill="#fff8" class="lgshine"/><text x="32" y="39" text-anchor="middle" font-size="9" font-weight="800" fill="#5a3d00">AU</text></svg><span>เลขาทอง <b style="color:var(--gold,#f5c542)">Gold AI</b> · XAUUSD</span></div><div class="live"><span class="dot"></span><span id="liveTxt">กำลังเชื่อมต่อ…</span></div></div></header>
+<header><div class="wrap"><div class="logo" style="display:flex;align-items:center;gap:10px"><svg class="pglogo" viewBox="0 0 64 64" width="38" height="38" aria-hidden="true">
+<defs>
+ <linearGradient id="pgH" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff4c2"/><stop offset=".45" stop-color="#f5c542"/><stop offset="1" stop-color="#a8740a"/></linearGradient>
+ <linearGradient id="shH" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+ <clipPath id="cpH"><circle cx="32" cy="32" r="29"/></clipPath>
+ <filter id="glH" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<circle cx="32" cy="32" r="30" fill="#120d02"/>
+<circle cx="32" cy="32" r="28.5" fill="none" stroke="url(#pgH)" stroke-width="3" filter="url(#glH)"/>
+<circle cx="32" cy="32" r="24" fill="none" stroke="#f5c54255" stroke-width="1" stroke-dasharray="2 3"/>
+<path d="M24 47V17h11.5c6.6 0 10.5 3.6 10.5 9.4S42.1 36 35.5 36H30.5v11z M30.5 30.6h4.6c3 0 4.6-1.5 4.6-4.2s-1.6-4.1-4.6-4.1h-4.6z" fill="url(#pgH)" fill-rule="evenodd" filter="url(#glH)"/>
+<g clip-path="url(#cpH)"><rect class="sweep" x="-40" y="0" width="24" height="64" fill="url(#shH)" transform="skewX(-20)"></rect></g>
+</svg>
+<div style="line-height:1"><div class="pgword">PUREGOLD</div><div style="font-size:10.5px;letter-spacing:2px;color:#c9a227;margin-top:3px">AI · XAUUSD</div></div></div><div class="live"><span class="dot"></span><span id="liveTxt">กำลังเชื่อมต่อ…</span></div></div></header>
 <main class="wrap grid">
 <section class="card c12" id="chartTop">
- <h2>📈 กราฟ XAUUSD <small>TradingView · OANDA</small></h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg> กราฟ XAUUSD <small>TradingView · OANDA</small></h2>
  <div class="tfs" id="tfs"></div>
  <div id="tv"></div>
 </section>
 <section class="card c8">
- <h2>⚡ ราคาทองโลกแบบเรียลไทม์ <small id="pxSrc">—</small></h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg> ราคาทองโลกแบบเรียลไทม์ <small id="pxSrc">—</small></h2>
  <div class="hero"><div class="price" id="px">—</div><div><div class="chg" id="pxChg">&nbsp;</div><div class="mut" style="font-size:12px" id="pxTime"></div></div><div id="biasBadge"></div></div>
  <div class="bias" id="bias"></div>
  <div class="ind mono" id="ind"></div>
  <div id="reco" class="reco"></div>
- <details class="legend"><summary>❓ คำศัพท์ง่ายๆ</summary>
+ <details class="legend"><summary><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg> คำศัพท์ง่ายๆ</summary>
   <b>SL (Stop Loss)</b> = จุดตัดขาดทุน ถ้าราคาไปผิดทางถึงตรงนี้ ระบบปิดให้อัตโนมัติ · <b>TP (Take Profit)</b> = จุดเก็บกำไร ·
   <b>RR</b> = กำไรที่หวังเทียบกับความเสี่ยง เช่น 1.6 คือเสี่ยง 1 ได้ 1.6 · <b>EV</b> = ผลตอบแทนคาดหวังต่อไม้ (หน่วย R) ถ้าเป็นบวกแปลว่าคุ้มเข้าในระยะยาว ·
   <b>ความมั่นใจ</b> = โอกาสที่ AI ประเมินว่าราคาจะไปทางนั้น (ไม่ใช่การรับประกัน)
@@ -164,7 +182,7 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
 </section>
 
 <section class="card c4">
- <h2>🧠 ความมั่นใจ AI (ระยะสั้น)</h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg> ความมั่นใจ AI (ระยะสั้น)</h2>
  <div class="gl"><span class="up" id="upPct">–</span><span class="dn" id="dnPct">–</span></div>
  <div class="gauge"><div class="g-up" id="gUp"></div><div class="g-dn" id="gDn"></div></div>
  <div class="mut" style="display:flex;justify-content:space-between;font-size:12px"><span>▲ โอกาสขึ้น</span><span>โอกาสลง ▼</span></div>
@@ -173,12 +191,12 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
 </section>
 
 <section class="card c12" id="card3d">
- <h2>🌐 แผนที่ราคา 3 มิติ <small>ลูกทอง = ราคาตอนนี้ · เขียว = แนวรับ · แดง = แนวต้าน · ลากเพื่อหมุน</small></h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></svg> แผนที่ราคา 3 มิติ <small>ลูกทอง = ราคาตอนนี้ · เขียว = แนวรับ · แดง = แนวต้าน · ลากเพื่อหมุน</small></h2>
  <div id="lv3d"></div>
 </section>
 
 <section class="card c12" id="pnlCard">
- <h2>💼 พอร์ต กำไร/ขาดทุน <small id="pnlNote"></small></h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16V7"/><circle cx="16" cy="14" r="1.5"/></svg> พอร์ต กำไร/ขาดทุน <small id="pnlNote"></small></h2>
  <div id="pnlSum" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px"></div>
  <svg id="pnlChart" viewBox="0 0 600 140" preserveAspectRatio="none" style="width:100%;height:140px;margin:10px 0;background:#0b0d12;border-radius:12px"></svg>
  <div id="pnlTr" style="overflow:auto"></div>
@@ -187,38 +205,38 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
 
 
 <section class="card c12">
- <h2>🇹🇭 ราคาทองไทยวันนี้ (บาทละ) <small id="tgSrc">ฮั่วเซ่งเฮง · อัปเดตทุก 30 วินาที</small></h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/></svg> ราคาทองไทยวันนี้ (บาทละ) <small id="tgSrc">ฮั่วเซ่งเฮง · อัปเดตทุก 30 วินาที</small></h2>
  <div class="tg" id="tg"><div class="mut">กำลังโหลด…</div></div>
 </section>
 
 <section class="card c4">
- <h2>🎯 แนวรับ · แนวต้าน</h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> แนวรับ · แนวต้าน</h2>
  <div class="ladder" id="ladder"></div>
 </section>
 
 <section class="card c8">
- <h2>📐 จุดเข้า · จุดออก + โมเดลตัดสินใจ EV</h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/></svg> จุดเข้า · จุดออก + โมเดลตัดสินใจ EV</h2>
  <div class="formula">EV(R) = p × RR − (1 − p) &nbsp;·&nbsp; RR = ระยะ TP ÷ ระยะ SL &nbsp;·&nbsp; เข้าเมื่อ EV &gt; 0</div>
  <div class="plans" id="evPlans"></div>
  <div class="meth" id="evMeth"></div>
- <h2 style="margin-top:16px">📋 แผนจากระบบ</h2>
+ <h2 style="margin-top:16px"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg> แผนจากระบบ</h2>
  <div class="plans" id="plans"></div>
 </section>
 
 <section class="card c12">
- <h2>📰 ข่าววิเคราะห์ทองคำ</h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0V11h4"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/></svg> ข่าววิเคราะห์ทองคำ</h2>
  <ul class="news" id="news"></ul>
 </section>
 
 <section class="card c5" id="chatCard">
- <h2>💬 คุยกับกราฟ <small id="modelLbl"></small><button class="btn pri" id="callBtn" style="margin-left:8px;padding:5px 12px;background:linear-gradient(90deg,#1db954,#0bd3a8);color:#fff">📞 คุยสด</button><button class="btn" id="memBtn" style="margin-left:8px;padding:5px 10px">🧠 ความจำ</button><button class="btn" id="setBtn" style="margin-left:8px;padding:5px 10px">⚙️ ตั้งค่า</button></h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> คุยกับกราฟ <small id="modelLbl"></small><button class="btn pri" id="callBtn" style="margin-left:8px;padding:5px 12px;background:linear-gradient(90deg,#1db954,#0bd3a8);color:#fff"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> คุยสด</button><button class="btn" id="memBtn" style="margin-left:8px;padding:5px 10px"> ความจำ</button><button class="btn" id="setBtn" style="margin-left:8px;padding:5px 10px">ตั้งค่า</button></h2>
  <div class="set" id="mem">
-  <b>🧠 ความจำของเลขา</b> <small>(เก็บในเบราว์เซอร์นี้เท่านั้น ไม่ขึ้นเว็บ)</small>
+  <b> ความจำของเลขา</b> <small>(เก็บในเบราว์เซอร์นี้เท่านั้น ไม่ขึ้นเว็บ)</small>
   <div id="memFacts"></div>
   <div style="display:flex;gap:6px"><input id="memNew" placeholder="เพิ่มสิ่งที่ให้จำ เช่น ชอบเทรดช่วง London" style="flex:1"><button class="btn pri" id="memAdd">+ จำ</button></div>
   <small>บันทึกสรุปบทสนทนา (แก้ไขได้)</small>
   <textarea id="memNotes" rows="4" style="width:100%;box-sizing:border-box;background:#0b0d12;color:#eee;border:1px solid #333;border-radius:10px;padding:8px"></textarea>
-  <div style="display:flex;gap:8px"><button class="btn" id="memSave">💾 บันทึก</button><button class="btn" id="memClear" style="color:#ff7b7b">🗑️ ล้างความจำ</button></div>
+  <div style="display:flex;gap:8px"><button class="btn" id="memSave"> บันทึก</button><button class="btn" id="memClear" style="color:#ff7b7b"> ล้างความจำ</button></div>
  </div>
  <div class="set" id="set">
   <b>Gemini API key</b>
@@ -229,17 +247,17 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
    <option value="gemini-flash-latest">gemini-flash-latest</option>
    <option value="gemini-2.5-flash">gemini-2.5-flash</option>
   </select>
-  <div style="display:flex;gap:8px"><button class="btn pri" id="saveKey">บันทึก</button><button class="btn" id="delKey">🗑️ ลบ key</button></div>
-  <div class="warn">🔒 key จะถูกเก็บไว้ <b>เฉพาะในเบราว์เซอร์ของเครื่องนี้</b> (localStorage) เท่านั้น ไม่ถูกส่งขึ้น GitHub หรือเซิร์ฟเวอร์อื่น ส่งตรงไปที่ Google เท่านั้น · อย่าใช้บนเครื่องสาธารณะ · กด “ลบ key” เมื่อเลิกใช้ · หากเคยแปะ key ในแชทหรือที่สาธารณะ ให้ลบแล้วสร้างใหม่ที่ Google AI Studio</div>
+  <div style="display:flex;gap:8px"><button class="btn pri" id="saveKey">บันทึก</button><button class="btn" id="delKey"> ลบ key</button></div>
+  <div class="warn"> key จะถูกเก็บไว้ <b>เฉพาะในเบราว์เซอร์ของเครื่องนี้</b> (localStorage) เท่านั้น ไม่ถูกส่งขึ้น GitHub หรือเซิร์ฟเวอร์อื่น ส่งตรงไปที่ Google เท่านั้น · อย่าใช้บนเครื่องสาธารณะ · กด “ลบ key” เมื่อเลิกใช้ · หากเคยแปะ key ในแชทหรือที่สาธารณะ ให้ลบแล้วสร้างใหม่ที่ Google AI Studio</div>
  </div>
  <div class="modebar" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
-  <button class="btn pri" id="mAna" style="padding:5px 10px">📈 วิเคราะห์ทอง</button><button class="btn" id="mTr" style="padding:5px 10px">🌐 แปลภาษา</button>
+  <button class="btn pri" id="mAna" style="padding:5px 10px"> วิเคราะห์ทอง</button><button class="btn" id="mTr" style="padding:5px 10px"> แปลภาษา</button>
   <select id="lang" style="display:none"><option value="en">English</option><option value="th">ไทย</option><option value="zh">中文</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="vi">Tiếng Việt</option><option value="lo">ລາວ</option><option value="my">မြန်မာ</option><option value="fr">Français</option><option value="de">Deutsch</option></select>
  </div>
  <div class="chat">
   <div class="msgs" id="msgs"></div>
   <div class="sugg" id="sugg"></div>
-  <div class="inrow"><textarea id="q" placeholder="ถามเรื่องกราฟทอง เช่น ตอนนี้ควร Buy หรือ Sell?"></textarea><button class="btn" id="mic" title="พูด">🎤</button><button class="btn pri" id="send">ส่ง</button></div>
+  <div class="inrow"><textarea id="q" placeholder="ถามเรื่องกราฟทอง เช่น ตอนนี้ควร Buy หรือ Sell?"></textarea><button class="btn" id="mic" title="พูด"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></svg></button><button class="btn pri" id="send">ส่ง</button></div>
  </div>
 </section>
 
@@ -247,16 +265,17 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
 <footer><div id="upd"></div><div id="note"></div><div>ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน · การเทรดมีความเสี่ยงสูง อาจขาดทุนเกินที่คาด</div></footer>
 <div id="callOv" style="display:none;position:fixed;inset:0;z-index:999;background:#000b;backdrop-filter:blur(8px)">
  <div style="position:absolute;inset:max(0px,4vh) max(0px,calc(50% - 340px));border:1px solid #f5c54255;border-radius:18px;overflow:hidden;box-shadow:0 0 50px #f5c54233;background:#07080c">
-  <button id="callX" aria-label="ปิด" style="position:absolute;top:8px;right:10px;z-index:2;background:#e53935;color:#fff;border:0;border-radius:50%;width:36px;height:36px;font-size:18px">✕</button>
+  <button id="callX" aria-label="ปิด" style="position:absolute;top:8px;right:10px;z-index:2;background:#e53935;color:#fff;border:0;border-radius:50%;width:36px;height:36px;font-size:18px"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
   <iframe id="callFr" title="คุยสดกับ AI" allow="microphone; autoplay" style="width:100%;height:100%;border:0"></iframe>
  </div>
 </div>
-<button class="fab" style="bottom:86px;background:#1db954" onclick="openCall()" aria-label="คุยสด">📞</button>
-<button class="fab" onclick="document.getElementById('chatCard').scrollIntoView()" aria-label="แชท">💬</button>
+<button class="fab" style="bottom:86px;background:#1db954" onclick="openCall()" aria-label="คุยสด"><svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button>
+<button class="fab" onclick="document.getElementById('chatCard').scrollIntoView()" aria-label="แชท"><svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
 
 <script>
+const ICON_MIC = `<svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></svg>`, ICON_STOP = `<svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
 "use strict";
-let D = {"updated": "19 ต.ค. 2026 11:55 น. (เวลาไทย)", "price": "~4,183 (สปอต)", "bias": "กลางๆ ระยะสั้น · รายวันยังอยู่ใต้ MA หลัก (ขาลง) แต่ข่าว Fed ผ่อนคลายหนุนเด้งสั้น · ราคาอยู่กลางกรอบ 4,162–4,191 ช่วงเอเชีย ยังไม่เข้าไม้ใหม่", "indicators": "รายวัน (ฟิวเจอร์ส): MA20 4,205 · MA50 4,370 · RSI14 ~52 · ATR14 ~70 | 1 ชม.: RSI ~54 · ATR ~17", "resistance": ["4,191 (ยอดเช้านี้)", "4,203 (ยอด 16 ต.ค.)", "4,225 (ยอด 12 ต.ค.)"], "support": ["4,162 (โลว์เช้านี้)", "4,151 (โลว์ 16 ต.ค.)", "4,104 / 4,075 (โลว์ 14 และ 7 ต.ค.)"], "plans": [["☑️ ปิดแล้ววันนี้: BUY 8 ไม้ (ไม้ละ 0.1)", "ปิดทั้งหมดก่อน 11:45 น.", "สุทธิ +120.5 USC", "ตอนนี้ไม่มีไม้เปิด"], ["⏳ รอ: SELL LIMIT 0.1 ล็อต", "เข้า 4,203", "SL 4,228", "TP 4,163", "R:R ≈ 1.6"], ["👀 แผนสำรอง: BUY ที่แนวรับ", "โซน 4,163", "SL 4,145", "TP 4,191", "รอแท่ง M5/M15 กลับตัวก่อน"]], "news": [["คืนนี้สหรัฐมีแค่ NAHB (ผลกระทบต่ำ) · Fed เข้าช่วงงดให้ความเห็น ประชุม 27–28 ต.ค. ตลาดให้โอกาสคงดอกเบี้ย ~84%", "https://www.tradingview.com/news/te_news:592937:0-gold-rises-as-fed-rate-hike-bets-ease/"], ["Warsh ไม่ส่งสัญญาณขึ้นดอกเบี้ย ต.ค. โอกาสขึ้นดอกเบี้ยเดือนนี้ลดเหลือ <20% ทองเด้ง", "https://www.investing.com/news/commodities-news/gold-rises-as-warsh-remarks-curb-fed-hike-bets-4956185"], ["ตลาดยังให้โอกาส ~92% ขึ้นดอกเบี้ย ธ.ค. ราคายังอยู่ใต้ MA หลัก ภาพรายวันยังเป็นขาลง", "https://www.fxstreet.com/news/gold-gains-ground-above-4-150-as-fed-avoids-policy-signals-geopolitical-risks-stay-in-focus-202610190129"], ["Bond yield ลดลง + ความเสี่ยงช่องแคบฮอร์มุซ/หุ้นเทคร่วง หนุนทองระยะสั้น", "https://www.cnbctv18.com/market/commodities/gold-silver-prices-edge-high-what-could-drive-rates-this-week-20014589.htm"]], "note": "ระดับราคาเป็นราคาสปอต · เทรดสั้นไม้ละ 0.1 ล็อต มี SL/TP ทุกไม้ · ไม่ใช่คำแนะนำการลงทุน รับประกันกำไรไม่ได้", "ai_up_pct": 47, "ai_down_pct": 53, "ai_method": "ให้คะแนนจากปัจจัย: เริ่ม 50/50 แล้วบวก/ลบตามน้ำหนักของอินดิเคเตอร์และข่าว (ราคาใต้ MA50 −8, ใต้ MA20 −5, โอกาสขึ้นดอกเบี้ยก่อนสิ้นปี −5, Warsh ผ่อนคลาย/ตลาดคาดคง ต.ค. +6, Yield ลง/ความเสี่ยงภูมิรัฐศาสตร์ +5, ETF ไหลเข้า 13 สัปดาห์ +2, RSI 1 ชม. กลางๆ +2) = ขึ้น 47% / ลง 53% · เป็นการประเมิน ไม่ใช่ความแน่นอน", "ai_reasons": [["down", "กราฟรายวันยังอยู่ใต้ MA20 (4,205) และ MA50 (4,370) แนวโน้มหลักยังเป็นขาลง"], ["down", "ตลาดยังมองว่า Fed มีโอกาสขึ้นดอกเบี้ยอีกครั้งก่อนสิ้นปี กดดันทอง"], ["up", "Warsh ไม่ส่งสัญญาณขึ้นดอกเบี้ยเดือน ต.ค. หนุนการเด้งระยะสั้น"], ["up", "Bond yield ลดลง + ความเสี่ยงช่องแคบฮอร์มุซ/หุ้นเทคร่วง หนุนทองเป็นสินทรัพย์ปลอดภัย"], ["up", "กองทุน ETF ทองคำมีเงินไหลเข้าต่อเนื่อง 13 สัปดาห์"], ["neutral", "RSI 1 ชม. กลางๆ ราคาอยู่กลางกรอบ 4,162–4,191 ช่วงตลาดเอเชีย ไม่ผ่านเช็กลิสต์ข้อ 2 จึงยังไม่เข้าไม้ใหม่"]], "ev_plans": [{"name": "SELL LIMIT 4,203", "side": "sell", "entry": 4203, "sl": 4228, "tp": 4163, "p_win": 0.45, "status": "ตั้งรอไว้ที่แนวต้าน 4,203", "rr": 1.6, "ev": 0.17, "breakeven": 0.385, "decision": "เข้า"}, {"name": "BUY ที่แนวรับ 4,163 (แผนสำรอง)", "side": "buy", "entry": 4163, "sl": 4145, "tp": 4191, "p_win": 0.45, "status": "รอสัญญาณกลับตัว M5/M15 ก่อนเข้า", "rr": 1.56, "ev": 0.15, "breakeven": 0.391, "decision": "เข้า"}], "ev_method": "p_win ประเมินจากระยะ SL/TP (random walk: p≈ระยะSL÷(ระยะSL+ระยะTP)) แล้วปรับตามความน่าจะเป็นขึ้น/ลงของ AI และตำแหน่งแนวรับแนวต้าน", "pnl": {"today_usc": 120.5, "today_points": null, "win_rate": null, "trade_count": 8, "open_count": 0, "mark_price": 4183.9, "note": "ปิดครบทุกไม้แล้ว (ปิดเองราว 11:44 น.) · บัญชีเซ็นต์: 0.1 ล็อต ราคาขยับ 1 ดอลลาร์ = 10 USC", "pending": [{"type": "Sell Limit", "lot": 0.1, "entry": 4203, "sl": 4228, "tp": 4163}], "trades": []}, "price_num": 4183.0, "res_nums": [4191.0, 4203.0, 4225.0], "sup_nums": [4162.0, 4151.0, 4104.0], "built": "2026-10-19 11:58"};
+let D = {"updated": "19 ต.ค. 2026 11:55 น. (เวลาไทย)", "price": "~4,183 (สปอต)", "bias": "กลางๆ ระยะสั้น · รายวันยังอยู่ใต้ MA หลัก (ขาลง) แต่ข่าว Fed ผ่อนคลายหนุนเด้งสั้น · ราคาอยู่กลางกรอบ 4,162–4,191 ช่วงเอเชีย ยังไม่เข้าไม้ใหม่", "indicators": "รายวัน (ฟิวเจอร์ส): MA20 4,205 · MA50 4,370 · RSI14 ~52 · ATR14 ~70 | 1 ชม.: RSI ~54 · ATR ~17", "resistance": ["4,191 (ยอดเช้านี้)", "4,203 (ยอด 16 ต.ค.)", "4,225 (ยอด 12 ต.ค.)"], "support": ["4,162 (โลว์เช้านี้)", "4,151 (โลว์ 16 ต.ค.)", "4,104 / 4,075 (โลว์ 14 และ 7 ต.ค.)"], "plans": [["☑️ ปิดแล้ววันนี้: BUY 8 ไม้ (ไม้ละ 0.1)", "ปิดทั้งหมดก่อน 11:45 น.", "สุทธิ +120.5 USC", "ตอนนี้ไม่มีไม้เปิด"], ["⏳ รอ: SELL LIMIT 0.1 ล็อต", "เข้า 4,203", "SL 4,228", "TP 4,163", "R:R ≈ 1.6"], ["👀 แผนสำรอง: BUY ที่แนวรับ", "โซน 4,163", "SL 4,145", "TP 4,191", "รอแท่ง M5/M15 กลับตัวก่อน"]], "news": [["คืนนี้สหรัฐมีแค่ NAHB (ผลกระทบต่ำ) · Fed เข้าช่วงงดให้ความเห็น ประชุม 27–28 ต.ค. ตลาดให้โอกาสคงดอกเบี้ย ~84%", "https://www.tradingview.com/news/te_news:592937:0-gold-rises-as-fed-rate-hike-bets-ease/"], ["Warsh ไม่ส่งสัญญาณขึ้นดอกเบี้ย ต.ค. โอกาสขึ้นดอกเบี้ยเดือนนี้ลดเหลือ <20% ทองเด้ง", "https://www.investing.com/news/commodities-news/gold-rises-as-warsh-remarks-curb-fed-hike-bets-4956185"], ["ตลาดยังให้โอกาส ~92% ขึ้นดอกเบี้ย ธ.ค. ราคายังอยู่ใต้ MA หลัก ภาพรายวันยังเป็นขาลง", "https://www.fxstreet.com/news/gold-gains-ground-above-4-150-as-fed-avoids-policy-signals-geopolitical-risks-stay-in-focus-202610190129"], ["Bond yield ลดลง + ความเสี่ยงช่องแคบฮอร์มุซ/หุ้นเทคร่วง หนุนทองระยะสั้น", "https://www.cnbctv18.com/market/commodities/gold-silver-prices-edge-high-what-could-drive-rates-this-week-20014589.htm"]], "note": "ระดับราคาเป็นราคาสปอต · เทรดสั้นไม้ละ 0.1 ล็อต มี SL/TP ทุกไม้ · ไม่ใช่คำแนะนำการลงทุน รับประกันกำไรไม่ได้", "ai_up_pct": 47, "ai_down_pct": 53, "ai_method": "ให้คะแนนจากปัจจัย: เริ่ม 50/50 แล้วบวก/ลบตามน้ำหนักของอินดิเคเตอร์และข่าว (ราคาใต้ MA50 −8, ใต้ MA20 −5, โอกาสขึ้นดอกเบี้ยก่อนสิ้นปี −5, Warsh ผ่อนคลาย/ตลาดคาดคง ต.ค. +6, Yield ลง/ความเสี่ยงภูมิรัฐศาสตร์ +5, ETF ไหลเข้า 13 สัปดาห์ +2, RSI 1 ชม. กลางๆ +2) = ขึ้น 47% / ลง 53% · เป็นการประเมิน ไม่ใช่ความแน่นอน", "ai_reasons": [["down", "กราฟรายวันยังอยู่ใต้ MA20 (4,205) และ MA50 (4,370) แนวโน้มหลักยังเป็นขาลง"], ["down", "ตลาดยังมองว่า Fed มีโอกาสขึ้นดอกเบี้ยอีกครั้งก่อนสิ้นปี กดดันทอง"], ["up", "Warsh ไม่ส่งสัญญาณขึ้นดอกเบี้ยเดือน ต.ค. หนุนการเด้งระยะสั้น"], ["up", "Bond yield ลดลง + ความเสี่ยงช่องแคบฮอร์มุซ/หุ้นเทคร่วง หนุนทองเป็นสินทรัพย์ปลอดภัย"], ["up", "กองทุน ETF ทองคำมีเงินไหลเข้าต่อเนื่อง 13 สัปดาห์"], ["neutral", "RSI 1 ชม. กลางๆ ราคาอยู่กลางกรอบ 4,162–4,191 ช่วงตลาดเอเชีย ไม่ผ่านเช็กลิสต์ข้อ 2 จึงยังไม่เข้าไม้ใหม่"]], "ev_plans": [{"name": "SELL LIMIT 4,203", "side": "sell", "entry": 4203, "sl": 4228, "tp": 4163, "p_win": 0.45, "status": "ตั้งรอไว้ที่แนวต้าน 4,203", "rr": 1.6, "ev": 0.17, "breakeven": 0.385, "decision": "เข้า"}, {"name": "BUY ที่แนวรับ 4,163 (แผนสำรอง)", "side": "buy", "entry": 4163, "sl": 4145, "tp": 4191, "p_win": 0.45, "status": "รอสัญญาณกลับตัว M5/M15 ก่อนเข้า", "rr": 1.56, "ev": 0.15, "breakeven": 0.391, "decision": "เข้า"}], "ev_method": "p_win ประเมินจากระยะ SL/TP (random walk: p≈ระยะSL÷(ระยะSL+ระยะTP)) แล้วปรับตามความน่าจะเป็นขึ้น/ลงของ AI และตำแหน่งแนวรับแนวต้าน", "pnl": {"today_usc": 120.5, "today_points": null, "win_rate": null, "trade_count": 8, "open_count": 0, "mark_price": 4183.9, "note": "ปิดครบทุกไม้แล้ว (ปิดเองราว 11:44 น.) · บัญชีเซ็นต์: 0.1 ล็อต ราคาขยับ 1 ดอลลาร์ = 10 USC", "pending": [{"type": "Sell Limit", "lot": 0.1, "entry": 4203, "sl": 4228, "tp": 4163}], "trades": []}, "auto_trade": {"enabled": true, "interval": "30 นาที", "lot": 0.1}, "price_num": 4183.0, "res_nums": [4191.0, 4203.0, 4225.0], "sup_nums": [4162.0, 4151.0, 4104.0], "built": "2026-10-19 12:01"};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt = (n, d = 2) => n == null || isNaN(n) ? "—" : Number(n).toLocaleString("en-US", {minimumFractionDigits: d, maximumFractionDigits: d});
@@ -283,7 +302,7 @@ function render() {
     <b>${p.side === "buy" ? '<span class="up">▲</span>' : '<span class="dn">▼</span>'} ${esc(p.name)}</b>
     <div class="kv"><span class="chip">เข้า ${fmt(p.entry, 0)}</span><span class="chip dn">SL ${fmt(p.sl, 0)}</span><span class="chip up">TP ${fmt(p.tp, 0)}</span></div>
     <div class="ev"><div><small>โอกาสชนะ p</small><span>${Math.round(p.p_win * 100)}%</span></div><div><small>RR</small><span>${fmt(p.rr)}</span></div><div><small>EV (R)</small><span class="${p.ev > 0 ? "up" : "dn"}">${p.ev > 0 ? "+" : ""}${fmt(p.ev)}</span></div></div>
-    <div class="dec"><span class="mut">ต้องชนะ ≥ ${Math.round(p.breakeven * 100)}% ถึงคุ้ม · ${esc(p.status || "")}</span><span class="badge ${p.ev > 0 ? "go" : "wait"}">${p.ev > 0 ? "✅ เข้า" : "⏸ รอ"}</span></div></div>`).join("") || '<div class="mut">ยังไม่มีแผน</div>';
+    <div class="dec"><span class="mut">ต้องชนะ ≥ ${Math.round(p.breakeven * 100)}% ถึงคุ้ม · ${esc(p.status || "")}</span><span class="badge ${p.ev > 0 ? "go" : "wait"}">${p.ev > 0 ? "เข้า" : "รอ"}</span></div></div>`).join("") || '<div class="mut">ยังไม่มีแผน</div>';
   $("evMeth").textContent = D.ev_method ? "ที่มาของ p: " + D.ev_method : "";
   $("plans").innerHTML = (D.plans || []).map(p => `<div class="plan"><b>${esc(p[0])}</b><div class="kv">${p.slice(1).map(x => `<span class="chip">${esc(x)}</span>`).join("")}</div></div>`).join("");
   $("news").innerHTML = (D.news || []).map(([t, u]) => `<li><span style="flex:1">${esc(t)}</span><a href="${esc(safeUrl(u))}" target="_blank" rel="noopener noreferrer">แหล่งข่าว ↗</a></li>`).join("");
@@ -322,7 +341,7 @@ async function pollPrice() {
     if (live.open == null) live.open = p;
     live.prev = live.price; live.price = p;
     live.time = new Date(j.updatedAt || Date.now()).toLocaleTimeString("th-TH", {timeZone: "Asia/Bangkok"});
-    showPrice(p, "สปอต · gold-api.com", live.time + " น. (เวลาไทย)");
+    showPrice(p, "สปอต · gold-api.com", live.time + "น. (เวลาไทย)");
     $("liveTxt").textContent = "LIVE · " + live.time; renderLadder(); renderPnl(); renderReco(); if (L3 && L3.orb && Math.abs((L3.lastPx || 0) - live.price) > .5) { L3.lastPx = live.price; build3d(); }
   } catch (e) { $("liveTxt").textContent = "ราคาสดไม่พร้อม · ใช้ราคาจากบทวิเคราะห์"; }
 }
@@ -349,7 +368,7 @@ let lastSig = "";
 async function pollData() {
   try { const r = await fetch("view.json?t=" + Date.now(), {cache: "no-store"}); if (r.ok) { const t = await r.text(); const sig = t.length + ":" + t.slice(-400);
     if (sig !== lastSig) { const first = !lastSig; lastSig = sig; D = JSON.parse(t); render(); renderPnl(); renderReco(); build3d(); if (!first) pulseUpd(); }
-    $("liveUpd").textContent = "อัปเดตล่าสุด " + new Date().toLocaleTimeString("th-TH", {timeZone: "Asia/Bangkok"}) + " น. (เวลาไทย)" + (D.built ? " · ข้อมูล " + D.built : ""); } } catch (e) {}
+    $("liveUpd").textContent = "อัปเดตล่าสุด " + new Date().toLocaleTimeString("th-TH", {timeZone: "Asia/Bangkok"}) + "น. (เวลาไทย)" + (D.built ? " · ข้อมูล " + D.built : ""); } } catch (e) {}
 }
 
 // TradingView
@@ -371,9 +390,9 @@ let hist = JSON.parse(localStorage.getItem("gd_hist") || sessionStorage.getItem(
 const MEM = {facts: () => JSON.parse(localStorage.getItem("gd_facts") || "[]"), notes: () => localStorage.getItem("gd_notes") || "",
   setFacts: a => localStorage.setItem("gd_facts", JSON.stringify(a.slice(-50))), setNotes: t => localStorage.setItem("gd_notes", String(t).slice(0, 4000))};
 function memText() { const f = MEM.facts(), n = MEM.notes(); return (f.length ? "\n\nสิ่งที่จำเกี่ยวกับผู้ใช้:\n- " + f.join("\n- ") : "") + (n ? "\n\nบันทึกสรุปบทสนทนาก่อนหน้า:\n" + n : ""); }
-const MEM_RULE = "\n\nถ้าผู้ใช้บอกข้อมูลที่ควรจำระยะยาว (ความชอบ สไตล์เทรด เป้าหมาย ข้อห้าม) ให้ใส่แท็ก [[จำ: ข้อความสั้น]] ท้ายคำตอบ (แท็กละ 1 เรื่อง)";
+const MEM_RULE = "\n\nห้ามใช้อีโมจิในคำตอบ\n\nถ้าผู้ใช้บอกข้อมูลที่ควรจำระยะยาว (ความชอบ สไตล์เทรด เป้าหมาย ข้อห้าม) ให้ใส่แท็ก [[จำ: ข้อความสั้น]] ท้ายคำตอบ (แท็กละ 1 เรื่อง)";
 function takeMem(text) { const add = []; text = text.replace(/\[\[\s*จำ\s*:\s*([^\]]+)\]\]/g, (_, x) => { add.push(x.trim()); return ""; }).trim();
-  if (add.length) { const f = MEM.facts(); add.forEach(x => { if (!f.includes(x)) f.push(x); }); MEM.setFacts(f); renderMem(); bubble("a", "🧠 จำไว้แล้วค่ะ: " + add.join(" · ")); } return text; }
+  if (add.length) { const f = MEM.facts(); add.forEach(x => { if (!f.includes(x)) f.push(x); }); MEM.setFacts(f); renderMem(); bubble("a", "จำไว้แล้วค่ะ: " + add.join(" · ")); } return text; }
 function saveHist() { localStorage.setItem("gd_hist", JSON.stringify(hist.slice(-80))); }
 async function summarizeOld() {
   const users = hist.filter(h => h.role === "user").length; if (users < 40 || !getKey()) return; // keep last 30 turns, fold older ones
@@ -385,7 +404,7 @@ async function summarizeOld() {
 }
 function renderMem() {
   const f = MEM.facts();
-  $("memFacts").innerHTML = f.length ? f.map((x, i) => `<div style="display:flex;gap:6px;margin:4px 0"><input data-i="${i}" class="memEd" value="${esc(x)}" style="flex:1"><button class="btn" data-del="${i}">✕</button></div>`).join("") : '<small class="mut">ยังไม่มีสิ่งที่จำ</small>';
+  $("memFacts").innerHTML = f.length ? f.map((x, i) => `<div style="display:flex;gap:6px;margin:4px 0"><input data-i="${i}" class="memEd" value="${esc(x)}" style="flex:1"><button class="btn" data-del="${i}"></button></div>`).join("") : '<small class="mut">ยังไม่มีสิ่งที่จำ</small>';
   $("memNotes").value = MEM.notes();
 }
 const getKey = () => localStorage.getItem(KEY) || "";
@@ -398,12 +417,12 @@ function context() {
     ev_plans: (D.ev_plans || []).map(({name, side, entry, sl, tp, p_win, rr, ev, decision, status}) => ({name, side, entry, sl, tp, p_win, rr, ev, decision, status})), ev_formula: "EV(R)=p*RR-(1-p); เข้าเมื่อ EV>0", news: D.news, note: D.note},
     live_xauusd_spot: live.price ?? D?.price_num, live_time: live.time, thai_gold_thb: thaiGold && thaiGold.map(x => ({type: x.GoldType, purity: x.GoldCode, buy: x.Buy, sell: x.Sell, change: x.BuyChange, time: x.TimeUpdate})),
     now_bangkok: new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"})};
-  return "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nคลังความรู้ (ใช้เป็นหลักการตัดสินใจ):\n" + KB + "\n\nบทเรียน/ประวัติเทรด:\n" + HIST + "\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
+  return "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ ห้ามใช้อีโมจิ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nคลังความรู้ (ใช้เป็นหลักการตัดสินใจ):\n" + KB + "\n\nบทเรียน/ประวัติเทรด:\n" + HIST + "\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
 }
 let mode = localStorage.getItem("gd_mode") || "ana";
 const LN = {en:"English",th:"Thai",zh:"Chinese (Simplified)",ja:"Japanese",ko:"Korean",vi:"Vietnamese",lo:"Lao",my:"Burmese",fr:"French",de:"German"};
 function trPrompt() { const l = LN[$("lang").value] || "English"; return `You are a professional translator. Translate the user's message (text, or speech in audio: transcribe first) into ${l}. Output format:\nต้นฉบับ: <original/transcript>\nแปล (${l}): <translation>\nNo extra commentary. Preserve numbers and trading terms.`; }
-function setMode(m) { mode = m; localStorage.setItem("gd_mode", m); $("mAna").classList.toggle("pri", m === "ana"); $("mTr").classList.toggle("pri", m === "tr"); $("lang").style.display = m === "tr" ? "" : "none"; $("q").placeholder = m === "tr" ? "พิมพ์หรือกด 🎤 พูด เพื่อแปล" : "ถามเรื่องกราฟทอง เช่น ตอนนี้ควร Buy หรือ Sell?"; $("sugg").style.display = m === "tr" ? "none" : ""; }
+function setMode(m) { mode = m; localStorage.setItem("gd_mode", m); $("mAna").classList.toggle("pri", m === "ana"); $("mTr").classList.toggle("pri", m === "tr"); $("lang").style.display = m === "tr" ? "" : "none"; $("q").placeholder = m === "tr" ? "พิมพ์หรือกด  พูด เพื่อแปล" : "ถามเรื่องกราฟทอง เช่น ตอนนี้ควร Buy หรือ Sell?"; $("sugg").style.display = m === "tr" ? "none" : ""; }
 $("mAna").onclick = () => setMode("ana"); $("mTr").onclick = () => setMode("tr");
 $("lang").value = localStorage.getItem("gd_lang") || "en"; $("lang").onchange = () => localStorage.setItem("gd_lang", $("lang").value);
 let rec = null;
@@ -413,11 +432,11 @@ $("mic").onclick = async () => {
   try {
     const st = await navigator.mediaDevices.getUserMedia({audio: true}); const ch = [];
     rec = new MediaRecorder(st); rec.ondataavailable = e => ch.push(e.data);
-    rec.onstop = async () => { st.getTracks().forEach(t => t.stop()); $("mic").textContent = "🎤";
+    rec.onstop = async () => { st.getTracks().forEach(t => t.stop()); $("mic").innerHTML = ICON_MIC;
       const b = new Blob(ch, {type: rec.mimeType || "audio/webm"}); const mt = (b.type || "audio/webm").split(";")[0];
       const b64 = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result.split(",")[1]); fr.readAsDataURL(b); });
       ask("", {mimeType: mt, data: b64}); };
-    rec.start(); $("mic").textContent = "⏹️";
+    rec.start(); $("mic").innerHTML = ICON_STOP;
   } catch (e) { bubble("e", "ใช้ไมค์ไม่ได้: " + e.message); }
 };
 async function ask(q, audio) {
@@ -426,7 +445,7 @@ async function ask(q, audio) {
   if (!key) { $("set").classList.add("show"); bubble("e", "กรุณาใส่ Gemini API key ในตั้งค่าก่อน"); return; }
   const tr = mode === "tr";
   const parts = []; if (audio) parts.push({inlineData: audio}); parts.push({text: q || (tr ? "(แปลเสียงนี้)" : "(ฟังคำถามจากเสียงนี้แล้วตอบ)")});
-  bubble("u", audio ? "🎤 ข้อความเสียง" + (q ? " · " + q : "") : q);
+  bubble("u", audio ? "[ข้อความเสียง]" + (q ? " · " + q : "") : q);
   const turn = {role: "user", parts}; if (!tr) hist.push({role: "user", parts: [{text: audio ? "[เสียง] " + q : q}]});
   const out = bubble("a", ""); out.classList.add("typing"); $("send").disabled = true;
   let text = "";
@@ -460,11 +479,11 @@ $("setBtn").onclick = () => $("set").classList.toggle("show");
 $("memBtn").onclick = () => { renderMem(); $("mem").classList.toggle("show"); };
 $("memAdd").onclick = () => { const v = $("memNew").value.trim(); if (!v) return; const f = MEM.facts(); f.push(v); MEM.setFacts(f); $("memNew").value = ""; renderMem(); };
 $("memFacts").addEventListener("click", e => { const i = e.target.dataset && e.target.dataset.del; if (i != null) { const f = MEM.facts(); f.splice(+i, 1); MEM.setFacts(f); renderMem(); } });
-$("memSave").onclick = () => { const f = [...document.querySelectorAll(".memEd")].map(x => x.value.trim()).filter(Boolean); MEM.setFacts(f); MEM.setNotes($("memNotes").value); renderMem(); bubble("a", "บันทึกความจำแล้วค่ะ 🧠"); };
+$("memSave").onclick = () => { const f = [...document.querySelectorAll(".memEd")].map(x => x.value.trim()).filter(Boolean); MEM.setFacts(f); MEM.setNotes($("memNotes").value); renderMem(); bubble("a", "บันทึกความจำแล้วค่ะ "); };
 $("memClear").onclick = () => { if (!confirm("ล้างความจำและประวัติแชททั้งหมด?")) return; ["gd_facts", "gd_notes", "gd_hist"].forEach(k => localStorage.removeItem(k)); sessionStorage.removeItem("gd_hist"); hist = []; $("msgs").innerHTML = ""; renderMem(); bubble("a", "ล้างความจำเรียบร้อยค่ะ"); };
-$("saveKey").onclick = () => { const k = $("keyIn").value.trim(); if (k) localStorage.setItem(KEY, k); localStorage.setItem(MODEL, $("modelIn").value); $("keyIn").value = ""; syncSet(); bubble("a", "บันทึกการตั้งค่าแล้ว ✅ (key อยู่ในเครื่องนี้เท่านั้น)"); };
-$("delKey").onclick = () => { localStorage.removeItem(KEY); syncSet(); bubble("a", "ลบ key ออกจากเครื่องนี้แล้ว 🗑️"); };
-function syncSet() { const k = getKey(); $("keyIn").placeholder = k ? "มี key บันทึกอยู่ (…" + k.slice(-4) + ") · วางใหม่เพื่อเปลี่ยน" : "วาง API key ของคุณที่นี่"; $("modelIn").value = getModel(); $("modelLbl").textContent = (k ? "🟢 " : "⚪ ยังไม่ใส่ key · ") + getModel(); }
+$("saveKey").onclick = () => { const k = $("keyIn").value.trim(); if (k) localStorage.setItem(KEY, k); localStorage.setItem(MODEL, $("modelIn").value); $("keyIn").value = ""; syncSet(); bubble("a", "บันทึกการตั้งค่าแล้ว  (key อยู่ในเครื่องนี้เท่านั้น)"); };
+$("delKey").onclick = () => { localStorage.removeItem(KEY); syncSet(); bubble("a", "ลบ key ออกจากเครื่องนี้แล้ว "); };
+function syncSet() { const k = getKey(); $("keyIn").placeholder = k ? "มี key บันทึกอยู่ (…" + k.slice(-4) + ") · วางใหม่เพื่อเปลี่ยน" : "วาง API key ของคุณที่นี่"; $("modelIn").value = getModel(); $("modelLbl").textContent = (k ? "● " : "○ ยังไม่ใส่ key · ") + getModel(); }
 const SUG = ["สรุปภาพรวมทองตอนนี้", "ควร Buy หรือ Sell ระยะสั้น?", "แผนไหน EV ดีที่สุด?", "ข่าวไหนกระทบทองมากสุด?", "ถ้าหลุดแนวรับจะไปถึงไหน?", "ราคาทองไทยวันนี้เป็นไง?"];
 $("sugg").innerHTML = SUG.map(s => `<button>${esc(s)}</button>`).join("");
 $("sugg").addEventListener("click", e => { if (e.target.tagName === "BUTTON") ask(e.target.textContent); });
@@ -482,10 +501,10 @@ function renderPnl() {
   const col = v => v >= 0 ? "#1db954" : "#ff5c5c", sg = v => (v >= 0 ? "+" : "") + v.toFixed(2);
   const card = (k, v, c, n, suf) => `<div style="background:#0b0d12;border:1px solid #f5c54222;border-radius:12px;padding:10px"><small>${k}</small><div class="cu" ${n != null ? `data-n="${n}" data-suf="${suf || ""}"` : ""} style="font-size:22px;font-weight:700;color:${c || "#eee"}">${v}</div></div>`;
   $("pnlSum").innerHTML = card("กำไร/ขาดทุนวันนี้", sg(tot) + " USC", col(tot), tot, " USC") + card("จุด (ดอลลาร์)", sg(pts), col(pts), pts, "") + card("อัตราชนะ (ไม้ที่ปิด)", wr) + card("ไม้เปิด / ไม้วันนี้", tr.filter(t => t.status === "open").length + " / " + (P.trade_count ?? closed.length)) +
-    (P.pending || []).map(o => card("⏳ " + esc(o.type) + " " + o.lot, `@${fmt(o.entry)}<div style="font-size:12px;font-weight:400">ตัดขาดทุน ${fmt(o.sl)} · รับกำไร ${fmt(o.tp)}</div>`, "#f5c542")).join("");
+    (P.pending || []).map(o => card("รอเข้า: " + esc(o.type) + " " + o.lot, `@${fmt(o.entry)}<div style="font-size:12px;font-weight:400">ตัดขาดทุน ${fmt(o.sl)} · รับกำไร ${fmt(o.tp)}</div>`, "#f5c542")).join("");
   countUp(); $("pnlNote").textContent = (P.note || "") + " · ไม้ที่เปิดอยู่คำนวณสดจากราคาปัจจุบัน";
   $("pnlTr").innerHTML = !tr.length ? '<div class="mut" style="font-size:13px">ไม่มีไม้ที่เปิดอยู่ตอนนี้</div>' : `<table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="color:#999;text-align:left"><th>เวลา</th><th>ฝั่ง</th><th>ล็อต</th><th>เข้า</th><th>ออก</th><th>จุด</th><th>USC</th><th>สถานะ</th><th>โดย</th></tr>` +
-    tr.map(t => `<tr style="border-top:1px solid #222"><td>${esc((t.time || "").slice(11) || t.time)}</td><td style="color:${t.side === "buy" ? "#1db954" : "#ff5c5c"}">${esc(t.side.toUpperCase())}</td><td>${esc(t.lot)}</td><td>${esc(t.entry)}</td><td>${t.exit == null ? "–" : esc(t.exit)}</td><td style="color:${col(t.pl_points)}">${sg(t.pl_points)}</td><td style="color:${col(t.pl_usc)}">${sg(t.pl_usc)}</td><td>${t.status === "open" ? "🟢 เปิด" : "⚪ ปิด"}</td><td>${esc(t.by)}</td></tr>`).join("") + "</table>";
+    tr.map(t => `<tr style="border-top:1px solid #222"><td>${esc((t.time || "").slice(11) || t.time)}</td><td style="color:${t.side === "buy" ? "#1db954" : "#ff5c5c"}">${esc(t.side.toUpperCase())}</td><td>${esc(t.lot)}</td><td>${esc(t.entry)}</td><td>${t.exit == null ? "–" : esc(t.exit)}</td><td style="color:${col(t.pl_points)}">${sg(t.pl_points)}</td><td style="color:${col(t.pl_usc)}">${sg(t.pl_usc)}</td><td>${t.status === "open" ? "เปิดอยู่" : "ปิดแล้ว"}</td><td>${esc(t.by)}</td></tr>`).join("") + "</table>";
   // cumulative P/L curve
   const sigEq = tr.map(t => t.time + t.status).join("|"); const animEq = sigEq !== window._eqSig; window._eqSig = sigEq;
   let c = 0; const pts2 = [0].concat(tr.slice().sort((a, b) => String(a.time).localeCompare(b.time)).map(t => c += t.pl_usc || 0));
@@ -499,11 +518,11 @@ function keyPrompt() {
   const o = document.createElement("div"); o.id = "kp";
   o.style.cssText = "position:fixed;inset:0;z-index:1000;background:#000c;display:flex;align-items:center;justify-content:center;padding:16px";
   o.innerHTML = `<div style="max-width:440px;width:100%;background:#11131a;border:1px solid #f5c542;border-radius:18px;padding:20px;box-shadow:0 0 40px #f5c54255">
-   <h2 style="margin:0 0 8px;color:#f5c542">🔑 ตั้งค่าครั้งแรก</h2><div style="font-size:14px;color:#ccc">วาง Gemini API key ครั้งเดียว ใช้ได้ทั้งแชท แปลภาษา และคุยสด<br>key ถูกเก็บ<b>เฉพาะในเบราว์เซอร์เครื่องนี้</b> ไม่ขึ้นเว็บ/GitHub · สร้างฟรีที่ <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:#f5c542">Google AI Studio</a></div>
+   <h2 style="margin:0 0 8px;color:#f5c542"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/></svg>ตั้งค่าครั้งแรก</h2><div style="font-size:14px;color:#ccc">วาง Gemini API key ครั้งเดียว ใช้ได้ทั้งแชท แปลภาษา และคุยสด<br>key ถูกเก็บ<b>เฉพาะในเบราว์เซอร์เครื่องนี้</b> ไม่ขึ้นเว็บ/GitHub · สร้างฟรีที่ <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:#f5c542">Google AI Studio</a></div>
    <input id="kpIn" type="password" autocomplete="off" spellcheck="false" placeholder="วาง API key ที่นี่" style="width:100%;box-sizing:border-box;margin:12px 0;padding:10px;border-radius:10px;border:1px solid #333;background:#0b0d12;color:#eee">
    <div style="display:flex;gap:8px"><button class="btn pri" id="kpSave" style="flex:1">บันทึก</button><button class="btn" id="kpSkip">ไว้ทีหลัง</button></div></div>`;
   document.body.appendChild(o);
-  $("kpSave").onclick = () => { const k = $("kpIn").value.trim(); if (!k) return; localStorage.setItem(KEY, k); o.remove(); syncSet(); bubble("a", "บันทึก key แล้วค่ะ ✅ ใช้ได้ทั้งแชท แปล และคุยสด"); };
+  $("kpSave").onclick = () => { const k = $("kpIn").value.trim(); if (!k) return; localStorage.setItem(KEY, k); o.remove(); syncSet(); bubble("a", "บันทึก key แล้วค่ะ  ใช้ได้ทั้งแชท แปล และคุยสด"); };
   $("kpSkip").onclick = () => { sessionStorage.setItem("gd_kp_skip", "1"); o.remove(); };
 }
 
@@ -539,7 +558,7 @@ const TIP = {SL: "SL = ตัดขาดทุน: ถ้าราคาไป�
 const tip = k => `<abbr class="tip" tabindex="0" title="คำนี้แปลว่า: ${esc(TIP[k])}">${k}</abbr>`;
 function planSentence(p, px) {
   const sell = p.side === "sell", act = sell ? "ขาย" : "ซื้อ", above = p.entry >= px;
-  const cond = Math.abs(px - p.entry) <= 3 ? `ราคาอยู่แถว ${fmt(p.entry)} แล้ว` : `ถ้าราคา${above ? "ขึ้น" : "ลง"}ถึง ${fmt(p.entry)}${!sell && !above ? " แล้วเด้ง" : sell && above ? "" : " แล้วยืนได้"}`;
+  const cond = Math.abs(px - p.entry) <= 3 ? `ราคาอยู่แถว ${fmt(p.entry)} แล้ว` : `ถ้าราคา${above ? "ขึ้น" : "ลง"}ถึง ${fmt(p.entry)}${!sell && !above ? "แล้วเด้ง" : sell && above ? "" : "แล้วยืนได้"}`;
   return `<div class="ps" style="border-left:4px solid ${sell ? "#ff4d4d" : "#1db954"}">${cond} → <b style="color:${sell ? "#ff6b6b" : "#1db954"}">${act}</b>
    <span>| ตัดขาดทุน (${tip("SL")}) <b style="color:#ff6b6b">${fmt(p.sl)}</b></span> <span>| รับกำไร (${tip("TP")}) <b style="color:#1db954">${fmt(p.tp)}</b></span>
    <div class="psm">${tip("RR")} ${p.rr} · ${tip("EV")} <b style="color:${p.ev > 0 ? "#1db954" : "#ff6b6b"}">${p.ev > 0 ? "+" : ""}${p.ev}R</b> · โอกาสชนะ ~${Math.round((p.p_win || 0) * 100)}% ${p.status ? "· " + esc(p.status) : ""}</div></div>`;
@@ -556,8 +575,11 @@ function renderReco() {
   const lo = Math.min(...(buys.length ? buys : D.sup_nums || [px - 20]), px) - 5, hi = Math.max(...(sells.length ? sells : D.res_nums || [px + 20]), px) + 5;
   const pos = v => Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100));
   const bar = `<div class="zbar"><div class="zb" style="left:0;width:${buys.length ? pos(Math.max(...buys)) : 0}%"></div><div class="zs" style="left:${sells.length ? pos(Math.min(...sells)) : 100}%;right:0"></div>
-    <div class="zp" style="left:${pos(px)}%"><span>ตอนนี้ ${fmt(px)}</span></div></div><div class="zl"><span style="color:#1db954">⬅ โซนซื้อ ${buys.length ? fmt(Math.max(...buys)) : ""}</span><span style="color:#ff6b6b">${sells.length ? fmt(Math.min(...sells)) : ""} โซนขาย ➡</span></div>`;
-  $("reco").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap">
+    <div class="zp" style="left:${pos(px)}%"><span>ตอนนี้ ${fmt(px)}</span></div></div><div class="zl"><span style="color:#1db954">← โซนซื้อ ${buys.length ? fmt(Math.max(...buys)) : ""}</span><span style="color:#ff6b6b">${sells.length ? fmt(Math.min(...sells)) : ""} โซนขาย →</span></div>`;
+  const AT = D.auto_trade || {}, mins = /(\d+)/.exec(AT.interval || "30") ? +/(\d+)/.exec(AT.interval || "30")[1] : 30;
+  const nx = new Date(Date.now() + 7 * 36e5), m = nx.getUTCHours() * 60 + nx.getUTCMinutes(); let nm = Math.floor((m - 15) / mins) * mins + 15 + mins; nm = ((nm % 1440) + 1440) % 1440;
+  const pill = `<div class="atp ${AT.enabled ? "on" : ""}"><span class="dotp"></span>เทรดอัตโนมัติ: ${AT.enabled ? "เปิด" : "ปิด"}${AT.enabled ? ` · ไม้ละ ${AT.lot ?? 0.1} ล็อต · ทุก ${esc(AT.interval || "30 นาที")} · เช็กถัดไป ~${String(Math.floor(nm / 60)).padStart(2, "0")}:${String(nm % 60).padStart(2, "0")} น.` : ""}</div>`;
+  $("reco").innerHTML = pill + `<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap">
      <div><small style="color:#aaa">คำแนะนำตอนนี้</small><div class="act">ตอนนี้: ${act}</div><div style="font-size:13px;color:#ccc">${at ? "ราคาอยู่ที่จุดเข้าตามแผน" : "ราคาอยู่กลางกรอบ ยังไม่คุ้มเข้า รอให้ถึงจุดด้านล่าง"}</div></div>
      ${conf != null ? `<div style="text-align:right"><small style="color:#aaa">ความมั่นใจ</small><div style="font-size:28px;font-weight:800;color:${col}">${conf}%</div></div>` : `<div style="text-align:right;font-size:12px;color:#aaa">AI มองขึ้น <b style="color:#1db954">${D.ai_up_pct}%</b> · ลง <b style="color:#ff6b6b">${D.ai_down_pct}%</b></div>`}</div>
    ${bar}
@@ -615,7 +637,7 @@ if (location.hash === "#call") openCall();
 window.addEventListener("hashchange", () => { if (location.hash === "#call") openCall(); });
 // init
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text.replace(/\*\*/g, "")));
-if (!hist.length) bubble("a", "สวัสดีค่ะ 👋 ดิฉันคือ เลขา ผู้ช่วยวิเคราะห์ทองค่ะ ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ต้องใส่ Gemini API key ใน ⚙️ ตั้งค่า ก่อนใช้ครั้งแรก)");
+if (!hist.length) bubble("a", "สวัสดีค่ะ  ดิฉันคือ เลขา ผู้ช่วยวิเคราะห์ทองค่ะ ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ต้องใส่ Gemini API key ใน  ตั้งค่า ก่อนใช้ครั้งแรก)");
 syncSet(); setMode(mode); render(); renderPnl(); renderReco(); init3d(); keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
 pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 15000); setInterval(pollThai, 30000); setInterval(pollData, 20000);
 </script>

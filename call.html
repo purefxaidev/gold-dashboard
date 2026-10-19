@@ -1,5 +1,5 @@
 <!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>📞 คุยสดกับ AI ทองคำ</title>
+<title>PUREGOLD AI · คุยสด</title><link rel="icon" type="image/svg+xml" href="logo.svg">
 <style>
 body{margin:0;font-family:system-ui,"Noto Sans Thai",sans-serif;background:radial-gradient(circle at 50% 0,#2a1f05,#07080c 60%);color:#eee;min-height:100vh}
 .w{max-width:640px;margin:auto;padding:16px}h1{font-size:20px;color:#f5c542;margin:6px 0}
@@ -11,9 +11,9 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
 #st{text-align:center;color:#aaa;font-size:14px}#log{max-height:40vh;overflow:auto;font-size:14px}
 .u{color:#9ecbff}.a{color:#f5c542}.e{color:#ff7b7b}a{color:#f5c542}small{color:#888}
 </style></head><body><div class="w">
-<h1>📞 คุยสดกับ AI ทองคำ</h1><small>Gemini Live API · เสียงต่อเสียงแบบเรียลไทม์ · <a href="./">← แดชบอร์ด</a></small>
+<h1>คุยสดกับ AI ทองคำ</h1><small>Gemini Live API · เสียงต่อเสียงแบบเรียลไทม์ · <a href="./">← แดชบอร์ด</a></small>
 <div class="card">
- <div class="row"><div><small>โหมด</small><select id="mode"><option value="ana">📈 วิเคราะห์ทอง</option><option value="tr">🌐 ล่ามแปลภาษา</option></select></div>
+ <div class="row"><div><small>โหมด</small><select id="mode"><option value="ana"> วิเคราะห์ทอง</option><option value="tr"> ล่ามแปลภาษา</option></select></div>
  <div id="lw"><small>ภาษาปลายทาง</small><select id="lang"><option value="English">English</option><option value="Thai">ไทย</option><option value="Chinese">中文</option><option value="Japanese">日本語</option><option value="Korean">한국어</option><option value="Vietnamese">Tiếng Việt</option><option value="Lao">ລາວ</option><option value="Burmese">မြန်မာ</option><option value="French">Français</option><option value="German">Deutsch</option></select></div></div>
  <div class="row"><div><small>โมเดล Live</small><select id="model">
   <option>models/gemini-3.8-live</option><option>models/gemini-3.8-live-extended-thinking</option>
@@ -22,15 +22,16 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
  <div><small>เสียง (ผู้หญิง)</small><select id="voice"><option>Sulafat</option><option>Kore</option><option>Aoede</option><option>Leda</option><option>Zephyr</option><option>Despina</option><option>Callirrhoe</option><option>Autonoe</option><option>Laomedeia</option><option>Achernar</option><option>Gacrux</option><option>Pulcherrima</option><option>Vindemiatrix</option><option>Erinome</option></select></div></div>
  <small id="keyst"></small>
 </div>
-<button class="big" id="call">📞</button><div id="st">กดเพื่อเริ่มคุย (ต้องอนุญาตไมค์)</div>
+<button class="big" id="call"><svg class="ic" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><div id="st">กดเพื่อเริ่มคุย (ต้องอนุญาตไมค์)</div>
 <div class="card" id="log"></div>
-<div class="card"><small>🔒 ใช้ Gemini key ที่บันทึกไว้ในเบราว์เซอร์นี้ (ตั้งค่าได้ที่แชทในหน้าแดชบอร์ด) — ไม่มี key ในเว็บไซต์ · ถ้าเปิดใน LINE แล้วไมค์ใช้ไม่ได้ ให้กด ⋮ → <b>เปิดในเบราว์เซอร์ภายนอก</b> · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน</small></div>
+<div class="card"><small> ใช้ Gemini key ที่บันทึกไว้ในเบราว์เซอร์นี้ (ตั้งค่าได้ที่แชทในหน้าแดชบอร์ด) — ไม่มี key ในเว็บไซต์ · ถ้าเปิดใน LINE แล้วไมค์ใช้ไม่ได้ ให้กด ⋮ → <b>เปิดในเบราว์เซอร์ภายนอก</b> · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน</small></div>
 </div>
 <script>
+const ICON_PHONE = `<svg class="ic" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`, ICON_STOP = `<svg class="ic" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
 const $ = id => document.getElementById(id);
 const LC = {English:"en",Thai:"th",Chinese:"zh",Japanese:"ja",Korean:"ko",Vietnamese:"vi",Lao:"lo",Burmese:"my",French:"fr",German:"de"};
 const KEY = localStorage.getItem("gd_gemini_key") || "";
-$("keyst").textContent = KEY ? "🟢 พบ Gemini key ในเครื่องนี้ (…" + KEY.slice(-4) + ")" : "⚪ ยังไม่มี key — ไปตั้งค่าที่แชทในหน้าแดชบอร์ดก่อน";
+$("keyst").textContent = KEY ? "● พบ Gemini key ในเครื่องนี้ (…" + KEY.slice(-4) + ")" : "○ ยังไม่มี key — ไปตั้งค่าที่แชทในหน้าแดชบอร์ดก่อน";
 const P = new URLSearchParams(location.search);
 for (const k of ["mode", "lang", "model", "voice"]) { const v = P.get(k) || localStorage.getItem("gc_" + k); if (v) $(k).value = v; if (k === "voice" && !$(k).value) $(k).value = "Sulafat"; $(k).onchange = () => { localStorage.setItem("gc_" + k, $(k).value); ui(); }; }
 function ui() { const t = $("mode").value === "tr" || /translate/.test($("model").value); $("lw").style.visibility = t ? "visible" : "hidden"; if (/translate/.test($("model").value) && !localStorage.getItem("gc_lang")) $("lang").value = "Thai"; } ui();
@@ -39,19 +40,19 @@ function log(c, t) { const d = document.createElement("div"); d.className = c; d
 function memText() { const f = JSON.parse(localStorage.getItem("gd_facts") || "[]"), n = localStorage.getItem("gd_notes") || "";
   return (f.length ? "\nสิ่งที่จำเกี่ยวกับผู้ใช้:\n- " + f.join("\n- ") : "") + (n ? "\nบันทึกสรุปบทสนทนาก่อนหน้า:\n" + n : ""); }
 async function saveCallMemory() {
-  const t = [...$("log").children].map(d => d.textContent).filter(x => /^(🗣️|🤖)/.test(x)).join("\n").slice(0, 15000);
+  const t = [...$("log").children].map(d => d.textContent).filter(x => /^(คุณ: |เลขา: )/.test(x)).join("\n").slice(0, 15000);
   if (t.length < 40 || !KEY || $("mode").value === "tr") return;
   try { const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent", {method: "POST", headers: {"Content-Type": "application/json", "x-goog-api-key": KEY},
     body: JSON.stringify({contents: [{role: "user", parts: [{text: "รวมบันทึกความจำเดิมกับสาระจากการคุยด้วยเสียงนี้ เป็นบันทึกภาษาไทยไม่เกิน 10 บรรทัด:\nบันทึกเดิม: " + (localStorage.getItem("gd_notes") || "") + "\n\nบทสนทนา:\n" + t}]}], generationConfig: {temperature: 0.2, maxOutputTokens: 600}})});
     const j = await r.json(); const s = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("").trim();
-    if (s) { localStorage.setItem("gd_notes", s.slice(0, 4000)); log("a", "🧠 บันทึกสรุปการคุยไว้ในความจำแล้วค่ะ"); } } catch (e) {}
+    if (s) { localStorage.setItem("gd_notes", s.slice(0, 4000)); log("a", "บันทึกสรุปการคุยไว้ในความจำแล้วค่ะ"); } } catch (e) {}
 }
 async function sysPrompt() {
   if ($("mode").value === "tr") return `คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) ทำหน้าที่ล่ามแปลภาษาแบบเรียลไทม์ ฟังสิ่งที่ผู้ใช้พูดแล้วพูดคำแปลเป็นภาษา ${$("lang").value} ทันที ถ้าผู้ใช้พูดภาษา ${$("lang").value} อยู่แล้ว ให้แปลเป็นภาษาไทย ห้ามเพิ่มความเห็น`;
   let ctx = "";
   try { const [hs, v, p, kb] = await Promise.all([Promise.all([fetch("lessons.md?t=" + Date.now()).then(r => r.ok ? r.text() : ""), fetch("history/trade_journal.jsonl?t=" + Date.now()).then(r => r.ok ? r.text() : "")]).then(([l, j]) => (l.slice(-3000) + "\n\nบันทึกเทรดล่าสุด:\n" + j.trim().split("\n").slice(-15).join("\n")).slice(0, 5000)).catch(() => ""), fetch("view.json?t=" + Date.now()).then(r => r.json()), fetch("https://api.gold-api.com/price/XAU").then(r => r.json()).catch(() => null), fetch("knowledge.md?t=" + Date.now()).then(r => r.text()).catch(() => "")]);
     ctx = JSON.stringify({live_price: p, dashboard: v}).slice(0, 12000) + "\nคลังความรู้:\n" + (kb || "").slice(0, 8000) + "\nบทเรียน/ประวัติ:\n" + (hs || ""); } catch (e) {}
-  return memText() + "\n" + "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + "\nข้อมูล: " + ctx;
+  return memText() + "\n" + "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย ห้ามใช้อีโมจิ สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + "\nข้อมูล: " + ctx;
 }
 
 // mic -> 16 kHz PCM16 via AudioWorklet
@@ -87,15 +88,15 @@ async function start() {
   ws.onmessage = async ev => {
     const m = JSON.parse(typeof ev.data === "string" ? ev.data : await ev.data.text());
     if (m.setupComplete) {
-      $("st").textContent = "🟢 กำลังฟัง… พูดได้เลย (พูดแทรกได้)"; $("call").classList.add("on"); $("call").textContent = "⏹️";
+      $("st").textContent = "กำลังฟัง… พูดได้เลย (พูดแทรกได้)"; $("call").classList.add("on"); $("call").innerHTML = ICON_STOP;
       const src = inCtx.createMediaStreamSource(stream); node = new AudioWorkletNode(inCtx, "rec16");
       node.port.onmessage = e => { if (ws && ws.readyState === 1) ws.send(JSON.stringify({realtimeInput: {audio: {data: b64(e.data), mimeType: "audio/pcm;rate=16000"}}})); };
       src.connect(node); return;
     }
     const sc = m.serverContent; if (!sc) { if (m.goAway) log("e", "เซสชันใกล้หมดเวลา"); return; }
     if (sc.interrupted) { stopPlay(); aLine = null; }
-    if (sc.inputTranscription?.text) { uLine = uLine || log("u", "🗣️ "); uLine.textContent += sc.inputTranscription.text; aLine = null; }
-    if (sc.outputTranscription?.text) { aLine = aLine || log("a", "🤖 "); aLine.textContent += sc.outputTranscription.text; uLine = null; }
+    if (sc.inputTranscription?.text) { uLine = uLine || log("u", "คุณ: "); uLine.textContent += sc.inputTranscription.text; aLine = null; }
+    if (sc.outputTranscription?.text) { aLine = aLine || log("a", "เลขา: "); aLine.textContent += sc.outputTranscription.text; uLine = null; }
     for (const p of sc.modelTurn?.parts || []) if (p.inlineData?.data) play(p.inlineData.data);
     if (sc.turnComplete) { aLine = null; uLine = null; }
   };
@@ -106,7 +107,7 @@ function stop(fromClose) {
   if (!fromClose && ws) try { ws.close(1000); } catch (e) {}
   ws = null; stopPlay(); try { node && node.disconnect(); } catch (e) {}
   stream && stream.getTracks().forEach(t => t.stop()); inCtx && inCtx.close(); outCtx && outCtx.close(); inCtx = outCtx = stream = node = null;
-  saveCallMemory(); $("call").classList.remove("on"); $("call").textContent = "📞"; $("st").textContent = "วางสายแล้ว · กดเพื่อเริ่มใหม่";
+  saveCallMemory(); $("call").classList.remove("on"); $("call").innerHTML = ICON_PHONE; $("st").textContent = "วางสายแล้ว · กดเพื่อเริ่มใหม่";
 }
 $("call").onclick = () => ws ? stop() : start();
 window.stopCall = () => { if (ws) stop(); };

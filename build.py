@@ -56,6 +56,9 @@ for fn in glob.glob('history/*.jsonl') + ['lessons.md']:
     for pat in bad:
         if re.search(pat, txt): sys.exit(f'build.py: {fn} matches forbidden pattern {pat!r}')
 
+at = d.get('auto_trade')
+if at is not None and set(at) - {'enabled', 'interval', 'lot'}: sys.exit('build.py: auto_trade has unexpected fields')
+
 def first_num(s):
     m = re.search(r'\d[\d,]*\.?\d*', str(s))
     return float(m.group().replace(',', '')) if m else None

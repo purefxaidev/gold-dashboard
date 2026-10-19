@@ -122,5 +122,10 @@
    }
   ],
   "trades": []
+ },
+ "auto_trade": {
+  "enabled": true,
+  "interval": "30 นาที",
+  "lot": 0.1
  }
 }
