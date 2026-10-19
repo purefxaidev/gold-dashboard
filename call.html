@@ -99,4 +99,6 @@ function stop(fromClose) {
   $("call").classList.remove("on"); $("call").textContent = "📞"; $("st").textContent = "วางสายแล้ว · กดเพื่อเริ่มใหม่";
 }
 $("call").onclick = () => ws ? stop() : start();
+window.stopCall = () => { if (ws) stop(); };
+if (P.get("embed")) { document.querySelector("h1+small a").style.display = "none"; document.body.style.background = "transparent"; }
 </script></body></html>

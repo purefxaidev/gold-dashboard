@@ -288,7 +288,7 @@ function createRichMenu() {
   function area(i, action) { return { bounds: { x: i * w, y: 0, width: w, height: h }, action: action }; }
   var menu = { size: { width: 2500, height: 843 }, selected: true, name: 'gold-menu', chatBarText: 'เมนูทองคำ',
     areas: [
-      area(0, { type: 'uri', label: 'โทรคุยกับ AI', uri: CALL_URL + '?openExternalBrowser=1' }),
+      area(0, { type: 'uri', label: 'โทรคุยกับ AI', uri: DASH_URL + '?openExternalBrowser=1#call' }),
       area(1, { type: 'uri', label: 'แดชบอร์ด', uri: DASH_URL }),
       area(2, { type: 'message', label: 'สรุปตอนนี้', text: 'สรุปภาพรวมทองตอนนี้ พร้อมจุดเข้า SL TP' }),
       area(3, { type: 'message', label: 'โหมดแปล', text: '/แปล' })

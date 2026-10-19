@@ -164,7 +164,7 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
 </section>
 
 <section class="card c5" id="chatCard">
- <h2>💬 คุยกับกราฟ <small id="modelLbl"></small><a class="btn" href="call.html" style="margin-left:8px;padding:5px 10px;text-decoration:none">📞 คุยสด</a><button class="btn" id="setBtn" style="margin-left:8px;padding:5px 10px">⚙️ ตั้งค่า</button></h2>
+ <h2>💬 คุยกับกราฟ <small id="modelLbl"></small><button class="btn pri" id="callBtn" style="margin-left:8px;padding:5px 12px;background:linear-gradient(90deg,#1db954,#0bd3a8);color:#fff">📞 คุยสด</button><button class="btn" id="setBtn" style="margin-left:8px;padding:5px 10px">⚙️ ตั้งค่า</button></h2>
  <div class="set" id="set">
   <b>Gemini API key</b>
   <input type="password" id="keyIn" placeholder="วาง API key ของคุณที่นี่" autocomplete="off" spellcheck="false">
@@ -194,6 +194,13 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
 </section>
 </main>
 <footer><div id="upd"></div><div id="note"></div><div>ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน · การเทรดมีความเสี่ยงสูง อาจขาดทุนเกินที่คาด</div></footer>
+<div id="callOv" style="display:none;position:fixed;inset:0;z-index:999;background:#000b;backdrop-filter:blur(8px)">
+ <div style="position:absolute;inset:max(0px,4vh) max(0px,calc(50% - 340px));border:1px solid #f5c54255;border-radius:18px;overflow:hidden;box-shadow:0 0 50px #f5c54233;background:#07080c">
+  <button id="callX" aria-label="ปิด" style="position:absolute;top:8px;right:10px;z-index:2;background:#e53935;color:#fff;border:0;border-radius:50%;width:36px;height:36px;font-size:18px">✕</button>
+  <iframe id="callFr" title="คุยสดกับ AI" allow="microphone; autoplay" style="width:100%;height:100%;border:0"></iframe>
+ </div>
+</div>
+<button class="fab" style="bottom:86px;background:#1db954" onclick="openCall()" aria-label="คุยสด">📞</button>
 <button class="fab" onclick="document.getElementById('chatCard').scrollIntoView()" aria-label="แชท">💬</button>
 
 <script>
@@ -379,6 +386,12 @@ const SUG = ["สรุปภาพรวมทองตอนนี้", "ค�
 $("sugg").innerHTML = SUG.map(s => `<button>${esc(s)}</button>`).join("");
 $("sugg").addEventListener("click", e => { if (e.target.tagName === "BUTTON") ask(e.target.textContent); });
 
+// realtime call overlay (same page)
+function openCall() { if (!$("callFr").src) $("callFr").src = "call.html?embed=1"; $("callOv").style.display = "block"; if (location.hash !== "#call") history.replaceState(null, "", "#call"); }
+function closeCall() { try { $("callFr").contentWindow.stopCall && $("callFr").contentWindow.stopCall(); } catch (e) {} $("callOv").style.display = "none"; history.replaceState(null, "", location.pathname + location.search); }
+$("callBtn").onclick = openCall; $("callX").onclick = closeCall;
+if (location.hash === "#call") openCall();
+window.addEventListener("hashchange", () => { if (location.hash === "#call") openCall(); });
 // init
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text.replace(/\*\*/g, "")));
 if (!hist.length) bubble("a", "สวัสดีครับ 👋 ผมคือผู้ช่วยวิเคราะห์ทอง ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลย (ต้องใส่ Gemini API key ใน ⚙️ ตั้งค่า ก่อนใช้ครั้งแรก)");

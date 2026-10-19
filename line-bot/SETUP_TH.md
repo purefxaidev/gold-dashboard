@@ -62,7 +62,7 @@
 - พิมพ์ `/วิเคราะห์` เพื่อกลับโหมดวิเคราะห์ทอง · โหมดถูกจำแยกต่อผู้ใช้ (Script Properties `MODE_<userId>`)
 
 ## 📞 คุยสดด้วยเสียงกับ AI (Live API)
-- LINE bot รับสายโทรไม่ได้ จึงทำหน้าเว็บ `https://purefxaidev.github.io/gold-dashboard/call.html` เชื่อม Gemini Live API ผ่าน WebSocket ตรงจากเบราว์เซอร์ (ใช้ key ที่บันทึกในแชทแดชบอร์ดของเครื่องนั้น ไม่มี key ในเว็บ)
+- LINE bot รับสายโทรไม่ได้ จึงทำหน้าเว็บ `https://purefxaidev.github.io/gold-dashboard/#call` (อยู่ในหน้าแดชบอร์ด ปุ่ม 📞 คุยสด; `call.html` ยังเปิดแยกได้) เชื่อม Gemini Live API ผ่าน WebSocket ตรงจากเบราว์เซอร์ (ใช้ key ที่บันทึกในแชทแดชบอร์ดของเครื่องนั้น ไม่มี key ในเว็บ)
 - โมเดลเริ่มต้น `models/gemini-3.8-live` (มีในเอกสาร Google) เปลี่ยนได้: 3.8-live-extended-thinking, 3.1-flash-live-preview, 2.5 native-audio, 3.5-live-translate-preview · เสียง `Sulafat` · พูดแทรกได้ · แสดงคำถอดเสียง · มีโหมดล่ามแปลภาษา
 - ใน LINE ถ้าไมค์ใช้ไม่ได้ ให้กด ⋮ → เปิดในเบราว์เซอร์ภายนอก (ปุ่มในเมนูใส่ `?openExternalBrowser=1` ให้แล้ว)
 
