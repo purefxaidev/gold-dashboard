@@ -485,7 +485,7 @@ async function ask(q, audio) {
     const mctx = tr ? "" : await PGAI.context();
     window.__lastSys = tr ? "" : context() + "\n" + mctx + PGAI.rules();
     const r = await gfetch("streamGenerateContent?alt=sse", {systemInstruction: {parts: [{text: tr ? trPrompt() : context() + (mctx ? "\n\nบริบทตลาดทั้งหมดล่าสุด (ทองคำ + FX + BTC + MTF + SMC + ความสัมพันธ์ + Edge):\n" + mctx : "") + PGAI.rules() + memText() + MEM_RULE}]}, contents: tr ? [turn] : hist.slice(-61, -1).concat([turn]), generationConfig: {temperature: tr ? 0.2 : 0.6, maxOutputTokens: 1200}});
-    if (!r.ok) { const h = await GKEY.handleResponse(r); throw new Error(h.kind ? GKEY.message(h.kind) : h.msg); }
+    if (!r.ok) { const h = await GKEY.handleResponse(r); throw new Error(h.kind ? GKEY.message(h.kind) : String(h.msg).replace(/models\/[\w.-]+|gemini[\w.-]*/gi, "AI")); }
     const rd = r.body.getReader(), dec = new TextDecoder(); let buf = "";
     for (;;) {
       const {done, value} = await rd.read(); if (done) break;
@@ -503,7 +503,7 @@ async function ask(q, audio) {
     out.innerHTML = md(text);
     if (!tr) { hist.push({role: "model", parts: [{text}]}); saveHist(); summarizeOld(); }
   } catch (e) {
-    out.remove(); if (!tr) hist.pop(); bubble("e", (EN() ? "Gemini request failed: " : "เรียก Gemini ไม่สำเร็จ: ") + e.message);
+    out.remove(); if (!tr) hist.pop(); bubble("e", (EN() ? "AI request failed: " : "เรียก AI ไม่สำเร็จ: ") + e.message);
   } finally { out.classList.remove("typing"); $("send").disabled = false; }
 }
 $("send").onclick = () => { const v = $("q").value; $("q").value = ""; ask(v); };
@@ -520,8 +520,8 @@ $("saveKey").onclick = async () => { const k = $("keyIn").value.trim(); $("keyEr
   $("keyIn").value = ""; syncSet(); bubble("a", EN() ? "Settings saved (the key stays in this browser only)" : "บันทึกการตั้งค่าแล้ว (คีย์อยู่ในเครื่องนี้เท่านั้น)"); };
 $("delKey").onclick = () => { GKEY.clear(); syncSet(); bubble("a", EN() ? "Key deleted from this browser" : "ลบคีย์ออกจากเครื่องนี้แล้ว"); };
 GKEY.onChange(() => syncSet()); GKEY.button(document.querySelector("#chatCard h2"), {style: ";margin-left:6px", onSaved: () => { syncSet(); bubble("a", EN() ? "New key saved" : "บันทึกคีย์ใหม่แล้วค่ะ"); }, onDeleted: () => { syncSet(); bubble("a", EN() ? "Key deleted from this browser" : "ลบคีย์ออกจากเครื่องนี้แล้ว"); }});
-function syncSet() { const k = getKey(); $("keyIn").placeholder = k ? "มี key บันทึกอยู่ (…" + k.slice(-4) + ") · วางใหม่เพื่อเปลี่ยน" : "วาง API key ของคุณที่นี่"; $("modelIn").value = getModel(); $("modelLbl").textContent = (k ? "● " : "○ ยังไม่ใส่ key · ") + getModel(); }
-const SUG = ["สรุปภาพรวมทองตอนนี้", "ควร Buy หรือ Sell ระยะสั้น?", "แผนไหน EV ดีที่สุด?", "ข่าวไหนกระทบทองมากสุด?", "ถ้าหลุดแนวรับจะไปถึงไหน?", "ราคาทองไทยวันนี้เป็นไง?"];
+function syncSet() { const k = getKey(); $("keyIn").placeholder = k ? "มี key บันทึกอยู่ (…" + k.slice(-4) + ") · วางใหม่เพื่อเปลี่ยน" : "วาง API key ของคุณที่นี่"; $("modelLbl").textContent = k ? (EN() ? "PUREGOLD AI" : "เลขา PUREGOLD") : (EN() ? "PUREGOLD AI · no key yet" : "เลขา PUREGOLD · ยังไม่ใส่คีย์"); }
+const SUG = ["สรุปภาพรวมทองตอนนี้", "ควร Buy หรือ Sell ระยะสั้น?", "แผนไหน EV ดีที่สุด?", "ข่าวไหนกระทบทองมากสุด?", "ถ้าหลุดแนวรับจะไปถึงไหน?", "ราคาทองไทยวันนี้เป็นไง?", "EURUSD กับ USDJPY ตอนนี้เป็นไง?", "BTC แนวโน้มเป็นยังไง?"];
 $("sugg").innerHTML = SUG.map(s => `<button>${esc(s)}</button>`).join("");
 $("sugg").addEventListener("click", e => { if (e.target.tagName === "BUTTON") ask(e.target.textContent); });
 
@@ -691,7 +691,7 @@ if (location.hash === "#call") openCall();
 window.addEventListener("hashchange", () => { if (location.hash === "#call") openCall(); });
 // init
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text));
-if (!hist.length) bubble("a", "สวัสดีค่ะ  ดิฉันคือ เลขา ผู้ช่วยวิเคราะห์ทองค่ะ ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ต้องใส่ Gemini API key ใน  ตั้งค่า ก่อนใช้ครั้งแรก)");
+if (!hist.length) bubble("a", EN() ? "Hello, I am the PUREGOLD assistant. Ask me about gold, the FX pairs, Bitcoin, support and resistance, or the news. (Add your API key once before the first use.)" : "สวัสดีค่ะ ดิฉันคือ เลขา PUREGOLD ถามได้ทั้งทองคำ คู่เงิน FX และ Bitcoin แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ใส่คีย์ครั้งเดียวก่อนใช้ครั้งแรก)");
 syncSet(); setMode(mode); render(); renderPnl(); renderReco(); init3d(); if (!exnessPrompt()) keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
 pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 15000); setInterval(pollThai, 30000); setInterval(pollData, 20000);
 </script>
