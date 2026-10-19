@@ -1,6 +1,7 @@
 <!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PUREGOLD AI · คุยสด</title><meta name="description" content="PUREGOLD AI live voice call: talk with the gold (XAUUSD) AI assistant in Thai or English."><link rel="alternate" hreflang="th" href="https://purefxaidev.github.io/gold-dashboard/call.html?lang=th"><link rel="alternate" hreflang="en" href="https://purefxaidev.github.io/gold-dashboard/call.html?lang=en"><script src="i18n.js"></script>
-<script src="gkey.js"></script><link rel="icon" type="image/svg+xml" href="logo.svg">
+<script src="gkey.js"></script>
+<script src="pgai.js"></script><link rel="icon" type="image/svg+xml" href="logo.svg">
 <style>
 body{margin:0;font-family:system-ui,"Noto Sans Thai",sans-serif;background:radial-gradient(circle at 50% 0,#2a1f05,#07080c 60%);color:#eee;min-height:100vh}
 .w{max-width:640px;margin:auto;padding:16px}h1{font-size:20px;color:#f5c542;margin:6px 0}
@@ -12,15 +13,10 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
 #st{text-align:center;color:#aaa;font-size:14px}#log{max-height:40vh;overflow:auto;font-size:14px}
 .u{color:#9ecbff}.a{color:#f5c542}.e{color:#ff7b7b}a{color:#f5c542}small{color:#888}
 </style></head><body><div class="w">
-<h1>คุยสดกับ AI ทองคำ</h1><small>Gemini Live API · เสียงต่อเสียงแบบเรียลไทม์ · <a href="./">← แดชบอร์ด</a></small>
+<h1 id="cTitle">คุยสดกับ เลขา PUREGOLD</h1><small><span id="cSub">PUREGOLD AI · เสียงต่อเสียงแบบเรียลไทม์</span> · <a href="./">← แดชบอร์ด</a></small>
 <div class="card">
  <div class="row"><div><small>โหมด</small><select id="mode"><option value="ana"> วิเคราะห์ทอง</option><option value="tr"> ล่ามแปลภาษา</option></select></div>
  <div id="lw"><small>ภาษาปลายทาง</small><select id="lang"><option value="English">English</option><option value="Thai">ไทย</option><option value="Chinese">中文</option><option value="Japanese">日本語</option><option value="Korean">한국어</option><option value="Vietnamese">Tiếng Việt</option><option value="Lao">ລາວ</option><option value="Burmese">မြန်မာ</option><option value="French">Français</option><option value="German">Deutsch</option></select></div></div>
- <div class="row"><div><small>โมเดล Live</small><select id="model">
-  <option>models/gemini-3.8-live</option><option>models/gemini-3.8-live-extended-thinking</option>
-  <option>models/gemini-3.1-flash-live-preview</option><option>models/gemini-2.5-flash-native-audio-preview-12-2025</option>
-  <option value="models/gemini-3.5-live-translate-preview">models/gemini-3.5-live-translate-preview (ล่ามแปล)</option></select></div>
- <div><small>เสียง (ผู้หญิง)</small><select id="voice"><option>Sulafat</option><option>Kore</option><option>Aoede</option><option>Leda</option><option>Zephyr</option><option>Despina</option><option>Callirrhoe</option><option>Autonoe</option><option>Laomedeia</option><option>Achernar</option><option>Gacrux</option><option>Pulcherrima</option><option>Vindemiatrix</option><option>Erinome</option></select></div></div>
  <small id="keyst"></small>
 </div>
 <button class="big" id="call"><svg class="ic" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><div id="callLbl" style="text-align:center;font-weight:700;color:#f5c542;margin-top:-6px">อนุญาตไมค์และเริ่มสาย</div>
@@ -29,7 +25,7 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
 <div class="card" id="inapp" style="display:none;border-color:#fb8c00"><div id="inappTxt" style="margin-bottom:8px"></div><button id="inappBtn" style="padding:10px 14px;border-radius:10px;border:0;background:#f5c542;color:#111;font-weight:700">เปิดในเบราว์เซอร์ภายนอก</button></div>
 <div class="card" id="log"></div>
 <details id="dbg" class="card"><summary style="cursor:pointer;color:#888;font-size:13px">ข้อมูลสำหรับแก้ปัญหา (debug)</summary><div id="dbgLog" style="font:11px/1.5 monospace;color:#9a9;max-height:30vh;overflow:auto;white-space:pre-wrap"></div></details>
-<div class="card"><small> ใช้ Gemini key ที่บันทึกไว้ในเบราว์เซอร์นี้ (ตั้งค่าได้ที่แชทในหน้าแดชบอร์ด) — ไม่มี key ในเว็บไซต์ · ถ้าเปิดใน LINE แล้วไมค์ใช้ไม่ได้ ให้กด ⋮ → <b>เปิดในเบราว์เซอร์ภายนอก</b> · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน</small></div>
+<div class="card"><small> ใช้ AI key ที่บันทึกไว้ในเบราว์เซอร์นี้ (ตั้งค่าได้ที่แชทในหน้าแดชบอร์ด) — ไม่มี key ในเว็บไซต์ · ถ้าเปิดใน LINE แล้วไมค์ใช้ไม่ได้ ให้กด ⋮ → <b>เปิดในเบราว์เซอร์ภายนอก</b> · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน</small></div>
 </div>
 <script>
 const ICON_PHONE = `<svg class="ic" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`, ICON_STOP = `<svg class="ic" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
@@ -37,12 +33,16 @@ const $ = id => document.getElementById(id);
 const LC = {English:"en",Thai:"th",Chinese:"zh",Japanese:"ja",Korean:"ko",Vietnamese:"vi",Lao:"lo",Burmese:"my",French:"fr",German:"de"};
 let KEY = GKEY.get();
 const CEN = () => window.LANG === "en";
-function keyst() { $("keyst").textContent = KEY ? (CEN() ? "Gemini key found in this browser (..." : "พบ Gemini key ในเครื่องนี้ (...") + KEY.slice(-4) + ")" : (CEN() ? "No key yet, press Add key" : "ยังไม่มีคีย์ กด ใส่คีย์ ด้านขวา"); }
+function keyst() { $("keyst").textContent = KEY ? (CEN() ? "AI key found in this browser (..." : "พบ AI key ในเครื่องนี้ (...") + KEY.slice(-4) + ")" : (CEN() ? "No key yet, press Add key" : "ยังไม่มีคีย์ กด ใส่คีย์ ด้านขวา"); }
 keyst(); GKEY.onChange(k => { KEY = k || ""; keyst(); });
 { const w = document.createElement("span"); w.style.cssText = "margin-left:8px;display:inline-flex;gap:6px;vertical-align:middle"; $("keyst").after(w); GKEY.button(w); }
 const P = new URLSearchParams(location.search);
-for (const k of ["mode", "lang", "model", "voice"]) { const v = P.get(k) || localStorage.getItem("gc_" + k); if (v) $(k).value = v; if (k === "voice" && !$(k).value) $(k).value = "Sulafat"; $(k).onchange = () => { localStorage.setItem("gc_" + k, $(k).value); ui(); }; }
-function ui() { const t = $("mode").value === "tr" || /translate/.test($("model").value); $("lw").style.visibility = t ? "visible" : "hidden"; if (/translate/.test($("model").value) && !localStorage.getItem("gc_lang")) $("lang").value = "Thai"; } ui();
+// models and voice are internal only (never shown); automatic fallback in connect()
+const LIVE_MODELS = ["models/gemini-3.8-live", "models/gemini-3.1-flash-live-preview", "models/gemini-2.5-flash-native-audio-preview-12-2025"], TR_MODEL = "models/gemini-3.5-live-translate-preview", VOICE = "Sulafat";
+const SUM_MODELS = ["gemini-3.8-flash", "gemini-3.5-flash-lite", "gemini-flash-latest"];
+if (CEN()) { $("cTitle").textContent = "Live call with the PUREGOLD assistant"; $("cSub").textContent = "PUREGOLD AI · real-time voice"; }
+for (const k of ["mode", "lang"]) { const v = P.get(k) || localStorage.getItem("gc_" + k); if (v) $(k).value = v; $(k).onchange = () => { localStorage.setItem("gc_" + k, $(k).value); ui(); }; }
+function ui() { const t = $("mode").value === "tr"; $("lw").style.visibility = t ? "visible" : "hidden"; } ui();
 function log(c, t) { const d = document.createElement("div"); d.className = c; d.textContent = t; $("log").appendChild(d); $("log").scrollTop = 1e9; return d; }
 
 function memText() { const f = JSON.parse(localStorage.getItem("gd_facts") || "[]"), n = localStorage.getItem("gd_notes") || "";
@@ -50,8 +50,8 @@ function memText() { const f = JSON.parse(localStorage.getItem("gd_facts") || "[
 async function saveCallMemory() {
   const t = [...$("log").children].map(d => d.textContent).filter(x => /^(คุณ: |เลขา: )/.test(x)).join("\n").slice(0, 15000);
   if (t.length < 40 || !KEY || $("mode").value === "tr") return;
-  try { const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent", {method: "POST", headers: {"Content-Type": "application/json", "x-goog-api-key": KEY},
-    body: JSON.stringify({contents: [{role: "user", parts: [{text: "รวมบันทึกความจำเดิมกับสาระจากการคุยด้วยเสียงนี้ เป็นบันทึกภาษาไทยไม่เกิน 10 บรรทัด:\nบันทึกเดิม: " + (localStorage.getItem("gd_notes") || "") + "\n\nบทสนทนา:\n" + t}]}], generationConfig: {temperature: 0.2, maxOutputTokens: 600}})});
+  try { let r; for (const sm of SUM_MODELS) { r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + sm + ":generateContent", {method: "POST", headers: {"Content-Type": "application/json", "x-goog-api-key": KEY},
+    body: JSON.stringify({contents: [{role: "user", parts: [{text: "รวมบันทึกความจำเดิมกับสาระจากการคุยด้วยเสียงนี้ เป็นบันทึกภาษาไทยไม่เกิน 10 บรรทัด:\nบันทึกเดิม: " + (localStorage.getItem("gd_notes") || "") + "\n\nบทสนทนา:\n" + t}]}], generationConfig: {temperature: 0.2, maxOutputTokens: 600}})}); if (r.ok || ![400, 404, 429, 500, 503].includes(r.status)) break; }
     if (!r.ok) { await GKEY.handleResponse(r); return; }
     const j = await r.json(); const s = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("").trim();
     if (s) { localStorage.setItem("gd_notes", s.slice(0, 4000)); log("a", "บันทึกสรุปการคุยไว้ในความจำแล้วค่ะ"); } } catch (e) {}
@@ -60,9 +60,9 @@ async function sysPrompt() {
   if ($("mode").value === "tr") return `คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) ทำหน้าที่ล่ามแปลภาษาแบบเรียลไทม์ ฟังสิ่งที่ผู้ใช้พูดแล้วพูดคำแปลเป็นภาษา ${$("lang").value} ทันที ถ้าผู้ใช้พูดภาษา ${$("lang").value} อยู่แล้ว ให้แปลเป็นภาษา${window.LANG === "en" ? "อังกฤษ (English)" : "ไทย"} ห้ามเพิ่มความเห็น`;
   let ctx = "";
   try { const [hs, v, p, kb] = await Promise.all([Promise.all([fetch("lessons.md?t=" + Date.now()).then(r => r.ok ? r.text() : ""), fetch("history/trade_journal.jsonl?t=" + Date.now()).then(r => r.ok ? r.text() : "")]).then(([l, j]) => (l.slice(-3000) + "\n\nบันทึกเทรดล่าสุด:\n" + j.trim().split("\n").slice(-15).join("\n")).slice(0, 5000)).catch(() => ""), fetch("view.json?t=" + Date.now()).then(r => r.json()), fetch("https://api.gold-api.com/price/XAU").then(r => r.json()).catch(() => null), fetch("knowledge.md?t=" + Date.now()).then(r => r.text()).catch(() => "")]);
-    ctx = JSON.stringify({live_price: p, dashboard: v}).slice(0, 12000) + "\nคลังความรู้:\n" + (kb || "").slice(0, 8000) + "\nบทเรียน/ประวัติ:\n" + (hs || ""); } catch (e) {}
+    const mc = await PGAI.context(); ctx = "ราคาทองสด: " + JSON.stringify(p) + "\nบริบทตลาดทั้งหมด (ทองคำ + FX + BTC + MTF + SMC + ความสัมพันธ์ + Edge):\n" + (mc || JSON.stringify(v).slice(0, 12000)) + "\nคลังความรู้:\n" + (kb || "").slice(0, 8000) + "\nบทเรียน/ประวัติ:\n" + (hs || ""); } catch (e) {}
   const EN_RULE = window.LANG === "en" ? "\n\nLANGUAGE OVERRIDE: the user selected English. Speak only natural, polite English as a female assistant (the PUREGOLD assistant). No emoji, no markdown. Use *_en fields of the dashboard data when present.\n" : "";
-  return EN_RULE + memText() + "\n" + "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย ห้ามใช้อีโมจิ ห้ามใช้ markdown พูดเป็นข้อความธรรมดา สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + "\nข้อมูล: " + ctx + EN_RULE;
+  return EN_RULE + memText() + "\n" + "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย ห้ามใช้อีโมจิ ห้ามใช้ markdown พูดเป็นข้อความธรรมดา สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + PGAI.rules().replace(/และใส่ข้อความ \[\[SIGNUP\]\][^\n]*/, "และเรียกเครื่องมือ show_signup เพื่อเปิดหน้าต่างสมัครบนหน้าจอ แล้วพูดอธิบายขั้นตอนทีละขั้นสั้นๆ") + "\nข้อมูล: " + ctx + EN_RULE;
 }
 
 // ===== audio engine (mobile-safe) =====
@@ -100,7 +100,7 @@ function micError(e) {
   if (n === "OverconstrainedError") return "อุปกรณ์ไม่รองรับการตั้งค่าไมค์ที่ขอ ลองใหม่อีกครั้งค่ะ";
   return "ใช้ไมค์ไม่ได้: " + (e && (e.message || n) || e);
 }
-const WS_CLOSE = {1006: "การเชื่อมต่อหลุด (เน็ตไม่เสถียร หรือ key/โมเดลไม่ถูกต้อง)", 1007: "ข้อมูลตั้งค่าไม่ถูกต้อง (อาจเป็นชื่อโมเดล/เสียงที่ไม่รองรับ)", 1008: "ถูกปฏิเสธ: key ไม่ถูกต้อง ไม่มีสิทธิ์ใช้โมเดลนี้ หรือโควตาหมด", 1011: "เซิร์ฟเวอร์ Gemini ขัดข้อง ลองใหม่อีกครั้ง", 1013: "เซิร์ฟเวอร์ไม่ว่าง ลองใหม่ภายหลัง"};
+const WS_CLOSE = {1006: "การเชื่อมต่อหลุด (เน็ตไม่เสถียร หรือคีย์ไม่ถูกต้อง)", 1007: "ระบบเสียง AI ยังไม่พร้อมกับคีย์นี้ ลองใหม่ภายหลัง", 1008: "ถูกปฏิเสธ: คีย์ไม่มีสิทธิ์ใช้ระบบเสียง หรือโควตาหมด", 1011: "เซิร์ฟเวอร์ AI ขัดข้อง ลองใหม่อีกครั้ง", 1013: "เซิร์ฟเวอร์ไม่ว่าง ลองใหม่ภายหลัง"};
 function startCapture() {
   srcNode = ac.createMediaStreamSource(stream);
   if (ac.audioWorklet && window.AudioWorkletNode) {
@@ -119,7 +119,7 @@ function startCapture() {
 function start() {
   // ---- synchronous part (must stay inside the user gesture for iOS) ----
   if (!window.isSecureContext) { log("e", "หน้านี้ไม่ได้เปิดผ่าน https จึงใช้ไมค์ไม่ได้ค่ะ"); return; }
-  if (!KEY) { log("e", CEN() ? "No Gemini key yet, please add one first" : "ยังไม่มี Gemini key กรุณาใส่คีย์ก่อนค่ะ"); GKEY.prompt("first"); return; }
+  if (!KEY) { log("e", CEN() ? "No AI key yet, please add one first" : "ยังไม่มี AI key กรุณาใส่คีย์ก่อนค่ะ"); GKEY.prompt("first"); return; }
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { log("e", "เบราว์เซอร์นี้ไม่รองรับไมค์ค่ะ" + (INAPP ? " (กำลังเปิดในแอป ให้เปิดในเบราว์เซอร์ภายนอก)" : "")); return; }
   const AC = window.AudioContext || window.webkitAudioContext;
   try { ac = new AC(); } catch (e) { log("e", "สร้างระบบเสียงไม่ได้: " + e.message); return; }
@@ -134,29 +134,46 @@ function start() {
     window.__callState = {mic: true, ctx: ac.state, rate: ac.sampleRate};
     s.getAudioTracks().forEach(t => t.onended = () => { dbg("mic track ended"); if (inCall) log("e", "ไมค์ถูกตัด (อาจมีสายเข้า/แอปอื่นใช้ไมค์)"); });
     await startCapture(); window.__callState.capture = node ? node.constructor.name : "none";
-    $("st").textContent = "กำลังเชื่อมต่อ Gemini…";
-    const sys = await sysPrompt();
-    ws = new WebSocket("wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=" + encodeURIComponent(KEY));
-    ws.onopen = () => { dbg("ws open, model " + $("model").value); ws.send(JSON.stringify({setup: {model: $("model").value,
-      generationConfig: {responseModalities: ["AUDIO"], speechConfig: {voiceConfig: {prebuiltVoiceConfig: {voiceName: $("voice").value || "Sulafat"}}}},
-      systemInstruction: {parts: [{text: sys}]}, inputAudioTranscription: {}, outputAudioTranscription: {},
-      ...(/translate/.test($("model").value) ? {translationConfig: {targetLanguageCode: LC[$("lang").value] || "th", echoTargetLanguage: true}} : {})}})); };
-    ws.onmessage = async ev => {
-      const m = JSON.parse(typeof ev.data === "string" ? ev.data : await ev.data.text());
-      if (m.setupComplete) { dbg("setupComplete"); $("st").textContent = "กำลังฟัง… พูดได้เลย (พูดแทรกได้)"; return; }
-      const sc = m.serverContent; if (!sc) { if (m.goAway) log("e", "เซสชันใกล้หมดเวลา"); return; }
-      if (sc.interrupted) { stopPlay(); aLine = null; }
-      if (sc.inputTranscription?.text) { uLine = uLine || log("u", "คุณ: "); uLine.textContent += sc.inputTranscription.text; aLine = null; }
-      if (sc.outputTranscription?.text) { aLine = aLine || log("a", "เลขา: "); aLine.textContent += sc.outputTranscription.text; uLine = null; }
-      for (const p of sc.modelTurn?.parts || []) if (p.inlineData?.data) play(p.inlineData.data);
-      if (sc.turnComplete) { aLine = null; uLine = null; }
+    $("st").textContent = CEN() ? "Connecting to PUREGOLD AI..." : "กำลังเชื่อมต่อ เลขา PUREGOLD…";
+    const sys = await sysPrompt(); window.__lastSys = sys;
+    const tr = $("mode").value === "tr", list = tr ? [TR_MODEL, ...LIVE_MODELS] : LIVE_MODELS.slice();
+    let mi = Math.max(0, list.indexOf(localStorage.getItem("gc_live_ok"))), tries = 0;
+    const connect = () => {
+      const model = list[mi], trans = /translate/.test(model); let ready = false; tries++;
+      ws = new WebSocket("wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=" + encodeURIComponent(KEY));
+      ws.onopen = () => { dbg("ws open #" + (mi + 1)); ws.send(JSON.stringify({setup: {model,
+        generationConfig: {responseModalities: ["AUDIO"], speechConfig: {voiceConfig: {prebuiltVoiceConfig: {voiceName: VOICE}}}},
+        systemInstruction: {parts: [{text: sys}]}, inputAudioTranscription: {}, outputAudioTranscription: {},
+        ...(!tr ? {tools: [{functionDeclarations: [{name: "show_signup", description: "Show the Exness account sign-up popup (link, QR code and steps) on the user's screen when they want to open an account, sign up or start trading."}]}]} : {}),
+        ...(trans ? {translationConfig: {targetLanguageCode: LC[$("lang").value] || "th", echoTargetLanguage: true}} : {})}})); };
+      ws.onmessage = async ev => {
+        const m = JSON.parse(typeof ev.data === "string" ? ev.data : await ev.data.text());
+        if (m.setupComplete) { ready = true; localStorage.setItem("gc_live_ok", model); dbg("setupComplete"); $("st").textContent = CEN() ? "Listening... speak any time (you can interrupt)" : "กำลังฟัง… พูดได้เลย (พูดแทรกได้)"; return; }
+        if (m.toolCall) { const fr = (m.toolCall.functionCalls || []).map(fc => { if (fc.name === "show_signup") PGAI.showSignup({force: true}); return {id: fc.id, name: fc.name, response: {result: "popup shown"}}; });
+          try { ws.send(JSON.stringify({toolResponse: {functionResponses: fr}})); } catch (e) {} return; }
+        const sc = m.serverContent; if (!sc) { if (m.goAway) log("e", CEN() ? "The session is about to time out" : "เซสชันใกล้หมดเวลา"); return; }
+        if (sc.interrupted) { stopPlay(); aLine = null; }
+        if (sc.inputTranscription?.text) { uLine = uLine || log("u", "คุณ: "); uLine.textContent += sc.inputTranscription.text; aLine = null; if (!tr && !uLine.dataset.su && PGAI.intent(uLine.textContent)) { uLine.dataset.su = "1"; PGAI.showSignup(); } }
+        if (sc.outputTranscription?.text) { aLine = aLine || log("a", "เลขา: "); aLine.textContent += sc.outputTranscription.text; uLine = null; }
+        for (const p of sc.modelTurn?.parts || []) if (p.inlineData?.data) play(p.inlineData.data);
+        if (sc.turnComplete) { aLine = null; uLine = null; }
+      };
+      ws.onerror = () => dbg("ws error");
+      ws.onclose = e => { const rs = String(e.reason || "").replace(/models\/[\w.-]+|gemini[\w.-]*/gi, "AI"); dbg("ws close " + e.code + " " + rs);
+        const gk = e.code !== 1000 ? GKEY.classify(0, e.reason) : null;
+        if (gk === "auth") { const was = inCall; GKEY.handle(gk); if (was) log("e", GKEY.message(gk)); stop(true); return; }
+        if (inCall && e.code !== 1000 && !ready && tries < list.length) { mi = (mi + 1) % list.length; dbg("fallback #" + (mi + 1)); connect(); return; }
+        if (gk) { GKEY.handle(gk); if (inCall) log("e", GKEY.message(gk)); stop(true); return; }
+        if (inCall && e.code !== 1000) log("e", (CEN() ? "Connection closed (" : "ปิดการเชื่อมต่อ (") + e.code + "): " + (WS_CLOSE[e.code] || "") + (rs ? " · " + rs : "")); stop(true); };
     };
-    ws.onerror = () => dbg("ws error");
-    ws.onclose = e => { dbg("ws close " + e.code + " " + e.reason); const gk = e.code !== 1000 ? GKEY.classify(0, e.reason) : null; if (gk) { const was = inCall; GKEY.handle(gk); if (was) log("e", GKEY.message(gk)); stop(true); return; } if (inCall && e.code !== 1000) log("e", "ปิดการเชื่อมต่อ (" + e.code + "): " + (/api key/i.test(e.reason || "") ? "Gemini key ไม่ถูกต้องหรือถูกปิดใช้งาน — ตั้งค่า key ใหม่ในหน้าแดชบอร์ด" : /model|not found|unsupported/i.test(e.reason || "") ? "โมเดลนี้ใช้ไม่ได้กับ key นี้ ลองเลือกโมเดลอื่น" : /quota|exhaust|rate/i.test(e.reason || "") ? "โควตาฟรีหมดชั่วคราว ลองใหม่ภายหลังหรือเปลี่ยนโมเดล" : (WS_CLOSE[e.code] || "")) + (e.reason ? " · " + e.reason : "")); stop(true); };
+    connect();
+    // refresh market context mid-call every 4 minutes (no reply requested)
+    clearInterval(window.__ctxTimer); if (!tr) window.__ctxTimer = setInterval(async () => { if (!inCall || !ws || ws.readyState !== 1) return; const mc = await PGAI.context();
+      if (mc) try { ws.send(JSON.stringify({clientContent: {turns: [{role: "user", parts: [{text: "[อัปเดตข้อมูลตลาดล่าสุด ใช้ตอบคำถามต่อจากนี้ ไม่ต้องตอบรับข้อความนี้]\n" + mc}]}], turnComplete: false}})); dbg("context refreshed"); } catch (e) {} }, 240000);
   }).catch(e => { dbg("start error " + (e && e.name) + " " + (e && e.message)); log("e", micError(e)); window.__callState = {mic: false, err: e && e.name}; stop(true, true); });
 }
 function stop(fromClose, quiet) {
-  const was = inCall; inCall = false;
+  const was = inCall; inCall = false; clearInterval(window.__ctxTimer);
   if (!fromClose && ws) try { ws.close(1000); } catch (e) {}
   ws = null; stopPlay(); try { node && node.disconnect(); srcNode && srcNode.disconnect(); } catch (e) {}
   stream && stream.getTracks().forEach(t => t.stop()); try { ac && ac.close(); } catch (e) {} ac = stream = node = srcNode = null; spBuf = []; spPos = 0;

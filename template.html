@@ -253,7 +253,7 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
   <div style="display:flex;gap:8px"><button class="btn" id="memSave"> บันทึก</button><button class="btn" id="memClear" style="color:#ff7b7b"> ล้างความจำ</button></div>
  </div>
  <div class="set" id="set">
-  <b>Gemini API key</b>
+  <b>AI key (Google AI Studio)</b>
   <input type="password" id="keyIn" placeholder="วาง API key ของคุณที่นี่" autocomplete="off" spellcheck="false">
   <small id="keyErr" role="alert" style="color:#ff6b81;min-height:14px;display:block"></small>
   <div style="display:flex;gap:8px"><button class="btn pri" id="saveKey">บันทึก</button><button class="btn" id="delKey"> ลบ key</button></div>
@@ -473,7 +473,7 @@ $("mic").onclick = async () => {
 async function ask(q, audio) {
   q = (q || "").trim(); if (!q && !audio) return;
   const key = getKey();
-  if (!key) { GKEY.prompt("first", {onSaved: () => { syncSet(); bubble("a", EN() ? "Key saved. You can ask again now." : "บันทึกคีย์แล้วค่ะ ถามใหม่ได้เลย"); }}); bubble("e", EN() ? "Please add a Gemini API key first" : "กรุณาใส่ Gemini API key ก่อน"); return; }
+  if (!key) { GKEY.prompt("first", {onSaved: () => { syncSet(); bubble("a", EN() ? "Key saved. You can ask again now." : "บันทึกคีย์แล้วค่ะ ถามใหม่ได้เลย"); }}); bubble("e", EN() ? "Please add a AI key (Google AI Studio) first" : "กรุณาใส่ AI key (Google AI Studio) ก่อน"); return; }
   const tr = mode === "tr";
   if (!tr && q && PGAI.intent(q)) PGAI.showSignup({force: true});
   const parts = []; if (audio) parts.push({inlineData: audio}); parts.push({text: q || (tr ? "(แปลเสียงนี้)" : "(ฟังคำถามจากเสียงนี้แล้วตอบ)")});
@@ -549,7 +549,7 @@ function renderPnl() {
   const xy = pts2.map((v, i) => `${(i / Math.max(1, pts2.length - 1)) * W},${y(v)}`).join(" ");
   $("pnlChart").innerHTML = `<line x1="0" x2="${W}" y1="${y(0)}" y2="${y(0)}" stroke="#444" stroke-dasharray="4"/><polyline class="${animEq ? "eq" : ""}" points="${xy}" fill="none" stroke="${col(c)}" stroke-width="3"/>` + pts2.map((v, i) => `<circle cx="${(i / Math.max(1, pts2.length - 1)) * W}" cy="${y(v)}" r="4" fill="${col(v)}"/>`).join("");
 }
-// first-run Gemini key prompt (stored only in this browser)
+// first-run AI key prompt (stored only in this browser)
 function exnessPrompt() {
   const force = /[?&]modal=1/.test(location.search);
   if (!force && (localStorage.getItem("gd_exq") || /[?&]shot=1/.test(location.search))) return false;

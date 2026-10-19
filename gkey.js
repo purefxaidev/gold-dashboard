@@ -1,4 +1,4 @@
-/* PUREGOLD Gemini key manager. The key lives only in this browser (localStorage "gd_gemini_key") and is sent only to
+/* PUREGOLD AI key manager. The key lives only in this browser (localStorage "gd_gemini_key") and is sent only to
    generativelanguage.googleapis.com. Handles invalid/expired keys (clear + ask again), quota (keep key, offer change),
    validates new keys with a cheap models.list call before saving. No emoji. */
 (function () {
@@ -38,7 +38,7 @@
       document.querySelectorAll(".gk-ov").forEach(x => x.remove());
       const o = document.createElement("div"); o.className = "gk-ov notr"; o.id = "gkBox";
       o.style.cssText = "position:fixed;inset:0;z-index:2000;background:#000c;display:flex;align-items:center;justify-content:center;padding:16px;font-family:system-ui,'Noto Sans Thai',sans-serif";
-      const head = reason === "invalid" ? G.message("auth") : reason === "quota" ? G.message("quota") : reason === "first" ? T("ตั้งค่าครั้งแรก: วาง Gemini API key", "First-time setup: paste your Gemini API key") : T("เปลี่ยน Gemini API key", "Change Gemini API key");
+      const head = reason === "invalid" ? G.message("auth") : reason === "quota" ? G.message("quota") : reason === "first" ? T("ตั้งค่าครั้งแรก: วาง AI key (Google AI Studio)", "First-time setup: paste your AI key (Google AI Studio)") : T("เปลี่ยน AI key (Google AI Studio)", "Change AI key (Google AI Studio)");
       const col = reason === "invalid" ? "#ff4d6d" : reason === "quota" ? "#fb8c00" : "#f5c542", has = !!G.get();
       o.innerHTML = `<div style="max-width:440px;width:100%;background:#11131a;border:1px solid ${col};border-radius:16px;padding:20px;box-shadow:0 0 40px ${col}44;color:#eee">
         <div id="gkHead" style="font-weight:700;font-size:16px;color:${col};margin-bottom:8px">${head}</div>

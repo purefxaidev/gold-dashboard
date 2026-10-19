@@ -3,17 +3,21 @@
 // Optional KV binding MODES (translate mode per user). Voice replies: not in Worker (no m4a encoder) — use line_notify_voice.sh for voice alerts.
 const CHAT_MODEL = 'gemini-3.8-flash', TTS_MODEL = 'gemini-3.8-flash-tts', TTS_VOICE = 'Sulafat';
 const DASHBOARD_URL = 'https://purefxaidev.github.io/gold-dashboard/view.json';
+const CONTEXT_URL = 'https://purefxaidev.github.io/gold-dashboard/ai_context.txt'; // compact all-markets context written by build.py
 const PRICE_URL = 'https://api.gold-api.com/price/XAU';
 const KNOWLEDGE_URL = 'https://purefxaidev.github.io/gold-dashboard/knowledge.md';
 const LESSONS_URL = 'https://purefxaidev.github.io/gold-dashboard/lessons.md';
 const JOURNAL_URL = 'https://purefxaidev.github.io/gold-dashboard/history/trade_journal.jsonl';
 const LANGS = { th: 'Thai', en: 'English', zh: 'Chinese (Simplified)', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese', lo: 'Lao', my: 'Burmese', fr: 'French', de: 'German' };
 const SYSTEM_PROMPT = [
-  'คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นผู้ช่วยนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) ตอบเป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ',
-  'ใช้ข้อมูลบริบท (ราคาสด แนวรับแนวต้าน แผนเทรด % ความมั่นใจ AI ค่า EV และข่าว) ที่แนบมาเป็นหลัก ถ้าข้อมูลไม่พอให้บอกตรงๆ',
+  'คุณคือ เลขา PUREGOLD (PUREGOLD AI) ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) เป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น และติดตามตลาดอื่นด้วย ได้แก่ EURUSD GBPUSD USDJPY AUDUSD USDCHF USDCAD BTCUSD ตอบเป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ',
+  'ตัวตน: ห้ามบอกชื่อโมเดล ชื่อบริษัทผู้พัฒนาโมเดล หรือชื่อเสียงที่ใช้ ถ้าถูกถามให้ตอบว่าเป็น เลขา PUREGOLD ระบบ AI ของ PUREGOLD',
+  'ใช้ข้อมูลบริบทที่แนบมาเป็นหลัก (ราคาทองสด แนวรับแนวต้าน แผนเทรด EV หลายไทม์เฟรม Smart Money ความสัมพันธ์ระหว่างตลาด Edge ข่าว และตลาด FX/BTC: ราคา % วันนี้ เทรนด์แต่ละ TF bias และไอเดีย setup) ตลาดอื่นนอกจากทองให้เป็นการวิเคราะห์เท่านั้น ถ้าข้อมูลไม่พอให้บอกตรงๆ',
   'ถ้าผู้ใช้ส่งภาพกราฟ ให้อ่านเทรนด์ แนวรับแนวต้านจากภาพ ถ้าส่งเสียง ให้ฟังคำถามแล้วตอบ',
   'ทุกครั้งที่แนะนำจุดเข้า ต้องระบุ Buy/Sell จุดเข้า SL และ TP พร้อมเหตุผลสั้นๆ',
-  'ห้ามใช้อีโมจิ ห้ามใช้ markdown (ห้าม ** # - ตาราง) ตอบเป็นข้อความธรรมดาแบ่งบรรทัดสั้นๆ ห้ามรับประกันกำไร ปิดท้ายด้วยคำเตือนความเสี่ยง 1 บรรทัด ห้ามขอหรือเปิดเผยรหัสผ่าน/API key'
+  'ห้ามใช้อีโมจิ ห้ามใช้ markdown (ห้าม ** # - ตาราง) ตอบเป็นข้อความธรรมดาแบ่งบรรทัดสั้นๆ ห้ามรับประกันหรือสัญญาว่าจะได้กำไร ปิดท้ายด้วยคำเตือนความเสี่ยงสั้นๆ 1 บรรทัด',
+  'ห้ามขอหรือเปิดเผยรหัสผ่าน เลขบัญชี เลขออเดอร์ ยอดเงิน อีเมล หรือ API key ใดๆ',
+  'ถ้าผู้ใช้อยากสมัคร เปิดบัญชี หรือเริ่มเทรด ให้ตอบขั้นตอนสั้นๆ เตือนความเสี่ยง และใส่ [[SIGNUP]] ไว้ท้ายคำตอบหนึ่งครั้ง (ระบบจะซ่อนแล้วส่งการ์ดสมัครให้)'
 ].join('\n');
 
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json' } });
@@ -111,6 +115,23 @@ function quick() {
   return { items: Object.keys(LANGS).map(k => ({ type: 'action', action: { type: 'message', label: k + ' ' + LANGS[k].split(' ')[0], text: '/แปล ' + k } }))
     .concat([{ type: 'action', action: { type: 'message', label: 'วิเคราะห์ทอง', text: '/วิเคราะห์' } }]) };
 }
+// ===== Signup card (Flex) — keyword or AI [[SIGNUP]] marker =====
+const SIGNUP_RE = /สมัคร|เปิดบัญชี|เปิดพอร์ต|อยากเทรด|เริ่มเทรด|ลงทะเบียน|sign ?up|open (an |a )?(trading )?account|how (do i |to )start trading|create (an )?account/i;
+function signupFlex_() {
+  var G = '#d4af37', steps = ['1. กดปุ่มสมัคร Exness ด้านล่าง', '2. กรอกอีเมล ตั้งรหัสผ่าน ยืนยันอีเมล/เบอร์', '3. ยืนยันตัวตน (บัตรประชาชน + ที่อยู่)', '4. เลือกบัญชี Standard แล้วฝากเงิน', '5. ติดตั้งแอป Exness Trade / MT5', '6. เริ่มด้วยล็อตเล็ก ตั้ง SL ทุกไม้'];
+  return { type: 'flex', altText: 'สมัครบัญชีเทรด Exness กับ PUREGOLD', contents: { type: 'bubble',
+    styles: { body: { backgroundColor: '#0b0d12' }, footer: { backgroundColor: '#0b0d12' } },
+    body: { type: 'box', layout: 'vertical', spacing: 'sm', contents: [
+      { type: 'text', text: 'PUREGOLD', color: G, weight: 'bold', size: 'sm' },
+      { type: 'text', text: 'เริ่มเทรดทองกับ Exness', color: '#ffffff', weight: 'bold', size: 'lg', wrap: true },
+      { type: 'text', text: 'สมัครผ่านลิงก์พาร์ทเนอร์ ใช้เวลาไม่กี่นาที แล้วใช้สัญญาณและเครื่องมือของ PUREGOLD ได้ทันที', color: '#b8bcc8', size: 'xs', wrap: true },
+      { type: 'separator', color: '#2a2f3a', margin: 'md' },
+      { type: 'box', layout: 'vertical', spacing: 'xs', margin: 'md', contents: steps.map(function (s) { return { type: 'text', text: s, color: '#e6e8ee', size: 'xs', wrap: true }; }) },
+      { type: 'text', text: 'คำเตือน: CFD และทองคำมีความเสี่ยงสูง อาจสูญเสียเงินทั้งหมด ไม่มีการรับประกันกำไร', color: '#8a8f9c', size: 'xxs', wrap: true, margin: 'md' } ] },
+    footer: { type: 'box', layout: 'vertical', spacing: 'sm', contents: [
+      { type: 'button', style: 'primary', color: G, height: 'sm', action: { type: 'uri', label: 'สมัคร Exness', uri: 'https://one.exnessonelink.com/a/s2didh6p' } },
+      { type: 'button', style: 'secondary', height: 'sm', action: { type: 'uri', label: 'ดูวิธีสมัครทีละขั้น', uri: 'https://purefxaidev.github.io/gold-dashboard/signup.html' } } ] } } };
+}
 const reply = (env, ev, messages) => line(env, 'reply', { replyToken: ev.replyToken, messages });
 
 async function handleEvent(env, ev) {
@@ -118,7 +139,7 @@ async function handleEvent(env, ev) {
   const m = ev.message, uid = ev.source && ev.source.userId;
   if (m.type === 'text' && m.text.startsWith('/')) {
     const t = m.text.trim();
-    if (/^\/สมัคร/.test(t)) return reply(env, ev, [{ type: 'text', text: 'สมัครบัญชี Exness (ลิงก์แนะนำ partner):\nhttps://one.exnessonelink.com/a/s2didh6p\n\nสอนสมัครทีละขั้น:\nhttps://purefxaidev.github.io/gold-dashboard/signup.html\n\nคำเตือน: CFD/ทองคำมีความเสี่ยงสูง อาจสูญเสียเงินทั้งหมด' }]);
+    if (/^\/สมัคร/.test(t)) return reply(env, ev, [signupFlex_()]);
     const so = /^\/ตั้งเจ้าของ\s+(\S+)/.exec(t);
     if (so) { const okS = env.ALERT_SECRET && so[1] === env.ALERT_SECRET && env.MODES; if (okS) await env.MODES.put('owner', uid);
       return reply(env, ev, [{ type: 'text', text: okS ? 'ตั้งคุณเป็นเจ้าของบอทแล้วค่ะ' : 'ตั้งไม่สำเร็จค่ะ (รหัสผิด หรือยังไม่ผูก KV)' }]); }
@@ -167,6 +188,7 @@ async function handleEvent(env, ev) {
       contents: [{ role: 'user', parts }], generationConfig: { temperature: 0.2, maxOutputTokens: 1200 } });
     return reply(env, ev, [{ type: 'text', text: (' ' + out).slice(0, 4500), quickReply: quick() }]);
   }
+  const kwSignup = m.type === 'text' && SIGNUP_RE.test(m.text);
   const now = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' });
   const mem = await getMem(env, uid);
   const memP = (mem.facts.length ? '\n\nสิ่งที่จำเกี่ยวกับผู้ใช้:\n- ' + mem.facts.join('\n- ') : '') + '\n\nถ้าผู้ใช้บอกข้อมูลที่ควรจำระยะยาว ให้ใส่ [[จำ: ข้อความสั้น]] ท้ายคำตอบ';
@@ -174,20 +196,22 @@ async function handleEvent(env, ev) {
     systemInstruction: { parts: [{ text: SYSTEM_PROMPT + memP }] },
     contents: [...mem.hist.map(h => ({ role: h.r, parts: [{ text: h.t }] })), { role: 'user', parts: [{ text: 'เวลาไทยตอนนี้: ' + now + '\n\nบริบทตลาด:\n' + await context() }, ...parts] }],
     generationConfig: { temperature: 0.4, maxOutputTokens: 1200 } });
+  let su = kwSignup; out = out.replace(/\[\[\s*SIGNUP\s*\]\]/gi, () => { su = true; return ''; });
   const add = []; out = out.replace(/\[\[\s*จำ\s*:\s*([^\]]+)\]\]/g, (_, x) => { add.push(x.trim()); return ''; }).trim();
   add.forEach(x => { if (!mem.facts.includes(x)) mem.facts.push(x); }); if (add.length) out += '\n\nจำไว้แล้วค่ะ: ' + add.join(' · ');
   mem.hist.push({ r: 'user', t: (m.type === 'text' ? m.text : '[' + m.type + ']').slice(0, 400) }, { r: 'model', t: out.slice(0, 600) });
   await setMem(env, uid, mem);
-  return reply(env, ev, [{ type: 'text', text: out.slice(0, 4500) }]);
+  return reply(env, ev, [{ type: 'text', text: out.slice(0, 4500) }].concat(su ? [signupFlex_()] : []));
 }
 
 async function context() {
   const out = [];
-  const [p, d, k, ls, jn] = await Promise.allSettled([fetch(PRICE_URL).then(r => r.ok ? r.text() : ''), fetch(DASHBOARD_URL + '?t=' + Date.now()).then(r => r.ok ? r.text() : ''),
+  const [p, d, k, ls, jn, ac] = await Promise.allSettled([fetch(PRICE_URL).then(r => r.ok ? r.text() : ''), fetch(DASHBOARD_URL + '?t=' + Date.now()).then(r => r.ok ? r.text() : ''),
     fetch(KNOWLEDGE_URL, { cf: { cacheTtl: 3600, cacheEverything: true } }).then(r => r.ok ? r.text() : ''),
-    fetch(LESSONS_URL, { cf: { cacheTtl: 600 } }).then(r => r.ok ? r.text() : ''), fetch(JOURNAL_URL, { cf: { cacheTtl: 600 } }).then(r => r.ok ? r.text() : '')]);
+    fetch(LESSONS_URL, { cf: { cacheTtl: 600 } }).then(r => r.ok ? r.text() : ''), fetch(JOURNAL_URL, { cf: { cacheTtl: 600 } }).then(r => r.ok ? r.text() : ''), fetch(CONTEXT_URL + '?t=' + Date.now()).then(r => r.ok ? r.text() : '')]);
   if (p.value) out.push('ราคาสด XAU: ' + p.value.slice(0, 500));
-  if (d.value) out.push('ข้อมูลแดชบอร์ด (JSON): ' + d.value.slice(0, 12000));
+  if (ac.value) out.push('บริบทตลาดทั้งหมด (ทองคำ FX BTC MTF SMC ความสัมพันธ์ Edge):\n' + ac.value.slice(0, 14000));
+  else if (d.value) out.push('ข้อมูลแดชบอร์ด (JSON): ' + d.value.slice(0, 12000));
   if (ls.value || jn.value) out.push('บทเรียน/ประวัติเทรด:\n' + ((ls.value || '').slice(-3000) + '\nบันทึกเทรดล่าสุด:\n' + (jn.value || '').trim().split('\n').slice(-15).join('\n')).slice(0, 5000));
   if (k.value) out.push('คลังความรู้ (หลักการตัดสินใจ):\n' + k.value.slice(0, 9000));
   return out.join('\n\n') || 'ไม่มีข้อมูลบริบท';

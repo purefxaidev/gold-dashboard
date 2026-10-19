@@ -63,6 +63,7 @@ svg text{font-family:var(--mono)}
  <div class="brand"><img src="logo.svg" alt="PUREGOLD"><div><b>PUREGOLD</b><small id="tSub">CONTROL CENTER · XAUUSD</small></div></div>
  <div class="sp"></div>
  <div class="meta" id="meta">-</div>
+ <button class="back" id="suBtn" type="button" style="cursor:pointer;font:inherit;font-size:11px;background:transparent;color:#ffd36b">OPEN ACCOUNT</button>
  <a class="back" id="back" href="./" data-langref>&lt; DASHBOARD</a>
 </div>
 <div class="chips" id="chips"></div>
@@ -99,6 +100,7 @@ svg text{font-family:var(--mono)}
 <div class="ticker"><div class="lab">NEWS</div><div style="overflow:hidden;flex:1"><div class="mv" id="tick">-</div></div></div>
 <div class="foot" id="foot">-</div>
 <script src="pgx.js"></script>
+<script src="pgai.js"></script>
 <script>
 const EN = window.LANG === "en", T = (th, en) => EN ? en : th, $ = id => document.getElementById(id);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
@@ -118,7 +120,7 @@ $("foot").textContent = T("ข้อมูลเพื่อการศึก�
 let D = null, live = {price: null, open: null, t: null};
 let PX = JSON.parse(localStorage.getItem("gd_ctl_px") || "[]").filter(x => Date.now() - x[0] < 6 * 3600e3);
 const CHIPS = [["PRICE.FEED", "g", () => live.price != null], ["VIEW.JSON", "", () => !!D], ["AI.CONF", "", () => D && num(D.ai_up_pct) != null], ["SR.MAP", "m", () => D && (D.res_nums || []).length + (D.sup_nums || []).length > 0],
- ["EV.MODEL", "", () => D && (D.ev_plans || []).length > 0], ["PNL.LEDGER", "g", () => D && D.pnl && (D.pnl.trades || []).length > 0], ["NEWS.STREAM", "m", () => D && (D.news || []).length > 0], ["AUTO.TRADE", "g", () => D && D.auto_trade && D.auto_trade.enabled === true], ["SPHERE.3D", "", () => !!S]];
+ ["EV.CALC", "", () => D && (D.ev_plans || []).length > 0], ["PNL.LEDGER", "g", () => D && D.pnl && (D.pnl.trades || []).length > 0], ["NEWS.STREAM", "m", () => D && (D.news || []).length > 0], ["AUTO.TRADE", "g", () => D && D.auto_trade && D.auto_trade.enabled === true], ["SPHERE.3D", "", () => !!S]];
 function chips() { $("chips").innerHTML = CHIPS.map(([n, c, f]) => { let on = false; try { on = !!f(); } catch (e) {} return `<span class="chip ${c} ${on ? "on" : ""}"><i></i>${n}</span>`; }).join(""); }
 
 function closedTrades() { const tr = (D && D.pnl && D.pnl.trades) || []; return tr.filter(t => t.status === "closed" && num(t.pl_usc) != null).sort((a, b) => String(a.time).localeCompare(String(b.time))); }
@@ -298,6 +300,8 @@ async function initSphere() {
 ["cMtf:mtf", "cMk:markets", "cEdge:edge", "cSmc:smc"].forEach(x => { const [id, k] = x.split(":"); PGX.mount($(id), k, {compact: true}); });
 chips(); renderPrice(); pollData(); pollPrice(); initSphere();
 setInterval(pollData, 10000); setInterval(pollPrice, 10000);
+$("suBtn").textContent = T("เปิดบัญชี", "OPEN ACCOUNT"); $("suBtn").onclick = () => PGAI.showSignup({force: true});
+if (new URLSearchParams(location.search).get("signup")) PGAI.showSignup({force: true});
 </script>
 </body>
 </html>

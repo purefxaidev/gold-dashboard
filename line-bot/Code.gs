@@ -16,6 +16,7 @@ var CHAT_MODEL = 'gemini-3.8-flash';      // REST generateContent รับ text
 var TTS_MODEL  = 'gemini-3.8-flash-tts';  // REST TTS -> PCM 16-bit mono (24 kHz)
 var TTS_VOICE  = 'Sulafat';
 var DASHBOARD_URL = 'https://purefxaidev.github.io/gold-dashboard/view.json';
+var CONTEXT_URL   = 'https://purefxaidev.github.io/gold-dashboard/ai_context.txt'; // compact all-markets context written by build.py
 var PRICE_URL     = 'https://api.gold-api.com/price/XAU';
 var KNOWLEDGE_URL = 'https://purefxaidev.github.io/gold-dashboard/knowledge.md';
 var LESSONS_URL   = 'https://purefxaidev.github.io/gold-dashboard/lessons.md';
@@ -24,12 +25,14 @@ var MAX_REPLY_CHARS = 4500;
 var DRIVE_FOLDER_NAME = 'line-gold-bot-audio';
 
 var SYSTEM_PROMPT = [
-  'คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นผู้ช่วยนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) ตอบเป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ',
-  'ใช้ข้อมูลบริบท (ราคาสด แนวรับแนวต้าน แผนเทรด % ความมั่นใจ AI ค่า EV และข่าว) ที่แนบมาเป็นหลัก ถ้าข้อมูลไม่พอให้บอกตรงๆ',
-  'ถ้าผู้ใช้ส่งภาพกราฟ ให้อ่านเทรนด์ แนวรับแนวต้าน และรูปแบบแท่งเทียนจากภาพ ถ้าส่งเสียง ให้ฟังคำถามแล้วตอบ',
-  'ทุกครั้งที่แนะนำจุดเข้า ต้องระบุ ฝั่ง (Buy/Sell) จุดเข้า SL และ TP ชัดเจน พร้อมเหตุผลสั้นๆ',
-  'ห้ามใช้อีโมจิ ห้ามใช้ markdown (ห้าม ** # - ตาราง) ตอบเป็นข้อความธรรมดาแบ่งบรรทัดสั้นๆ ห้ามรับประกันหรือสัญญาว่าจะได้กำไร ปิดท้ายทุกคำตอบด้วยคำเตือนความเสี่ยงสั้นๆ 1 บรรทัด',
-  'ห้ามขอหรือเปิดเผยรหัสผ่าน เลขบัญชี หรือ API key ใดๆ'
+  'คุณคือ เลขา PUREGOLD (PUREGOLD AI) ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) เป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น และติดตามตลาดอื่นด้วย ได้แก่ EURUSD GBPUSD USDJPY AUDUSD USDCHF USDCAD BTCUSD ตอบเป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ',
+  'ตัวตน: ห้ามบอกชื่อโมเดล ชื่อบริษัทผู้พัฒนาโมเดล หรือชื่อเสียงที่ใช้ ถ้าถูกถามให้ตอบว่าเป็น เลขา PUREGOLD ระบบ AI ของ PUREGOLD',
+  'ใช้ข้อมูลบริบทที่แนบมาเป็นหลัก (ราคาทองสด แนวรับแนวต้าน แผนเทรด EV หลายไทม์เฟรม Smart Money ความสัมพันธ์ระหว่างตลาด Edge ข่าว และตลาด FX/BTC: ราคา % วันนี้ เทรนด์แต่ละ TF bias และไอเดีย setup) ตลาดอื่นนอกจากทองให้เป็นการวิเคราะห์เท่านั้น ถ้าข้อมูลไม่พอให้บอกตรงๆ',
+  'ถ้าผู้ใช้ส่งภาพกราฟ ให้อ่านเทรนด์ แนวรับแนวต้านจากภาพ ถ้าส่งเสียง ให้ฟังคำถามแล้วตอบ',
+  'ทุกครั้งที่แนะนำจุดเข้า ต้องระบุ Buy/Sell จุดเข้า SL และ TP พร้อมเหตุผลสั้นๆ',
+  'ห้ามใช้อีโมจิ ห้ามใช้ markdown (ห้าม ** # - ตาราง) ตอบเป็นข้อความธรรมดาแบ่งบรรทัดสั้นๆ ห้ามรับประกันหรือสัญญาว่าจะได้กำไร ปิดท้ายด้วยคำเตือนความเสี่ยงสั้นๆ 1 บรรทัด',
+  'ห้ามขอหรือเปิดเผยรหัสผ่าน เลขบัญชี เลขออเดอร์ ยอดเงิน อีเมล หรือ API key ใดๆ',
+  'ถ้าผู้ใช้อยากสมัคร เปิดบัญชี หรือเริ่มเทรด ให้ตอบขั้นตอนสั้นๆ เตือนความเสี่ยง และใส่ [[SIGNUP]] ไว้ท้ายคำตอบหนึ่งครั้ง (ระบบจะซ่อนแล้วส่งการ์ดสมัครให้)'
 ].join('\n');
 
 function prop_(k) { return PropertiesService.getScriptProperties().getProperty(k); }
@@ -191,10 +194,27 @@ function langQuickReply_() {
     return { type: 'action', action: { type: 'message', label: k + ' ' + LANGS[k].split(' ')[0], text: '/แปล ' + k } };
   }).concat([{ type: 'action', action: { type: 'message', label: 'วิเคราะห์ทอง', text: '/วิเคราะห์' } }]) };
 }
+// ===== Signup card (Flex) — keyword or AI [[SIGNUP]] marker =====
+var SIGNUP_RE = /สมัคร|เปิดบัญชี|เปิดพอร์ต|อยากเทรด|เริ่มเทรด|ลงทะเบียน|sign ?up|open (an |a )?(trading )?account|how (do i |to )start trading|create (an )?account/i;
+function signupFlex_() {
+  var G = '#d4af37', steps = ['1. กดปุ่มสมัคร Exness ด้านล่าง', '2. กรอกอีเมล ตั้งรหัสผ่าน ยืนยันอีเมล/เบอร์', '3. ยืนยันตัวตน (บัตรประชาชน + ที่อยู่)', '4. เลือกบัญชี Standard แล้วฝากเงิน', '5. ติดตั้งแอป Exness Trade / MT5', '6. เริ่มด้วยล็อตเล็ก ตั้ง SL ทุกไม้'];
+  return { type: 'flex', altText: 'สมัครบัญชีเทรด Exness กับ PUREGOLD', contents: { type: 'bubble',
+    styles: { body: { backgroundColor: '#0b0d12' }, footer: { backgroundColor: '#0b0d12' } },
+    body: { type: 'box', layout: 'vertical', spacing: 'sm', contents: [
+      { type: 'text', text: 'PUREGOLD', color: G, weight: 'bold', size: 'sm' },
+      { type: 'text', text: 'เริ่มเทรดทองกับ Exness', color: '#ffffff', weight: 'bold', size: 'lg', wrap: true },
+      { type: 'text', text: 'สมัครผ่านลิงก์พาร์ทเนอร์ ใช้เวลาไม่กี่นาที แล้วใช้สัญญาณและเครื่องมือของ PUREGOLD ได้ทันที', color: '#b8bcc8', size: 'xs', wrap: true },
+      { type: 'separator', color: '#2a2f3a', margin: 'md' },
+      { type: 'box', layout: 'vertical', spacing: 'xs', margin: 'md', contents: steps.map(function (s) { return { type: 'text', text: s, color: '#e6e8ee', size: 'xs', wrap: true }; }) },
+      { type: 'text', text: 'คำเตือน: CFD และทองคำมีความเสี่ยงสูง อาจสูญเสียเงินทั้งหมด ไม่มีการรับประกันกำไร', color: '#8a8f9c', size: 'xxs', wrap: true, margin: 'md' } ] },
+    footer: { type: 'box', layout: 'vertical', spacing: 'sm', contents: [
+      { type: 'button', style: 'primary', color: G, height: 'sm', action: { type: 'uri', label: 'สมัคร Exness', uri: 'https://one.exnessonelink.com/a/s2didh6p' } },
+      { type: 'button', style: 'secondary', height: 'sm', action: { type: 'uri', label: 'ดูวิธีสมัครทีละขั้น', uri: 'https://purefxaidev.github.io/gold-dashboard/signup.html' } } ] } } };
+}
 function handleCommand_(ev, t) {
   var uid = ev.source && ev.source.userId, rt = ev.replyToken;
   // --- เจ้าของ + เปิด/ปิดเทรดอัตโนมัติ ---
-  if (/^\/สมัคร/.test(t)) { lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'สมัครบัญชี Exness (ลิงก์แนะนำ partner):\nhttps://one.exnessonelink.com/a/s2didh6p\n\nสอนสมัครทีละขั้น:\nhttps://purefxaidev.github.io/gold-dashboard/signup.html\n\nคำเตือน: CFD/ทองคำมีความเสี่ยงสูง อาจสูญเสียเงินทั้งหมด' }] }); return true; }
+  if (/^\/สมัคร/.test(t)) { lineSend_('reply', { replyToken: rt, messages: [signupFlex_()] }); return true; }
   var so = /^\/ตั้งเจ้าของ\s+(\S+)/.exec(t);
   if (so && uid) { var okS = prop_('ALERT_SECRET') && so[1] === prop_('ALERT_SECRET');
     if (okS) PropertiesService.getScriptProperties().setProperty('OWNER_USER_ID', uid);
@@ -272,11 +292,13 @@ function handleEvent_(ev) {
     return;
   }
   var uid = ev.source && ev.source.userId, mem = uid ? getMem_(uid) : { facts: [], hist: [] };
-  var tk = takeMem_(askGemini_(parts, mem), mem), answer = tk.text;
+  var su = m.type === 'text' && SIGNUP_RE.test(m.text);
+  var tk = takeMem_(askGemini_(parts, mem), mem), answer = tk.text.replace(/\[\[\s*SIGNUP\s*\]\]/gi, function () { su = true; return ''; }).trim();
   if (uid) { var q = m.type === 'text' ? m.text : '[' + (m.type === 'image' ? 'ภาพ' : 'เสียง') + ']';
     mem.hist.push({ r: 'user', t: q.slice(0, 400) }, { r: 'model', t: answer.slice(0, 600) }); setMem_(uid, mem); }
   var msgs = [{ type: 'text', text: answer.slice(0, MAX_REPLY_CHARS) }];
-  try { var v = buildVoiceMessage_(answer); if (v) msgs.push(v); } catch (err) { console.warn('TTS skipped: ' + err); }
+  if (su) msgs.push(signupFlex_());
+  else try { var v = buildVoiceMessage_(answer); if (v) msgs.push(v); } catch (err) { console.warn('TTS skipped: ' + err); }
   var code = lineSend_('reply', { replyToken: ev.replyToken, messages: msgs });
   // reply ล้ม (เช่นเสียงไม่ผ่าน) -> ลองส่งแค่ข้อความ (token ยังไม่ถูกใช้ถ้า 400)
   if (code === 400 && msgs.length > 1) lineSend_('reply', { replyToken: ev.replyToken, messages: [msgs[0]] });
@@ -289,7 +311,10 @@ function getContext_() {
   var out = [];
   try { var p = UrlFetchApp.fetch(PRICE_URL, { muteHttpExceptions: true });
         if (p.getResponseCode() === 200) out.push('ราคาสด XAU: ' + p.getContentText().slice(0, 500)); } catch (err) {}
-  try { var d = UrlFetchApp.fetch(DASHBOARD_URL + '?t=' + Date.now(), { muteHttpExceptions: true });
+  var gotCtx = false;
+  try { var ac = UrlFetchApp.fetch(CONTEXT_URL + '?t=' + Date.now(), { muteHttpExceptions: true });
+        if (ac.getResponseCode() === 200) { out.push('บริบทตลาดทั้งหมด (ทองคำ FX BTC MTF SMC ความสัมพันธ์ Edge):\n' + ac.getContentText().slice(0, 14000)); gotCtx = true; } } catch (err) {}
+  if (!gotCtx) try { var d = UrlFetchApp.fetch(DASHBOARD_URL + '?t=' + Date.now(), { muteHttpExceptions: true });
         if (d.getResponseCode() === 200) out.push('ข้อมูลแดชบอร์ด (JSON): ' + d.getContentText().slice(0, 12000)); } catch (err) {}
   var kb = cache.get('kb');
   if (!kb) { try { var k = UrlFetchApp.fetch(KNOWLEDGE_URL, { muteHttpExceptions: true });
