@@ -17,6 +17,7 @@ var TTS_MODEL  = 'gemini-3.8-flash-tts';  // REST TTS -> PCM 16-bit mono (24 kHz
 var TTS_VOICE  = 'Sulafat';
 var DASHBOARD_URL = 'https://purefxaidev.github.io/gold-dashboard/view.json';
 var PRICE_URL     = 'https://api.gold-api.com/price/XAU';
+var KNOWLEDGE_URL = 'https://purefxaidev.github.io/gold-dashboard/knowledge.md';
 var MAX_REPLY_CHARS = 4500;
 var DRIVE_FOLDER_NAME = 'line-gold-bot-audio';
 
@@ -170,8 +171,12 @@ function getContext_() {
         if (p.getResponseCode() === 200) out.push('ราคาสด XAU: ' + p.getContentText().slice(0, 500)); } catch (err) {}
   try { var d = UrlFetchApp.fetch(DASHBOARD_URL + '?t=' + Date.now(), { muteHttpExceptions: true });
         if (d.getResponseCode() === 200) out.push('ข้อมูลแดชบอร์ด (JSON): ' + d.getContentText().slice(0, 12000)); } catch (err) {}
-  var s = out.join('\n\n') || 'ไม่มีข้อมูลบริบท';
-  cache.put('ctx', s, 60);
+  var kb = cache.get('kb');
+  if (!kb) { try { var k = UrlFetchApp.fetch(KNOWLEDGE_URL, { muteHttpExceptions: true });
+    kb = k.getResponseCode() === 200 ? k.getContentText().slice(0, 9000) : ''; if (kb) cache.put('kb', kb, 3600); } catch (err) { kb = ''; } }
+  if (kb) out.push('คลังความรู้ (หลักการตัดสินใจ):\n' + kb);
+  var s = (out.join('\n\n') || 'ไม่มีข้อมูลบริบท').slice(0, 25000);
+  cache.put('ctx', s.slice(0, 90000), 60);
   return s;
 }
 

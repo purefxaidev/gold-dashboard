@@ -4,6 +4,7 @@
 const CHAT_MODEL = 'gemini-3.8-flash', TTS_MODEL = 'gemini-3.8-flash-tts', TTS_VOICE = 'Sulafat';
 const DASHBOARD_URL = 'https://purefxaidev.github.io/gold-dashboard/view.json';
 const PRICE_URL = 'https://api.gold-api.com/price/XAU';
+const KNOWLEDGE_URL = 'https://purefxaidev.github.io/gold-dashboard/knowledge.md';
 const LANGS = { th: 'Thai', en: 'English', zh: 'Chinese (Simplified)', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese', lo: 'Lao', my: 'Burmese', fr: 'French', de: 'German' };
 const SYSTEM_PROMPT = [
   'คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นผู้ช่วยนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) ตอบเป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ',
@@ -97,9 +98,11 @@ async function handleEvent(env, ev) {
 
 async function context() {
   const out = [];
-  const [p, d] = await Promise.allSettled([fetch(PRICE_URL).then(r => r.ok ? r.text() : ''), fetch(DASHBOARD_URL + '?t=' + Date.now()).then(r => r.ok ? r.text() : '')]);
+  const [p, d, k] = await Promise.allSettled([fetch(PRICE_URL).then(r => r.ok ? r.text() : ''), fetch(DASHBOARD_URL + '?t=' + Date.now()).then(r => r.ok ? r.text() : ''),
+    fetch(KNOWLEDGE_URL, { cf: { cacheTtl: 3600, cacheEverything: true } }).then(r => r.ok ? r.text() : '')]);
   if (p.value) out.push('ราคาสด XAU: ' + p.value.slice(0, 500));
   if (d.value) out.push('ข้อมูลแดชบอร์ด (JSON): ' + d.value.slice(0, 12000));
+  if (k.value) out.push('คลังความรู้ (หลักการตัดสินใจ):\n' + k.value.slice(0, 9000));
   return out.join('\n\n') || 'ไม่มีข้อมูลบริบท';
 }
 async function geminiRaw(env, model, payload) {

@@ -316,12 +316,13 @@ let hist = JSON.parse(sessionStorage.getItem("gd_hist") || "[]");
 const getKey = () => localStorage.getItem(KEY) || "";
 const getModel = () => localStorage.getItem(MODEL) || "gemini-3.8-flash";
 function bubble(role, text) { const d = document.createElement("div"); d.className = "m " + role; d.textContent = text; $("msgs").appendChild(d); $("msgs").scrollTop = 1e9; return d; }
+let KB = ""; fetch("knowledge.md?t=" + Date.now()).then(r => r.ok ? r.text() : "").then(t => KB = t.slice(0, 12000)).catch(() => {});
 function context() {
   const ctx = {analysis: D && {updated: D.updated, bias: D.bias, indicators: D.indicators, resistance: D.resistance, support: D.support, plans: D.plans, ai_up_pct: D.ai_up_pct, ai_down_pct: D.ai_down_pct, ai_reasons: D.ai_reasons, ai_method: D.ai_method,
     ev_plans: (D.ev_plans || []).map(({name, side, entry, sl, tp, p_win, rr, ev, decision, status}) => ({name, side, entry, sl, tp, p_win, rr, ev, decision, status})), ev_formula: "EV(R)=p*RR-(1-p); เข้าเมื่อ EV>0", news: D.news, note: D.note},
     live_xauusd_spot: live.price ?? D?.price_num, live_time: live.time, thai_gold_thb: thaiGold && thaiGold.map(x => ({type: x.GoldType, purity: x.GoldCode, buy: x.Buy, sell: x.Sell, change: x.BuyChange, time: x.TimeUpdate})),
     now_bangkok: new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"})};
-  return "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
+  return "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nคลังความรู้ (ใช้เป็นหลักการตัดสินใจ):\n" + KB + "\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
 }
 let mode = localStorage.getItem("gd_mode") || "ana";
 const LN = {en:"English",th:"Thai",zh:"Chinese (Simplified)",ja:"Japanese",ko:"Korean",vi:"Vietnamese",lo:"Lao",my:"Burmese",fr:"French",de:"German"};
