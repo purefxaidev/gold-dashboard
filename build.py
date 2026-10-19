@@ -28,6 +28,7 @@ EV decision model (computed here, do not hand-edit rr/ev):
   RR     = reward / risk
   EV (R) = p_win * RR - (1 - p_win)        # expected result per trade in units of risk (R)
   decision = "เข้า" if EV > 0 else "รอ"
+  risk_free: SL at/beyond breakeven (or risk < max(0.5, 5% of reward)) -> rr/ev/breakeven = null, decision = "ถือ"
   Breakeven win rate = 1 / (1 + RR)
 
 Safety: build fails if data.json contains anything that looks like an API key, email, or account/
@@ -88,6 +89,11 @@ v['sup_nums'] = [first_num(x) for x in d.get('support', [])]
 evs = []
 for p in d.get('ev_plans', []):
     risk = abs(p['entry'] - p['sl']); reward = abs(p['tp'] - p['entry'])
+    buy = str(p.get('side', '')).lower() == 'buy'
+    # SL at/beyond breakeven (or tiny risk) -> no loss risk left; RR/EV are meaningless, do not show them
+    tiny = max(0.5, 0.05 * reward)
+    if (buy and p['sl'] >= p['entry'] - tiny) or (not buy and p['sl'] <= p['entry'] + tiny):
+        evs.append(dict(p, rr=None, ev=None, breakeven=None, risk_free=True, decision='ถือ')); continue
     rr = reward / risk if risk else 0
     pw = float(p['p_win'])
     ev = pw * rr - (1 - pw)

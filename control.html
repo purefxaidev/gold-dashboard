@@ -150,9 +150,9 @@ function renderData() {
   const rl = pick("resistance") || [], sl = pick("support") || [], rn = D.res_nums || [], sn = D.sup_nums || [];
   const lv = [...rl.map((t, i) => ["R" + (i + 1), rn[i], t, "mgc"]).reverse(), ...sl.map((t, i) => ["S" + (i + 1), sn[i], t, "cy"])];
   $("sr").innerHTML = lv.map(([k, v, t, c]) => `<div class="lv"><b class="${c}">${k}</b><span>${fmt(v)}</span><small title="${esc(t)}">${esc(String(t).replace(/^[\d,.\s/~]+/, "").replace(/^\(|\)$/g, ""))}</small></div>`).join("") || "-";
-  $("ev").innerHTML = (D.ev_plans || []).map(p => { const go = p.ev > 0; return `<div class="ev"><div class="h"><b class="${p.side === "buy" ? "up" : "dn"}">${esc(EN && p.name_en ? p.name_en : p.name)}</b><span class="tag ${go ? "go" : "wt"}">${go ? T("เข้า", "ENTER") : T("รอ", "WAIT")}</span></div>
+  $("ev").innerHTML = (D.ev_plans || []).map(p => { const go = p.ev > 0, rf = !!p.risk_free; return `<div class="ev"><div class="h"><b class="${p.side === "buy" ? "up" : "dn"}">${esc(EN && p.name_en ? p.name_en : p.name)}</b><span class="tag ${go || rf ? "go" : "wt"}">${rf ? T("ถือ", "HOLD") : go ? T("เข้า", "ENTER") : T("รอ", "WAIT")}</span></div>
     <div class="r"><span>${T("เข้า / SL / TP", "Entry / SL / TP")}</span><span>${fmt(p.entry, 1)} / <span class="dn">${fmt(p.sl, 1)}</span> / <span class="up">${fmt(p.tp, 1)}</span></span></div>
-    <div class="r"><span>p_win · RR · EV</span><span>${num(p.p_win) != null ? Math.round(p.p_win * 100) + "%" : "-"} · ${fmt(p.rr)} · <span class="${go ? "up" : "dn"}">${sg(p.ev)}R</span></span></div>
+    ${rf ? `<div class="r"><span class="up" style="color:var(--gr)">${T("ไม่มีความเสี่ยงแล้ว (กันหน้าไม้)", "Risk-free (breakeven SL)")}</span><span>-</span></div>` : `<div class="r"><span>p_win · RR · EV</span><span>${num(p.p_win) != null ? Math.round(p.p_win * 100) + "%" : "-"} · ${fmt(p.rr)} · <span class="${go ? "up" : "dn"}">${sg(p.ev)}R</span></span></div>`}
     ${(EN ? p.status_en || p.status : p.status) ? `<div class="sub">${esc(EN ? p.status_en || p.status : p.status)}</div>` : ""}</div>`; }).join("") || "-";
   // pnl
   const P = D.pnl || {}, c = closedTrades(), all = (P.trades || []).slice().sort((a, b) => String(a.time).localeCompare(String(b.time)));

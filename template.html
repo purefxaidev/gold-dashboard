@@ -316,8 +316,9 @@ function render() {
   $("evPlans").innerHTML = (D.ev_plans || []).map(p => `<div class="plan">
     <b>${p.side === "buy" ? '<span class="up">▲</span>' : '<span class="dn">▼</span>'} ${esc(Lf(p, "name"))}</b>
     <div class="kv"><span class="chip">เข้า ${fmt(p.entry, 0)}</span><span class="chip dn">SL ${fmt(p.sl, 0)}</span><span class="chip up">TP ${fmt(p.tp, 0)}</span></div>
+    ${p.risk_free ? `<div class="dec notr"><span class="up">${EN() ? "Risk-free (breakeven SL)" : "ไม่มีความเสี่ยงแล้ว (กันหน้าไม้)"} · ${esc(Lf(p, "status") || "")}</span><span class="badge go">${EN() ? "HOLD" : "ถือ"}</span></div></div>` : `
     <div class="ev"><div><small>โอกาสชนะ p</small><span>${Math.round(p.p_win * 100)}%</span></div><div><small>RR</small><span>${fmt(p.rr)}</span></div><div><small>EV (R)</small><span class="${p.ev > 0 ? "up" : "dn"}">${p.ev > 0 ? "+" : ""}${fmt(p.ev)}</span></div></div>
-    <div class="dec"><span class="mut">ต้องชนะ ≥ ${Math.round(p.breakeven * 100)}% ถึงคุ้ม · ${esc(Lf(p, "status") || "")}</span><span class="badge ${p.ev > 0 ? "go" : "wait"}">${p.ev > 0 ? "เข้า" : "รอ"}</span></div></div>`).join("") || '<div class="mut">ยังไม่มีแผน</div>';
+    <div class="dec"><span class="mut">ต้องชนะ ≥ ${Math.round(p.breakeven * 100)}% ถึงคุ้ม · ${esc(Lf(p, "status") || "")}</span><span class="badge ${p.ev > 0 ? "go" : "wait"}">${p.ev > 0 ? "เข้า" : "รอ"}</span></div></div>`}`).join("") || '<div class="mut">ยังไม่มีแผน</div>';
   $("evMeth").textContent = D.ev_method ? (EN() ? "Source of p: " : "ที่มาของ p: ") + Lf(D, "ev_method") : "";
   $("plans").innerHTML = (Lf(D, "plans") || []).map(p => `<div class="plan"><b>${esc(p[0])}</b><div class="kv">${p.slice(1).map(x => `<span class="chip">${esc(x)}</span>`).join("")}</div></div>`).join("");
   $("news").innerHTML = (Lf(D, "news") || []).map(([t, u]) => `<li><span style="flex:1">${esc(t)}</span><a href="${esc(safeUrl(u))}" target="_blank" rel="noopener noreferrer">แหล่งข่าว ↗</a></li>`).join("");
@@ -601,7 +602,7 @@ function planSentenceEn(p, px) {
   const st = Lf(p, "status");
   return `<div class="ps" style="border-left:4px solid ${sell ? "#ff4d4d" : "#1db954"}">${cond} → <b style="color:${sell ? "#ff6b6b" : "#1db954"}">${sell ? "SELL" : "BUY"}</b>
    <span>| Stop loss (${tip("SL")}) <b style="color:#ff6b6b">${fmt(p.sl)}</b></span> <span>| Take profit (${tip("TP")}) <b style="color:#1db954">${fmt(p.tp)}</b></span>
-   <div class="psm">${tip("RR")} ${p.rr} · ${tip("EV")} <b style="color:${p.ev > 0 ? "#1db954" : "#ff6b6b"}">${p.ev > 0 ? "+" : ""}${p.ev}R</b> · win chance ~${Math.round((p.p_win || 0) * 100)}% ${st ? "· " + esc(st) : ""}</div></div>`;
+   <div class="psm">${p.risk_free ? "Risk-free (breakeven SL)" : `${tip("RR")} ${p.rr} · ${tip("EV")} <b style="color:${p.ev > 0 ? "#1db954" : "#ff6b6b"}">${p.ev > 0 ? "+" : ""}${p.ev}R</b>`} · win chance ~${Math.round((p.p_win || 0) * 100)}% ${st ? "· " + esc(st) : ""}</div></div>`;
 }
 function planSentence(p, px) {
   if (EN()) return planSentenceEn(p, px);
@@ -609,7 +610,7 @@ function planSentence(p, px) {
   const cond = Math.abs(px - p.entry) <= 3 ? `ราคาอยู่แถว ${fmt(p.entry)} แล้ว` : `ถ้าราคา${above ? "ขึ้น" : "ลง"}ถึง ${fmt(p.entry)}${!sell && !above ? "แล้วเด้ง" : sell && above ? "" : "แล้วยืนได้"}`;
   return `<div class="ps" style="border-left:4px solid ${sell ? "#ff4d4d" : "#1db954"}">${cond} → <b style="color:${sell ? "#ff6b6b" : "#1db954"}">${act}</b>
    <span>| ตัดขาดทุน (${tip("SL")}) <b style="color:#ff6b6b">${fmt(p.sl)}</b></span> <span>| รับกำไร (${tip("TP")}) <b style="color:#1db954">${fmt(p.tp)}</b></span>
-   <div class="psm">${tip("RR")} ${p.rr} · ${tip("EV")} <b style="color:${p.ev > 0 ? "#1db954" : "#ff6b6b"}">${p.ev > 0 ? "+" : ""}${p.ev}R</b> · โอกาสชนะ ~${Math.round((p.p_win || 0) * 100)}% ${p.status ? "· " + esc(noEmo(p.status)) : ""}</div></div>`;
+   <div class="psm">${p.risk_free ? "ไม่มีความเสี่ยงแล้ว (กันหน้าไม้)" : `${tip("RR")} ${p.rr} · ${tip("EV")} <b style="color:${p.ev > 0 ? "#1db954" : "#ff6b6b"}">${p.ev > 0 ? "+" : ""}${p.ev}R</b>`} · โอกาสชนะ ~${Math.round((p.p_win || 0) * 100)}% ${p.status ? "· " + esc(noEmo(p.status)) : ""}</div></div>`;
 }
 function renderReco() {
   if (!D) return; const px = live.price || D.price_num; if (!px) return;
