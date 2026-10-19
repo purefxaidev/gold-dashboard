@@ -177,10 +177,14 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
   <div style="display:flex;gap:8px"><button class="btn pri" id="saveKey">บันทึก</button><button class="btn" id="delKey">🗑️ ลบ key</button></div>
   <div class="warn">🔒 key จะถูกเก็บไว้ <b>เฉพาะในเบราว์เซอร์ของเครื่องนี้</b> (localStorage) เท่านั้น ไม่ถูกส่งขึ้น GitHub หรือเซิร์ฟเวอร์อื่น ส่งตรงไปที่ Google เท่านั้น · อย่าใช้บนเครื่องสาธารณะ · กด “ลบ key” เมื่อเลิกใช้ · หากเคยแปะ key ในแชทหรือที่สาธารณะ ให้ลบแล้วสร้างใหม่ที่ Google AI Studio</div>
  </div>
+ <div class="modebar" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px">
+  <button class="btn pri" id="mAna" style="padding:5px 10px">📈 วิเคราะห์ทอง</button><button class="btn" id="mTr" style="padding:5px 10px">🌐 แปลภาษา</button>
+  <select id="lang" style="display:none"><option value="en">English</option><option value="th">ไทย</option><option value="zh">中文</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="vi">Tiếng Việt</option><option value="lo">ລາວ</option><option value="my">မြန်မာ</option><option value="fr">Français</option><option value="de">Deutsch</option></select>
+ </div>
  <div class="chat">
   <div class="msgs" id="msgs"></div>
   <div class="sugg" id="sugg"></div>
-  <div class="inrow"><textarea id="q" placeholder="ถามเรื่องกราฟทอง เช่น ตอนนี้ควร Buy หรือ Sell?"></textarea><button class="btn pri" id="send">ส่ง</button></div>
+  <div class="inrow"><textarea id="q" placeholder="ถามเรื่องกราฟทอง เช่น ตอนนี้ควร Buy หรือ Sell?"></textarea><button class="btn" id="mic" title="พูด">🎤</button><button class="btn pri" id="send">ส่ง</button></div>
  </div>
 </section>
 
@@ -312,17 +316,40 @@ function context() {
     now_bangkok: new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"})};
   return "คุณคือนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
 }
-async function ask(q) {
-  q = q.trim(); if (!q) return;
+let mode = localStorage.getItem("gd_mode") || "ana";
+const LN = {en:"English",th:"Thai",zh:"Chinese (Simplified)",ja:"Japanese",ko:"Korean",vi:"Vietnamese",lo:"Lao",my:"Burmese",fr:"French",de:"German"};
+function trPrompt() { const l = LN[$("lang").value] || "English"; return `You are a professional translator. Translate the user's message (text, or speech in audio: transcribe first) into ${l}. Output format:\nต้นฉบับ: <original/transcript>\nแปล (${l}): <translation>\nNo extra commentary. Preserve numbers and trading terms.`; }
+function setMode(m) { mode = m; localStorage.setItem("gd_mode", m); $("mAna").classList.toggle("pri", m === "ana"); $("mTr").classList.toggle("pri", m === "tr"); $("lang").style.display = m === "tr" ? "" : "none"; $("q").placeholder = m === "tr" ? "พิมพ์หรือกด 🎤 พูด เพื่อแปล" : "ถามเรื่องกราฟทอง เช่น ตอนนี้ควร Buy หรือ Sell?"; $("sugg").style.display = m === "tr" ? "none" : ""; }
+$("mAna").onclick = () => setMode("ana"); $("mTr").onclick = () => setMode("tr");
+$("lang").value = localStorage.getItem("gd_lang") || "en"; $("lang").onchange = () => localStorage.setItem("gd_lang", $("lang").value);
+let rec = null;
+$("mic").onclick = async () => {
+  if (rec && rec.state === "recording") { rec.stop(); return; }
+  if (!navigator.mediaDevices || !window.MediaRecorder) { bubble("e", "เบราว์เซอร์นี้อัดเสียงไม่ได้"); return; }
+  try {
+    const st = await navigator.mediaDevices.getUserMedia({audio: true}); const ch = [];
+    rec = new MediaRecorder(st); rec.ondataavailable = e => ch.push(e.data);
+    rec.onstop = async () => { st.getTracks().forEach(t => t.stop()); $("mic").textContent = "🎤";
+      const b = new Blob(ch, {type: rec.mimeType || "audio/webm"}); const mt = (b.type || "audio/webm").split(";")[0];
+      const b64 = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result.split(",")[1]); fr.readAsDataURL(b); });
+      ask("", {mimeType: mt, data: b64}); };
+    rec.start(); $("mic").textContent = "⏹️";
+  } catch (e) { bubble("e", "ใช้ไมค์ไม่ได้: " + e.message); }
+};
+async function ask(q, audio) {
+  q = (q || "").trim(); if (!q && !audio) return;
   const key = getKey();
   if (!key) { $("set").classList.add("show"); bubble("e", "กรุณาใส่ Gemini API key ในตั้งค่าก่อน"); return; }
-  bubble("u", q); hist.push({role: "user", parts: [{text: q}]});
+  const tr = mode === "tr";
+  const parts = []; if (audio) parts.push({inlineData: audio}); parts.push({text: q || (tr ? "(แปลเสียงนี้)" : "(ฟังคำถามจากเสียงนี้แล้วตอบ)")});
+  bubble("u", audio ? "🎤 ข้อความเสียง" + (q ? " · " + q : "") : q);
+  const turn = {role: "user", parts}; if (!tr) hist.push({role: "user", parts: [{text: audio ? "[เสียง] " + q : q}]});
   const out = bubble("a", ""); out.classList.add("typing"); $("send").disabled = true;
   let text = "";
   try {
     const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(getModel())}:streamGenerateContent?alt=sse`, {
       method: "POST", headers: {"Content-Type": "application/json", "x-goog-api-key": key},
-      body: JSON.stringify({systemInstruction: {parts: [{text: context()}]}, contents: hist.slice(-20), generationConfig: {temperature: 0.6, maxOutputTokens: 1200}})});
+      body: JSON.stringify({systemInstruction: {parts: [{text: tr ? trPrompt() : context()}]}, contents: tr ? [turn] : hist.slice(-20, -1).concat([turn]), generationConfig: {temperature: tr ? 0.2 : 0.6, maxOutputTokens: 1200}})});
     if (!r.ok) { let m = r.status + ""; try { m += " " + (await r.json()).error.message; } catch (e) {} throw new Error(m); }
     const rd = r.body.getReader(), dec = new TextDecoder(); let buf = "";
     for (;;) {
@@ -337,9 +364,9 @@ async function ask(q) {
     }
     if (!text) text = "(ไม่มีคำตอบ ลองถามใหม่)";
     out.textContent = text.replace(/\*\*/g, "");
-    hist.push({role: "model", parts: [{text}]}); sessionStorage.setItem("gd_hist", JSON.stringify(hist));
+    if (!tr) { hist.push({role: "model", parts: [{text}]}); sessionStorage.setItem("gd_hist", JSON.stringify(hist)); }
   } catch (e) {
-    out.remove(); hist.pop(); bubble("e", "เรียก Gemini ไม่สำเร็จ: " + e.message + " (ตรวจสอบ key / ชื่อโมเดลในตั้งค่า)");
+    out.remove(); if (!tr) hist.pop(); bubble("e", "เรียก Gemini ไม่สำเร็จ: " + e.message + " (ตรวจสอบ key / ชื่อโมเดลในตั้งค่า)");
   } finally { out.classList.remove("typing"); $("send").disabled = false; }
 }
 $("send").onclick = () => { const v = $("q").value; $("q").value = ""; ask(v); };
@@ -355,7 +382,7 @@ $("sugg").addEventListener("click", e => { if (e.target.tagName === "BUTTON") as
 // init
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text.replace(/\*\*/g, "")));
 if (!hist.length) bubble("a", "สวัสดีครับ 👋 ผมคือผู้ช่วยวิเคราะห์ทอง ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลย (ต้องใส่ Gemini API key ใน ⚙️ ตั้งค่า ก่อนใช้ครั้งแรก)");
-syncSet(); render(); tv(localStorage.getItem("gd_tf") || "15");
+syncSet(); setMode(mode); render(); tv(localStorage.getItem("gd_tf") || "15");
 pollPrice(); pollThai(); setInterval(pollPrice, 15000); setInterval(pollThai, 30000); setInterval(pollData, 300000);
 </script>
 </body>
