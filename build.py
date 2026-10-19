@@ -39,13 +39,22 @@ for pat in bad:
         sys.exit(f'build.py: refusing to build, data.json matches forbidden pattern {pat!r}')
 
 # ---- pnl allowlist (no balance/equity/account/ticket) ----
-PNL_KEYS = {'today_usc', 'today_points', 'win_rate', 'mark_price', 'note', 'trades'}
+PNL_KEYS = {'today_usc', 'today_points', 'win_rate', 'mark_price', 'note', 'trades', 'trade_count', 'open_count', 'pending'}
 TRADE_KEYS = {'time', 'side', 'lot', 'entry', 'exit', 'pl_usc', 'pl_points', 'status', 'by'}
 pnl = d.get('pnl')
 if pnl is not None:
     extra = set(pnl) - PNL_KEYS
     for t in pnl.get('trades', []): extra |= set(t) - TRADE_KEYS
+    for t in pnl.get('pending', []): extra |= set(t) - {'type', 'lot', 'entry', 'sl', 'tp'}
     if extra: sys.exit(f'build.py: pnl has non-allowlisted fields {sorted(extra)}')
+
+# ---- history files guard ----
+import glob
+for fn in glob.glob('history/*.jsonl') + ['lessons.md']:
+    try: txt = open(fn, encoding='utf-8').read()
+    except FileNotFoundError: continue
+    for pat in bad:
+        if re.search(pat, txt): sys.exit(f'build.py: {fn} matches forbidden pattern {pat!r}')
 
 def first_num(s):
     m = re.search(r'\d[\d,]*\.?\d*', str(s))

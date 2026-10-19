@@ -120,20 +120,47 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
 #pnlCard.hot{animation:rise .7s forwards,cardglow 1.5s ease-out}@keyframes cardglow{0%{box-shadow:0 0 0 2px #f5c542,0 0 40px #f5c54288}}
 .eq{stroke-dasharray:2000;stroke-dashoffset:2000;animation:draw 1.6s ease-out forwards}@keyframes draw{to{stroke-dashoffset:0}}
 .cu{transition:color .4s}
+.lgspin{transform-origin:32px 32px;animation:lgs 12s linear infinite}@keyframes lgs{to{transform:rotate(360deg)}}
+.lgshine{animation:pulse 2.4s ease-in-out infinite}
+.grid{align-items:start}
+.reco{margin-top:14px;border-radius:16px;padding:14px;background:linear-gradient(135deg,#ffffff08,#ffffff02);border:2px solid var(--rc,#f5c542);box-shadow:0 0 30px color-mix(in srgb,var(--rc,#f5c542) 30%,transparent)}
+.reco .act{font-size:clamp(34px,7vw,56px);font-weight:900;line-height:1;color:var(--rc)}
+.reco .kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px;margin-top:10px}
+.reco .kv div{background:#0b0d12;border-radius:10px;padding:6px 8px}.reco .kv small{display:block;color:#999;font-size:11px}.reco .kv b{font-size:17px}
+.ps{margin-top:10px;padding:8px 10px;background:#0b0d12;border-radius:10px;font-size:14.5px;line-height:1.7}.psm{font-size:12px;color:#aaa}
+.tip{text-decoration:underline dotted #f5c542;cursor:help;color:#f5c542;font-weight:700}
+.zbar{position:relative;height:14px;border-radius:999px;background:#2a2a2a;margin:26px 0 4px}.zb,.zs{position:absolute;top:0;bottom:0}.zb{background:linear-gradient(90deg,#1db954,#1db95433);border-radius:999px 0 0 999px}.zs{background:linear-gradient(90deg,#ff4d4d33,#ff4d4d);border-radius:0 999px 999px 0}
+.zp{position:absolute;top:-6px;width:4px;height:26px;background:#ffd36b;box-shadow:0 0 12px #ffd36b;border-radius:2px;transform:translateX(-2px);transition:left 1s}.zp span{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;color:#ffd36b}
+.zl{display:flex;justify-content:space-between;font-size:11.5px}
+@media(max-width:600px){.updb{top:auto;bottom:8px;left:8px;transform:none;font-size:10.5px}}
+.legend{margin-top:10px;font-size:12.5px;color:#bbb;line-height:1.7}.legend summary{cursor:pointer;color:#f5c542}
+#lv3d{position:relative;height:300px;border-radius:14px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#1a1405,#06070a)}
+#lv3d canvas{display:block;width:100%!important;height:100%!important;touch-action:pan-y}
+@media(max-width:600px){#lv3d{height:240px}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.card,.m{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 <canvas id="fx" aria-hidden="true" style="position:fixed;inset:0;z-index:-1;pointer-events:none"></canvas>
 <div id="liveUpd" class="updb">กำลังโหลดข้อมูล…</div>
-<header><div class="wrap"><div class="logo">◆ GOLD AI · XAUUSD</div><div class="live"><span class="dot"></span><span id="liveTxt">กำลังเชื่อมต่อ…</span></div></div></header>
+<header><div class="wrap"><div class="logo" style="display:flex;align-items:center;gap:8px"><svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".5" stop-color="#f5c542"/><stop offset="1" stop-color="#b8860b"/></linearGradient></defs><g class="lgspin"><circle cx="32" cy="32" r="29" fill="none" stroke="url(#lg)" stroke-width="3" stroke-dasharray="12 6"/></g><path d="M14 42 L22 24 H42 L50 42 Z" fill="url(#lg)"/><path d="M22 24 H42 L38 30 H26 Z" fill="#fff8" class="lgshine"/><text x="32" y="39" text-anchor="middle" font-size="9" font-weight="800" fill="#5a3d00">AU</text></svg><span>เลขาทอง <b style="color:var(--gold,#f5c542)">Gold AI</b> · XAUUSD</span></div><div class="live"><span class="dot"></span><span id="liveTxt">กำลังเชื่อมต่อ…</span></div></div></header>
 <main class="wrap grid">
-
+<section class="card c12" id="chartTop">
+ <h2>📈 กราฟ XAUUSD <small>TradingView · OANDA</small></h2>
+ <div class="tfs" id="tfs"></div>
+ <div id="tv"></div>
+</section>
 <section class="card c8">
  <h2>⚡ ราคาทองโลกแบบเรียลไทม์ <small id="pxSrc">—</small></h2>
  <div class="hero"><div class="price" id="px">—</div><div><div class="chg" id="pxChg">&nbsp;</div><div class="mut" style="font-size:12px" id="pxTime"></div></div><div id="biasBadge"></div></div>
  <div class="bias" id="bias"></div>
  <div class="ind mono" id="ind"></div>
+ <div id="reco" class="reco"></div>
+ <details class="legend"><summary>❓ คำศัพท์ง่ายๆ</summary>
+  <b>SL (Stop Loss)</b> = จุดตัดขาดทุน ถ้าราคาไปผิดทางถึงตรงนี้ ระบบปิดให้อัตโนมัติ · <b>TP (Take Profit)</b> = จุดเก็บกำไร ·
+  <b>RR</b> = กำไรที่หวังเทียบกับความเสี่ยง เช่น 1.6 คือเสี่ยง 1 ได้ 1.6 · <b>EV</b> = ผลตอบแทนคาดหวังต่อไม้ (หน่วย R) ถ้าเป็นบวกแปลว่าคุ้มเข้าในระยะยาว ·
+  <b>ความมั่นใจ</b> = โอกาสที่ AI ประเมินว่าราคาจะไปทางนั้น (ไม่ใช่การรับประกัน)
+ </details>
 </section>
 
 <section class="card c4">
@@ -144,6 +171,20 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
  <ul class="reasons" id="reasons"></ul>
  <div class="meth" id="aiMeth"></div>
 </section>
+
+<section class="card c12" id="card3d">
+ <h2>🌐 แผนที่ราคา 3 มิติ <small>ลูกทอง = ราคาตอนนี้ · เขียว = แนวรับ · แดง = แนวต้าน · ลากเพื่อหมุน</small></h2>
+ <div id="lv3d"></div>
+</section>
+
+<section class="card c12" id="pnlCard">
+ <h2>💼 พอร์ต กำไร/ขาดทุน <small id="pnlNote"></small></h2>
+ <div id="pnlSum" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px"></div>
+ <svg id="pnlChart" viewBox="0 0 600 140" preserveAspectRatio="none" style="width:100%;height:140px;margin:10px 0;background:#0b0d12;border-radius:12px"></svg>
+ <div id="pnlTr" style="overflow:auto"></div>
+</section>
+
+
 
 <section class="card c12">
  <h2>🇹🇭 ราคาทองไทยวันนี้ (บาทละ) <small id="tgSrc">ฮั่วเซ่งเฮง · อัปเดตทุก 30 วินาที</small></h2>
@@ -164,14 +205,21 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
  <div class="plans" id="plans"></div>
 </section>
 
-<section class="card c7">
- <h2>📈 กราฟ XAUUSD <small>TradingView · OANDA</small></h2>
- <div class="tfs" id="tfs"></div>
- <div id="tv"></div>
+<section class="card c12">
+ <h2>📰 ข่าววิเคราะห์ทองคำ</h2>
+ <ul class="news" id="news"></ul>
 </section>
 
 <section class="card c5" id="chatCard">
- <h2>💬 คุยกับกราฟ <small id="modelLbl"></small><button class="btn pri" id="callBtn" style="margin-left:8px;padding:5px 12px;background:linear-gradient(90deg,#1db954,#0bd3a8);color:#fff">📞 คุยสด</button><button class="btn" id="setBtn" style="margin-left:8px;padding:5px 10px">⚙️ ตั้งค่า</button></h2>
+ <h2>💬 คุยกับกราฟ <small id="modelLbl"></small><button class="btn pri" id="callBtn" style="margin-left:8px;padding:5px 12px;background:linear-gradient(90deg,#1db954,#0bd3a8);color:#fff">📞 คุยสด</button><button class="btn" id="memBtn" style="margin-left:8px;padding:5px 10px">🧠 ความจำ</button><button class="btn" id="setBtn" style="margin-left:8px;padding:5px 10px">⚙️ ตั้งค่า</button></h2>
+ <div class="set" id="mem">
+  <b>🧠 ความจำของเลขา</b> <small>(เก็บในเบราว์เซอร์นี้เท่านั้น ไม่ขึ้นเว็บ)</small>
+  <div id="memFacts"></div>
+  <div style="display:flex;gap:6px"><input id="memNew" placeholder="เพิ่มสิ่งที่ให้จำ เช่น ชอบเทรดช่วง London" style="flex:1"><button class="btn pri" id="memAdd">+ จำ</button></div>
+  <small>บันทึกสรุปบทสนทนา (แก้ไขได้)</small>
+  <textarea id="memNotes" rows="4" style="width:100%;box-sizing:border-box;background:#0b0d12;color:#eee;border:1px solid #333;border-radius:10px;padding:8px"></textarea>
+  <div style="display:flex;gap:8px"><button class="btn" id="memSave">💾 บันทึก</button><button class="btn" id="memClear" style="color:#ff7b7b">🗑️ ล้างความจำ</button></div>
+ </div>
  <div class="set" id="set">
   <b>Gemini API key</b>
   <input type="password" id="keyIn" placeholder="วาง API key ของคุณที่นี่" autocomplete="off" spellcheck="false">
@@ -195,17 +243,6 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
  </div>
 </section>
 
-<section class="card c12" id="pnlCard">
- <h2>💼 พอร์ต กำไร/ขาดทุน <small id="pnlNote"></small></h2>
- <div id="pnlSum" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px"></div>
- <svg id="pnlChart" viewBox="0 0 600 140" preserveAspectRatio="none" style="width:100%;height:140px;margin:10px 0;background:#0b0d12;border-radius:12px"></svg>
- <div id="pnlTr" style="overflow:auto"></div>
-</section>
-
-<section class="card c12">
- <h2>📰 ข่าววิเคราะห์ทองคำ</h2>
- <ul class="news" id="news"></ul>
-</section>
 </main>
 <footer><div id="upd"></div><div id="note"></div><div>ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน · การเทรดมีความเสี่ยงสูง อาจขาดทุนเกินที่คาด</div></footer>
 <div id="callOv" style="display:none;position:fixed;inset:0;z-index:999;background:#000b;backdrop-filter:blur(8px)">
@@ -286,7 +323,7 @@ async function pollPrice() {
     live.prev = live.price; live.price = p;
     live.time = new Date(j.updatedAt || Date.now()).toLocaleTimeString("th-TH", {timeZone: "Asia/Bangkok"});
     showPrice(p, "สปอต · gold-api.com", live.time + " น. (เวลาไทย)");
-    $("liveTxt").textContent = "LIVE · " + live.time; renderLadder(); renderPnl();
+    $("liveTxt").textContent = "LIVE · " + live.time; renderLadder(); renderPnl(); renderReco(); if (L3 && L3.orb && Math.abs((L3.lastPx || 0) - live.price) > .5) { L3.lastPx = live.price; build3d(); }
   } catch (e) { $("liveTxt").textContent = "ราคาสดไม่พร้อม · ใช้ราคาจากบทวิเคราะห์"; }
 }
 
@@ -311,7 +348,7 @@ async function pollThai() {
 let lastSig = "";
 async function pollData() {
   try { const r = await fetch("view.json?t=" + Date.now(), {cache: "no-store"}); if (r.ok) { const t = await r.text(); const sig = t.length + ":" + t.slice(-400);
-    if (sig !== lastSig) { const first = !lastSig; lastSig = sig; D = JSON.parse(t); render(); renderPnl(); if (!first) pulseUpd(); }
+    if (sig !== lastSig) { const first = !lastSig; lastSig = sig; D = JSON.parse(t); render(); renderPnl(); renderReco(); build3d(); if (!first) pulseUpd(); }
     $("liveUpd").textContent = "อัปเดตล่าสุด " + new Date().toLocaleTimeString("th-TH", {timeZone: "Asia/Bangkok"}) + " น. (เวลาไทย)" + (D.built ? " · ข้อมูล " + D.built : ""); } } catch (e) {}
 }
 
@@ -329,17 +366,39 @@ $("tfs").addEventListener("click", e => { const v = e.target.dataset && e.target
 
 // Gemini chat
 const KEY = "gd_gemini_key", MODEL = "gd_gemini_model";
-let hist = JSON.parse(sessionStorage.getItem("gd_hist") || "[]");
+let hist = JSON.parse(localStorage.getItem("gd_hist") || sessionStorage.getItem("gd_hist") || "[]");
+// ---- memory (client-side only) ----
+const MEM = {facts: () => JSON.parse(localStorage.getItem("gd_facts") || "[]"), notes: () => localStorage.getItem("gd_notes") || "",
+  setFacts: a => localStorage.setItem("gd_facts", JSON.stringify(a.slice(-50))), setNotes: t => localStorage.setItem("gd_notes", String(t).slice(0, 4000))};
+function memText() { const f = MEM.facts(), n = MEM.notes(); return (f.length ? "\n\nสิ่งที่จำเกี่ยวกับผู้ใช้:\n- " + f.join("\n- ") : "") + (n ? "\n\nบันทึกสรุปบทสนทนาก่อนหน้า:\n" + n : ""); }
+const MEM_RULE = "\n\nถ้าผู้ใช้บอกข้อมูลที่ควรจำระยะยาว (ความชอบ สไตล์เทรด เป้าหมาย ข้อห้าม) ให้ใส่แท็ก [[จำ: ข้อความสั้น]] ท้ายคำตอบ (แท็กละ 1 เรื่อง)";
+function takeMem(text) { const add = []; text = text.replace(/\[\[\s*จำ\s*:\s*([^\]]+)\]\]/g, (_, x) => { add.push(x.trim()); return ""; }).trim();
+  if (add.length) { const f = MEM.facts(); add.forEach(x => { if (!f.includes(x)) f.push(x); }); MEM.setFacts(f); renderMem(); bubble("a", "🧠 จำไว้แล้วค่ะ: " + add.join(" · ")); } return text; }
+function saveHist() { localStorage.setItem("gd_hist", JSON.stringify(hist.slice(-80))); }
+async function summarizeOld() {
+  const users = hist.filter(h => h.role === "user").length; if (users < 40 || !getKey()) return; // keep last 30 turns, fold older ones
+  const old = hist.slice(0, hist.length - 60), keep = hist.slice(-60); if (!old.length) return;
+  try { const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(getModel())}:generateContent`, {method: "POST", headers: {"Content-Type": "application/json", "x-goog-api-key": getKey()},
+    body: JSON.stringify({contents: [{role: "user", parts: [{text: "สรุปบทสนทนาต่อไปนี้เป็นบันทึกความจำภาษาไทยสั้นๆ (ไม่เกิน 10 บรรทัด) เน้นสิ่งที่ผู้ใช้สนใจ ตัดสินใจ หรือขอไว้ รวมกับบันทึกเดิม:\nบันทึกเดิม: " + MEM.notes() + "\n\nบทสนทนา:\n" + old.map(h => (h.role === "user" ? "ผู้ใช้: " : "เลขา: ") + h.parts[0].text).join("\n").slice(0, 20000)}]}], generationConfig: {temperature: 0.2, maxOutputTokens: 600}})});
+    const j = await r.json(); const t = (j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("").trim();
+    if (t) { MEM.setNotes(t); hist = keep; saveHist(); renderMem(); } } catch (e) {}
+}
+function renderMem() {
+  const f = MEM.facts();
+  $("memFacts").innerHTML = f.length ? f.map((x, i) => `<div style="display:flex;gap:6px;margin:4px 0"><input data-i="${i}" class="memEd" value="${esc(x)}" style="flex:1"><button class="btn" data-del="${i}">✕</button></div>`).join("") : '<small class="mut">ยังไม่มีสิ่งที่จำ</small>';
+  $("memNotes").value = MEM.notes();
+}
 const getKey = () => localStorage.getItem(KEY) || "";
 const getModel = () => localStorage.getItem(MODEL) || "gemini-3.8-flash";
 function bubble(role, text) { const d = document.createElement("div"); d.className = "m " + role; d.textContent = text; $("msgs").appendChild(d); $("msgs").scrollTop = 1e9; return d; }
-let KB = ""; fetch("knowledge.md?t=" + Date.now()).then(r => r.ok ? r.text() : "").then(t => KB = t.slice(0, 12000)).catch(() => {});
+let KB = "", HIST = ""; fetch("knowledge.md?t=" + Date.now()).then(r => r.ok ? r.text() : "").then(t => KB = t.slice(0, 12000)).catch(() => {});
+Promise.all([fetch("lessons.md?t=" + Date.now()).then(r => r.ok ? r.text() : ""), fetch("history/trade_journal.jsonl?t=" + Date.now()).then(r => r.ok ? r.text() : "")]).then(([l, j]) => (l.slice(-3000) + "\n\nบันทึกเทรดล่าสุด:\n" + j.trim().split("\n").slice(-15).join("\n")).slice(0, 5000)).catch(() => "").then(t => HIST = t);
 function context() {
   const ctx = {analysis: D && {updated: D.updated, bias: D.bias, indicators: D.indicators, resistance: D.resistance, support: D.support, plans: D.plans, ai_up_pct: D.ai_up_pct, ai_down_pct: D.ai_down_pct, ai_reasons: D.ai_reasons, ai_method: D.ai_method,
     ev_plans: (D.ev_plans || []).map(({name, side, entry, sl, tp, p_win, rr, ev, decision, status}) => ({name, side, entry, sl, tp, p_win, rr, ev, decision, status})), ev_formula: "EV(R)=p*RR-(1-p); เข้าเมื่อ EV>0", news: D.news, note: D.note},
     live_xauusd_spot: live.price ?? D?.price_num, live_time: live.time, thai_gold_thb: thaiGold && thaiGold.map(x => ({type: x.GoldType, purity: x.GoldCode, buy: x.Buy, sell: x.Sell, change: x.BuyChange, time: x.TimeUpdate})),
     now_bangkok: new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"})};
-  return "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nคลังความรู้ (ใช้เป็นหลักการตัดสินใจ):\n" + KB + "\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
+  return "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nคลังความรู้ (ใช้เป็นหลักการตัดสินใจ):\n" + KB + "\n\nบทเรียน/ประวัติเทรด:\n" + HIST + "\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
 }
 let mode = localStorage.getItem("gd_mode") || "ana";
 const LN = {en:"English",th:"Thai",zh:"Chinese (Simplified)",ja:"Japanese",ko:"Korean",vi:"Vietnamese",lo:"Lao",my:"Burmese",fr:"French",de:"German"};
@@ -374,7 +433,7 @@ async function ask(q, audio) {
   try {
     const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(getModel())}:streamGenerateContent?alt=sse`, {
       method: "POST", headers: {"Content-Type": "application/json", "x-goog-api-key": key},
-      body: JSON.stringify({systemInstruction: {parts: [{text: tr ? trPrompt() : context()}]}, contents: tr ? [turn] : hist.slice(-20, -1).concat([turn]), generationConfig: {temperature: tr ? 0.2 : 0.6, maxOutputTokens: 1200}})});
+      body: JSON.stringify({systemInstruction: {parts: [{text: tr ? trPrompt() : context() + memText() + MEM_RULE}]}, contents: tr ? [turn] : hist.slice(-61, -1).concat([turn]), generationConfig: {temperature: tr ? 0.2 : 0.6, maxOutputTokens: 1200}})});
     if (!r.ok) { let m = r.status + ""; try { m += " " + (await r.json()).error.message; } catch (e) {} throw new Error(m); }
     const rd = r.body.getReader(), dec = new TextDecoder(); let buf = "";
     for (;;) {
@@ -388,8 +447,9 @@ async function ask(q, audio) {
       }
     }
     if (!text) text = "(ไม่มีคำตอบ ลองถามใหม่)";
+    if (!tr) text = takeMem(text) || "(บันทึกแล้วค่ะ)";
     out.textContent = text.replace(/\*\*/g, "");
-    if (!tr) { hist.push({role: "model", parts: [{text}]}); sessionStorage.setItem("gd_hist", JSON.stringify(hist)); }
+    if (!tr) { hist.push({role: "model", parts: [{text}]}); saveHist(); summarizeOld(); }
   } catch (e) {
     out.remove(); if (!tr) hist.pop(); bubble("e", "เรียก Gemini ไม่สำเร็จ: " + e.message + " (ตรวจสอบ key / ชื่อโมเดลในตั้งค่า)");
   } finally { out.classList.remove("typing"); $("send").disabled = false; }
@@ -397,6 +457,11 @@ async function ask(q, audio) {
 $("send").onclick = () => { const v = $("q").value; $("q").value = ""; ask(v); };
 $("q").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("send").click(); } });
 $("setBtn").onclick = () => $("set").classList.toggle("show");
+$("memBtn").onclick = () => { renderMem(); $("mem").classList.toggle("show"); };
+$("memAdd").onclick = () => { const v = $("memNew").value.trim(); if (!v) return; const f = MEM.facts(); f.push(v); MEM.setFacts(f); $("memNew").value = ""; renderMem(); };
+$("memFacts").addEventListener("click", e => { const i = e.target.dataset && e.target.dataset.del; if (i != null) { const f = MEM.facts(); f.splice(+i, 1); MEM.setFacts(f); renderMem(); } });
+$("memSave").onclick = () => { const f = [...document.querySelectorAll(".memEd")].map(x => x.value.trim()).filter(Boolean); MEM.setFacts(f); MEM.setNotes($("memNotes").value); renderMem(); bubble("a", "บันทึกความจำแล้วค่ะ 🧠"); };
+$("memClear").onclick = () => { if (!confirm("ล้างความจำและประวัติแชททั้งหมด?")) return; ["gd_facts", "gd_notes", "gd_hist"].forEach(k => localStorage.removeItem(k)); sessionStorage.removeItem("gd_hist"); hist = []; $("msgs").innerHTML = ""; renderMem(); bubble("a", "ล้างความจำเรียบร้อยค่ะ"); };
 $("saveKey").onclick = () => { const k = $("keyIn").value.trim(); if (k) localStorage.setItem(KEY, k); localStorage.setItem(MODEL, $("modelIn").value); $("keyIn").value = ""; syncSet(); bubble("a", "บันทึกการตั้งค่าแล้ว ✅ (key อยู่ในเครื่องนี้เท่านั้น)"); };
 $("delKey").onclick = () => { localStorage.removeItem(KEY); syncSet(); bubble("a", "ลบ key ออกจากเครื่องนี้แล้ว 🗑️"); };
 function syncSet() { const k = getKey(); $("keyIn").placeholder = k ? "มี key บันทึกอยู่ (…" + k.slice(-4) + ") · วางใหม่เพื่อเปลี่ยน" : "วาง API key ของคุณที่นี่"; $("modelIn").value = getModel(); $("modelLbl").textContent = (k ? "🟢 " : "⚪ ยังไม่ใส่ key · ") + getModel(); }
@@ -410,13 +475,16 @@ function renderPnl() {
   const P = D && D.pnl; if (!P) { $("pnlCard").style.display = "none"; return; }
   const px = live.price || P.mark_price;
   const tr = (P.trades || []).map(t => { if (t.status === "open" && px) { const pts = +(((t.side === "buy" ? 1 : -1) * (px - t.entry))).toFixed(2); return {...t, pl_points: pts, pl_usc: +(pts * 100 * t.lot).toFixed(2)}; } return t; });
-  const tot = tr.reduce((a, t) => a + (t.pl_usc || 0), 0), pts = tr.reduce((a, t) => a + (t.pl_points || 0), 0);
+  const hasClosed = tr.some(t => t.status === "closed"), flo = tr.filter(t => t.status === "open").reduce((a, t) => a + (t.pl_usc || 0), 0);
+  const tot = (!hasClosed && P.today_usc != null && !tr.length) ? P.today_usc : (!hasClosed && P.today_usc != null && P.trade_count ? P.today_usc + flo : tr.reduce((a, t) => a + (t.pl_usc || 0), 0));
+  const pts = P.today_points != null || !tr.length ? (P.today_points || 0) : tr.reduce((a, t) => a + (t.pl_points || 0), 0);
   const closed = tr.filter(t => t.status === "closed"), wr = closed.length ? Math.round(100 * closed.filter(t => t.pl_usc > 0).length / closed.length) + "%" : (P.win_rate != null ? P.win_rate + "%" : "–");
   const col = v => v >= 0 ? "#1db954" : "#ff5c5c", sg = v => (v >= 0 ? "+" : "") + v.toFixed(2);
   const card = (k, v, c, n, suf) => `<div style="background:#0b0d12;border:1px solid #f5c54222;border-radius:12px;padding:10px"><small>${k}</small><div class="cu" ${n != null ? `data-n="${n}" data-suf="${suf || ""}"` : ""} style="font-size:22px;font-weight:700;color:${c || "#eee"}">${v}</div></div>`;
-  $("pnlSum").innerHTML = card("กำไร/ขาดทุนวันนี้", sg(tot) + " USC", col(tot), tot, " USC") + card("จุด (ดอลลาร์)", sg(pts), col(pts), pts, "") + card("อัตราชนะ (ไม้ที่ปิด)", wr) + card("ไม้เปิด / ปิด", tr.filter(t => t.status === "open").length + " / " + closed.length);
+  $("pnlSum").innerHTML = card("กำไร/ขาดทุนวันนี้", sg(tot) + " USC", col(tot), tot, " USC") + card("จุด (ดอลลาร์)", sg(pts), col(pts), pts, "") + card("อัตราชนะ (ไม้ที่ปิด)", wr) + card("ไม้เปิด / ไม้วันนี้", tr.filter(t => t.status === "open").length + " / " + (P.trade_count ?? closed.length)) +
+    (P.pending || []).map(o => card("⏳ " + esc(o.type) + " " + o.lot, `@${fmt(o.entry)}<div style="font-size:12px;font-weight:400">ตัดขาดทุน ${fmt(o.sl)} · รับกำไร ${fmt(o.tp)}</div>`, "#f5c542")).join("");
   countUp(); $("pnlNote").textContent = (P.note || "") + " · ไม้ที่เปิดอยู่คำนวณสดจากราคาปัจจุบัน";
-  $("pnlTr").innerHTML = `<table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="color:#999;text-align:left"><th>เวลา</th><th>ฝั่ง</th><th>ล็อต</th><th>เข้า</th><th>ออก</th><th>จุด</th><th>USC</th><th>สถานะ</th><th>โดย</th></tr>` +
+  $("pnlTr").innerHTML = !tr.length ? '<div class="mut" style="font-size:13px">ไม่มีไม้ที่เปิดอยู่ตอนนี้</div>' : `<table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="color:#999;text-align:left"><th>เวลา</th><th>ฝั่ง</th><th>ล็อต</th><th>เข้า</th><th>ออก</th><th>จุด</th><th>USC</th><th>สถานะ</th><th>โดย</th></tr>` +
     tr.map(t => `<tr style="border-top:1px solid #222"><td>${esc((t.time || "").slice(11) || t.time)}</td><td style="color:${t.side === "buy" ? "#1db954" : "#ff5c5c"}">${esc(t.side.toUpperCase())}</td><td>${esc(t.lot)}</td><td>${esc(t.entry)}</td><td>${t.exit == null ? "–" : esc(t.exit)}</td><td style="color:${col(t.pl_points)}">${sg(t.pl_points)}</td><td style="color:${col(t.pl_usc)}">${sg(t.pl_usc)}</td><td>${t.status === "open" ? "🟢 เปิด" : "⚪ ปิด"}</td><td>${esc(t.by)}</td></tr>`).join("") + "</table>";
   // cumulative P/L curve
   const sigEq = tr.map(t => t.time + t.status).join("|"); const animEq = sigEq !== window._eqSig; window._eqSig = sigEq;
@@ -427,7 +495,7 @@ function renderPnl() {
 }
 // first-run Gemini key prompt (stored only in this browser)
 function keyPrompt() {
-  if (getKey() || sessionStorage.getItem("gd_kp_skip")) return;
+  if (getKey() || sessionStorage.getItem("gd_kp_skip") || /[?&]shot=1/.test(location.search)) return;
   const o = document.createElement("div"); o.id = "kp";
   o.style.cssText = "position:fixed;inset:0;z-index:1000;background:#000c;display:flex;align-items:center;justify-content:center;padding:16px";
   o.innerHTML = `<div style="max-width:440px;width:100%;background:#11131a;border:1px solid #f5c542;border-radius:18px;padding:20px;box-shadow:0 0 40px #f5c54255">
@@ -464,6 +532,81 @@ function pulseUpd() { for (const id of ["liveUpd", "pnlCard"]) { const el = $(id
     requestAnimationFrame(loop); };
   loop();
 })();
+
+// ---- recommendation hero ----
+const TIP = {SL: "SL = ตัดขาดทุน: ถ้าราคาไปผิดทางถึงจุดนี้ ระบบปิดไม้ให้อัตโนมัติ เพื่อไม่ให้ขาดทุนหนัก", TP: "TP = รับกำไร: ถ้าราคาไปถูกทางถึงจุดนี้ ระบบปิดเก็บกำไรให้อัตโนมัติ",
+  RR: "RR = กำไรเทียบความเสี่ยง เช่น 1.6 แปลว่า ถ้าแพ้เสีย 1 ส่วน ถ้าชนะได้ 1.6 ส่วน", EV: "EV = ผลตอบแทนคาดหวังต่อไม้ (หน่วย R) ถ้าเป็นบวก แปลว่าทำซ้ำหลายครั้งแล้วน่าจะคุ้ม"};
+const tip = k => `<abbr class="tip" tabindex="0" title="คำนี้แปลว่า: ${esc(TIP[k])}">${k}</abbr>`;
+function planSentence(p, px) {
+  const sell = p.side === "sell", act = sell ? "ขาย" : "ซื้อ", above = p.entry >= px;
+  const cond = Math.abs(px - p.entry) <= 3 ? `ราคาอยู่แถว ${fmt(p.entry)} แล้ว` : `ถ้าราคา${above ? "ขึ้น" : "ลง"}ถึง ${fmt(p.entry)}${!sell && !above ? " แล้วเด้ง" : sell && above ? "" : " แล้วยืนได้"}`;
+  return `<div class="ps" style="border-left:4px solid ${sell ? "#ff4d4d" : "#1db954"}">${cond} → <b style="color:${sell ? "#ff6b6b" : "#1db954"}">${act}</b>
+   <span>| ตัดขาดทุน (${tip("SL")}) <b style="color:#ff6b6b">${fmt(p.sl)}</b></span> <span>| รับกำไร (${tip("TP")}) <b style="color:#1db954">${fmt(p.tp)}</b></span>
+   <div class="psm">${tip("RR")} ${p.rr} · ${tip("EV")} <b style="color:${p.ev > 0 ? "#1db954" : "#ff6b6b"}">${p.ev > 0 ? "+" : ""}${p.ev}R</b> · โอกาสชนะ ~${Math.round((p.p_win || 0) * 100)}% ${p.status ? "· " + esc(p.status) : ""}</div></div>`;
+}
+function renderReco() {
+  if (!D) return; const px = live.price || D.price_num; if (!px) return;
+  const ps = (D.ev_plans || []).filter(p => p.decision === "เข้า").sort((a, b) => Math.abs(a.entry - px) - Math.abs(b.entry - px));
+  const at = ps.find(p => Math.abs(px - p.entry) <= 3);
+  const act = at ? (at.side === "buy" ? "ซื้อ" : "ขาย") : "รอ", col = at ? (at.side === "buy" ? "#1db954" : "#ff4d4d") : "#f5b342";
+  const conf = at ? (at.side === "buy" ? D.ai_up_pct : D.ai_down_pct) : null;
+  $("reco").style.setProperty("--rc", col);
+  // zone bar: buy zone (lowest buy entry) ... sell zone (highest sell entry)
+  const buys = ps.filter(p => p.side === "buy").map(p => p.entry), sells = ps.filter(p => p.side === "sell").map(p => p.entry);
+  const lo = Math.min(...(buys.length ? buys : D.sup_nums || [px - 20]), px) - 5, hi = Math.max(...(sells.length ? sells : D.res_nums || [px + 20]), px) + 5;
+  const pos = v => Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100));
+  const bar = `<div class="zbar"><div class="zb" style="left:0;width:${buys.length ? pos(Math.max(...buys)) : 0}%"></div><div class="zs" style="left:${sells.length ? pos(Math.min(...sells)) : 100}%;right:0"></div>
+    <div class="zp" style="left:${pos(px)}%"><span>ตอนนี้ ${fmt(px)}</span></div></div><div class="zl"><span style="color:#1db954">⬅ โซนซื้อ ${buys.length ? fmt(Math.max(...buys)) : ""}</span><span style="color:#ff6b6b">${sells.length ? fmt(Math.min(...sells)) : ""} โซนขาย ➡</span></div>`;
+  $("reco").innerHTML = `<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap">
+     <div><small style="color:#aaa">คำแนะนำตอนนี้</small><div class="act">ตอนนี้: ${act}</div><div style="font-size:13px;color:#ccc">${at ? "ราคาอยู่ที่จุดเข้าตามแผน" : "ราคาอยู่กลางกรอบ ยังไม่คุ้มเข้า รอให้ถึงจุดด้านล่าง"}</div></div>
+     ${conf != null ? `<div style="text-align:right"><small style="color:#aaa">ความมั่นใจ</small><div style="font-size:28px;font-weight:800;color:${col}">${conf}%</div></div>` : `<div style="text-align:right;font-size:12px;color:#aaa">AI มองขึ้น <b style="color:#1db954">${D.ai_up_pct}%</b> · ลง <b style="color:#ff6b6b">${D.ai_down_pct}%</b></div>`}</div>
+   ${bar}
+   ${ps.map(p => planSentence(p, px)).join("") || '<div class="ps">ยังไม่มีแผนที่คุ้มเสี่ยง (EV ไม่เป็นบวก) — รอดูก่อน</div>'}
+   <div style="margin-top:6px;font-size:11px;color:#888">อัปเดตเมื่อ ${esc(D.updated || "")} · แตะคำ SL/TP/RR/EV เพื่อดูความหมาย · ไม่ใช่การรับประกันกำไร</div>`;
+}
+document.addEventListener("click", e => { const t = e.target.closest && e.target.closest(".tip"); if (t) { e.preventDefault(); alert(t.title); } });
+// ---- 3D levels (Three.js, lazy, fallback 2D) ----
+let L3 = null;
+async function init3d() {
+  const box = $("lv3d"); if (!box) return;
+  const ok = (() => { try { const c = document.createElement("canvas"); return !!(c.getContext("webgl2") || c.getContext("webgl")); } catch (e) { return false; } })();
+  if (!ok) { box.innerHTML = '<div style="padding:20px;color:#aaa">อุปกรณ์นี้ไม่รองรับ 3D — ดูแนวรับแนวต้านด้านล่างแทน</div>'; return; }
+  let THREE; try { THREE = await import("https://unpkg.com/three@0.160.0/build/three.module.min.js"); } catch (e) { box.innerHTML = '<div style="padding:20px;color:#aaa">โหลด 3D ไม่สำเร็จ</div>'; return; }
+  const W = () => box.clientWidth, H = () => box.clientHeight, mobile = innerWidth < 700;
+  const r = new THREE.WebGLRenderer({antialias: !mobile, alpha: true}); r.setPixelRatio(Math.min(devicePixelRatio, mobile ? 1.5 : 2)); r.setSize(W(), H()); box.appendChild(r.domElement);
+  const sc = new THREE.Scene(), cam = new THREE.PerspectiveCamera(45, W() / H(), .1, 100); cam.position.set(0, 0, 13);
+  sc.add(new THREE.AmbientLight(0xffffff, .6)); const pl = new THREE.PointLight(0xffd36b, 40, 40); pl.position.set(3, 4, 6); sc.add(pl);
+  const grp = new THREE.Group(); sc.add(grp);
+  const label = (txt, color) => { const c = document.createElement("canvas"); c.width = 512; c.height = 96; const x = c.getContext("2d"); x.font = "bold 44px 'Noto Sans Thai',sans-serif"; x.fillStyle = color; x.fillText(txt, 8, 64);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({map: new THREE.CanvasTexture(c), transparent: true, depthTest: false})); sp.scale.set(4, .75, 1); return sp; };
+  L3 = {THREE, r, sc, cam, grp, label, W, H};
+  build3d(); let drag = null, rotY = 0, vel = .004;
+  r.domElement.addEventListener("pointerdown", e => { drag = e.clientX; vel = 0; });
+  addEventListener("pointerup", () => { drag = null; vel = .004; });
+  r.domElement.addEventListener("pointermove", e => { if (drag != null) { rotY += (e.clientX - drag) * .01; drag = e.clientX; } });
+  new ResizeObserver(() => { r.setSize(W(), H()); cam.aspect = W() / H(); cam.updateProjectionMatrix(); }).observe(box);
+  let vis = true; new IntersectionObserver(es => vis = es[0].isIntersecting).observe(box);
+  const loop = t => { requestAnimationFrame(loop); if (!vis || document.hidden) return; if (!RM) rotY += vel; grp.rotation.y = Math.sin(rotY) * .9;
+    if (L3.orb) { L3.orb.scale.setScalar(1 + Math.sin(t / 400) * .06); } r.render(sc, cam); };
+  requestAnimationFrame(loop);
+}
+function build3d() {
+  if (!L3 || !D) return; const {THREE, grp, label} = L3; while (grp.children.length) grp.remove(grp.children[0]);
+  const px = live.price || D.price_num, p = (D.ev_plans || [])[0];
+  const lv = [...(D.res_nums || []).map(v => [v, "r"]), ...(D.sup_nums || []).map(v => [v, "s"])].filter(x => x[0]);
+  if (p) lv.push([p.entry, "e"], [p.sl, "sl"], [p.tp, "tp"]);
+  const all = lv.map(x => x[0]).concat([px]); const mn = Math.min(...all) - 5, mx = Math.max(...all) + 5, y = v => ((v - mn) / (mx - mn) - .5) * 8;
+  const axis = new THREE.Mesh(new THREE.CylinderGeometry(.04, .04, 8.4, 8), new THREE.MeshBasicMaterial({color: 0x666666})); grp.add(axis);
+  const C = {r: 0xff4d4d, s: 0x1db954, e: 0xf5c542, sl: 0xff8080, tp: 0x7dffb0}, T = {r: "แนวต้าน", s: "แนวรับ", e: "จุดเข้า", sl: "SL", tp: "TP"};
+  lv.forEach(([v, k]) => { const plane = k === "r" || k === "s";
+    const m = new THREE.Mesh(plane ? new THREE.BoxGeometry(5, .03, 2.4) : new THREE.TorusGeometry(.5, .04, 8, 32), new THREE.MeshStandardMaterial({color: C[k], emissive: C[k], emissiveIntensity: .5, transparent: true, opacity: plane ? .45 : .9}));
+    if (!plane) m.rotation.x = Math.PI / 2; m.position.y = y(v); grp.add(m);
+    const lb = label(`${T[k]} ${fmt(v)}`, "#" + C[k].toString(16).padStart(6, "0")); lb.position.set(plane ? 3.6 : -3.4, y(v), 0); grp.add(lb); });
+  const orb = new THREE.Mesh(new THREE.SphereGeometry(.45, 32, 32), new THREE.MeshStandardMaterial({color: 0xffd36b, emissive: 0xf5a700, emissiveIntensity: 1.2, metalness: .6, roughness: .25}));
+  orb.position.y = y(px); grp.add(orb); L3.orb = orb;
+  const halo = new THREE.Mesh(new THREE.SphereGeometry(.75, 24, 24), new THREE.MeshBasicMaterial({color: 0xf5c542, transparent: true, opacity: .15})); halo.position.y = y(px); grp.add(halo);
+  const lb = label("ราคาตอนนี้ " + fmt(px), "#ffe08a"); lb.position.set(0, y(px) + .9, 0); grp.add(lb);
+}
 // realtime call overlay (same page)
 function openCall() { if (!$("callFr").src) $("callFr").src = "call.html?embed=1"; $("callOv").style.display = "block"; if (location.hash !== "#call") history.replaceState(null, "", "#call"); }
 function closeCall() { try { $("callFr").contentWindow.stopCall && $("callFr").contentWindow.stopCall(); } catch (e) {} $("callOv").style.display = "none"; history.replaceState(null, "", location.pathname + location.search); }
@@ -473,7 +616,7 @@ window.addEventListener("hashchange", () => { if (location.hash === "#call") ope
 // init
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text.replace(/\*\*/g, "")));
 if (!hist.length) bubble("a", "สวัสดีค่ะ 👋 ดิฉันคือ เลขา ผู้ช่วยวิเคราะห์ทองค่ะ ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ต้องใส่ Gemini API key ใน ⚙️ ตั้งค่า ก่อนใช้ครั้งแรก)");
-syncSet(); setMode(mode); render(); renderPnl(); keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
+syncSet(); setMode(mode); render(); renderPnl(); renderReco(); init3d(); keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
 pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 15000); setInterval(pollThai, 30000); setInterval(pollData, 20000);
 </script>
 </body>

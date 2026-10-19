@@ -79,3 +79,8 @@
 4. `wrangler deploy` → ได้ URL `https://line-gold-bot.<ชื่อ>.workers.dev` → ใส่เป็น Webhook URL ใน LINE (ไม่ต้องมี ?key=)
 5. แจ้งเตือน: `POST /alert` (ข้อความ) และ `POST /tts` (คืน PCM ให้ `line_notify_voice.sh`) — ใช้ JSON `{"secret":..., "text":...}` (สคริปต์ปัจจุบันใช้ `action` แบบ Apps Script; ถ้าใช้ Worker ให้ตั้ง `LINE_ALERT_URL=https://.../tts`)
 - Worker ไม่ส่งเสียงตอบในแชท (ไม่มีตัวเข้ารหัส m4a) · Rich Menu ใช้ `createRichMenu()` ใน Apps Script หรือสร้างใน LINE OA Manager
+
+## 🧠 ความจำ
+- เว็บ: เก็บในเบราว์เซอร์ (ประวัติแชท ~30 รอบ, สรุปอัตโนมัติ, รายการ "สิ่งที่จำ") ปุ่ม 🧠 ความจำ เพื่อดู/แก้/ลบ/ล้าง · คุยสดจะใช้ความจำนี้และบันทึกสรุปหลังวางสาย
+- LINE: `/จำ ข้อความ` เพิ่ม · `/ความจำ` ดู · `/ลืม` ล้าง · AI เพิ่มเองได้ผ่าน [[จำ: ...]] · Apps Script เก็บใน Script Properties (`MEM_<userId>`, ≤ 8.5KB, 10 รอบล่าสุด) · Worker เก็บใน KV `MODES` (ถ้าไม่ผูก KV จะไม่จำ)
+- ไม่มีข้อมูลความจำใน repo

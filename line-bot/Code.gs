@@ -18,6 +18,8 @@ var TTS_VOICE  = 'Sulafat';
 var DASHBOARD_URL = 'https://purefxaidev.github.io/gold-dashboard/view.json';
 var PRICE_URL     = 'https://api.gold-api.com/price/XAU';
 var KNOWLEDGE_URL = 'https://purefxaidev.github.io/gold-dashboard/knowledge.md';
+var LESSONS_URL   = 'https://purefxaidev.github.io/gold-dashboard/lessons.md';
+var JOURNAL_URL   = 'https://purefxaidev.github.io/gold-dashboard/history/trade_journal.jsonl';
 var MAX_REPLY_CHARS = 4500;
 var DRIVE_FOLDER_NAME = 'line-gold-bot-audio';
 
@@ -80,6 +82,24 @@ function handleAlert_(text, wantVoice) {
   return { ok: code === 200, voice: voiceOk, line: code };
 }
 
+// ===== ความจำต่อผู้ใช้ (Script Properties, จำกัดขนาด) =====
+function getMem_(uid) { try { return JSON.parse(prop_('MEM_' + uid) || '') } catch (e) { return { facts: [], hist: [] }; } }
+function setMem_(uid, m) {
+  if (!uid) return; m.facts = (m.facts || []).slice(-20); m.hist = (m.hist || []).slice(-20);
+  var j = JSON.stringify(m); while (j.length > 8500 && m.hist.length) { m.hist.shift(); j = JSON.stringify(m); }
+  PropertiesService.getScriptProperties().setProperty('MEM_' + uid, j);
+}
+function memPrompt_(m) {
+  return (m.facts.length ? '\n\nสิ่งที่จำเกี่ยวกับผู้ใช้:\n- ' + m.facts.join('\n- ') : '') +
+    '\n\nถ้าผู้ใช้บอกข้อมูลที่ควรจำระยะยาว (ความชอบ สไตล์เทรด เป้าหมาย) ให้ใส่ [[จำ: ข้อความสั้น]] ท้ายคำตอบ';
+}
+function takeMem_(text, m) {
+  var add = [];
+  text = text.replace(/\[\[\s*จำ\s*:\s*([^\]]+)\]\]/g, function (_, x) { add.push(x.trim()); return ''; }).trim();
+  add.forEach(function (x) { if (m.facts.indexOf(x) < 0) m.facts.push(x); });
+  return { text: text + (add.length ? '\n\n🧠 จำไว้แล้วค่ะ: ' + add.join(' · ') : ''), added: add.length };
+}
+
 // ===== โหมดแปลภาษา (เก็บต่อผู้ใช้ใน Script Properties) =====
 var LANGS = { th: 'Thai', en: 'English', zh: 'Chinese (Simplified)', ja: 'Japanese', ko: 'Korean',
               vi: 'Vietnamese', lo: 'Lao', my: 'Burmese', fr: 'French', de: 'German' };
@@ -95,6 +115,14 @@ function langQuickReply_() {
 }
 function handleCommand_(ev, t) {
   var uid = ev.source && ev.source.userId, rt = ev.replyToken;
+  var mj = /^\/จำ\s+([\s\S]+)/.exec(t);
+  if (mj && uid) { var m1 = getMem_(uid); m1.facts.push(mj[1].trim().slice(0, 200)); setMem_(uid, m1);
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: '🧠 จำไว้แล้วค่ะ: ' + mj[1].trim() }] }); return true; }
+  if (/^\/ลืม/.test(t) && uid) { PropertiesService.getScriptProperties().deleteProperty('MEM_' + uid);
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: '🗑️ ล้างความจำทั้งหมดแล้วค่ะ' }] }); return true; }
+  if (/^\/ความจำ/.test(t) && uid) { var m2 = getMem_(uid);
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: '🧠 ความจำของเลขา\n' + (m2.facts.length ? m2.facts.map(function (x, i) { return (i + 1) + '. ' + x; }).join('\n') : '(ยังไม่มี)') +
+      '\nประวัติแชท: ' + m2.hist.length / 2 + ' รอบล่าสุด\n/จำ ข้อความ = เพิ่ม · /ลืม = ล้างทั้งหมด' }] }); return true; }
   if (/^\/(วิเคราะห์|analyst)/i.test(t)) {
     setMode_(uid, '');
     lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: '📈 กลับสู่โหมดวิเคราะห์ทองแล้วค่ะ' }] });
@@ -154,7 +182,10 @@ function handleEvent_(ev) {
     if (c2 === 400 && tm.length > 1) lineSend_('reply', { replyToken: ev.replyToken, messages: [tm[0]] });
     return;
   }
-  var answer = askGemini_(parts);
+  var uid = ev.source && ev.source.userId, mem = uid ? getMem_(uid) : { facts: [], hist: [] };
+  var tk = takeMem_(askGemini_(parts, mem), mem), answer = tk.text;
+  if (uid) { var q = m.type === 'text' ? m.text : '[' + (m.type === 'image' ? 'ภาพ' : 'เสียง') + ']';
+    mem.hist.push({ r: 'user', t: q.slice(0, 400) }, { r: 'model', t: answer.slice(0, 600) }); setMem_(uid, mem); }
   var msgs = [{ type: 'text', text: answer.slice(0, MAX_REPLY_CHARS) }];
   try { var v = buildVoiceMessage_(answer); if (v) msgs.push(v); } catch (err) { console.warn('TTS skipped: ' + err); }
   var code = lineSend_('reply', { replyToken: ev.replyToken, messages: msgs });
@@ -175,6 +206,13 @@ function getContext_() {
   if (!kb) { try { var k = UrlFetchApp.fetch(KNOWLEDGE_URL, { muteHttpExceptions: true });
     kb = k.getResponseCode() === 200 ? k.getContentText().slice(0, 9000) : ''; if (kb) cache.put('kb', kb, 3600); } catch (err) { kb = ''; } }
   if (kb) out.push('คลังความรู้ (หลักการตัดสินใจ):\n' + kb);
+  var hs = cache.get('hist');
+  if (hs === null) { hs = ''; try {
+    var l = UrlFetchApp.fetch(LESSONS_URL, { muteHttpExceptions: true }), jn = UrlFetchApp.fetch(JOURNAL_URL, { muteHttpExceptions: true });
+    if (l.getResponseCode() === 200) hs += l.getContentText().slice(-3000);
+    if (jn.getResponseCode() === 200) hs += '\nบันทึกเทรดล่าสุด:\n' + jn.getContentText().trim().split('\n').slice(-15).join('\n');
+    hs = hs.slice(0, 5000); cache.put('hist', hs, 600); } catch (err) {} }
+  if (hs) out.push('บทเรียน/ประวัติเทรด:\n' + hs);
   var s = (out.join('\n\n') || 'ไม่มีข้อมูลบริบท').slice(0, 25000);
   cache.put('ctx', s.slice(0, 90000), 60);
   return s;
@@ -190,11 +228,12 @@ function gemini_(model, payload) {
   return JSON.parse(r.getContentText());
 }
 
-function askGemini_(userParts) {
+function askGemini_(userParts, mem) {
+  mem = mem || { facts: [], hist: [] };
   var now = Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd HH:mm');
   var j = gemini_(CHAT_MODEL, {
-    systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-    contents: [{ role: 'user', parts: [{ text: 'เวลาไทยตอนนี้: ' + now + '\n\nบริบทตลาด:\n' + getContext_() }].concat(userParts) }],
+    systemInstruction: { parts: [{ text: SYSTEM_PROMPT + memPrompt_(mem) }] },
+    contents: mem.hist.map(function (h) { return { role: h.r, parts: [{ text: h.t }] }; }).concat([{ role: 'user', parts: [{ text: 'เวลาไทยตอนนี้: ' + now + '\n\nบริบทตลาด:\n' + getContext_() }].concat(userParts) }]),
     generationConfig: { temperature: 0.4, maxOutputTokens: 1200 }
   });
   var ps = (((j.candidates || [])[0] || {}).content || {}).parts || [];

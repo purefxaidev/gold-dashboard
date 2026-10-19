@@ -113,46 +113,23 @@
  ],
  "ev_method": "p_win ประเมินจากระยะ SL/TP (random walk: p≈ระยะSL÷(ระยะSL+ระยะTP)) แล้วปรับตามความน่าจะเป็นขึ้น/ลงของ AI และตำแหน่งแนวรับแนวต้าน",
  "pnl": {
-  "today_usc": 79.4,
-  "today_points": 7.94,
+  "today_usc": 120.5,
+  "today_points": null,
   "win_rate": null,
+  "trade_count": 8,
+  "open_count": 0,
   "mark_price": 4183.9,
-  "note": "บัญชีเซ็นต์ (USC): 0.1 ล็อต ราคาขยับ 1 ดอลลาร์ = 10 USC (ตรวจเทียบกับหน้าเทรด Exness แล้ว) · ใช้ราคาสปอต อาจต่างจากแพลตฟอร์มเล็กน้อย",
-  "trades": [
+  "note": "ปิดครบทุกไม้แล้ว (ปิดเองราว 11:44 น.) · บัญชีเซ็นต์: 0.1 ล็อต ราคาขยับ 1 ดอลลาร์ = 10 USC",
+  "pending": [
    {
-    "time": "2026-10-19 10:22",
-    "side": "buy",
+    "type": "Sell Limit",
     "lot": 0.1,
-    "entry": 4182.273,
-    "exit": null,
-    "pl_usc": 16.3,
-    "pl_points": 1.63,
-    "status": "open",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "2026-10-19 10:22",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4180.741,
-    "exit": null,
-    "pl_usc": 31.6,
-    "pl_points": 3.16,
-    "status": "open",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "2026-10-19 10:23",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4180.75,
-    "exit": null,
-    "pl_usc": 31.5,
-    "pl_points": 3.15,
-    "status": "open",
-    "by": "ผู้ใช้"
+    "entry": 4203,
+    "sl": 4228,
+    "tp": 4163
    }
-  ]
+  ],
+  "trades": []
  },
  "price_num": 4183.0,
  "res_nums": [
@@ -165,5 +142,5 @@
   4151.0,
   4104.0
  ],
- "built": "2026-10-19 11:54"
+ "built": "2026-10-19 11:58"
 }

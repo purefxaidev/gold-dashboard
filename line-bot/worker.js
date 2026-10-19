@@ -5,6 +5,8 @@ const CHAT_MODEL = 'gemini-3.8-flash', TTS_MODEL = 'gemini-3.8-flash-tts', TTS_V
 const DASHBOARD_URL = 'https://purefxaidev.github.io/gold-dashboard/view.json';
 const PRICE_URL = 'https://api.gold-api.com/price/XAU';
 const KNOWLEDGE_URL = 'https://purefxaidev.github.io/gold-dashboard/knowledge.md';
+const LESSONS_URL = 'https://purefxaidev.github.io/gold-dashboard/lessons.md';
+const JOURNAL_URL = 'https://purefxaidev.github.io/gold-dashboard/history/trade_journal.jsonl';
 const LANGS = { th: 'Thai', en: 'English', zh: 'Chinese (Simplified)', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese', lo: 'Lao', my: 'Burmese', fr: 'French', de: 'German' };
 const SYSTEM_PROMPT = [
   'คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นผู้ช่วยนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) ตอบเป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ',
@@ -46,6 +48,9 @@ export default {
   }
 };
 
+// ---- memory (KV binding MODES, optional) ----
+async function getMem(env, uid) { if (!uid || !env.MODES) return { facts: [], hist: [] }; try { return JSON.parse(await env.MODES.get('mem:' + uid)) || { facts: [], hist: [] }; } catch { return { facts: [], hist: [] }; } }
+async function setMem(env, uid, m) { if (!uid || !env.MODES) return; m.facts = m.facts.slice(-20); m.hist = m.hist.slice(-20); await env.MODES.put('mem:' + uid, JSON.stringify(m)); }
 async function getMode(env, uid) { return uid && env.MODES ? (await env.MODES.get('m:' + uid)) || '' : ''; }
 async function setMode(env, uid, v) { if (!uid || !env.MODES) return; v ? await env.MODES.put('m:' + uid, v) : await env.MODES.delete('m:' + uid); }
 function quick() {
@@ -59,6 +64,14 @@ async function handleEvent(env, ev) {
   const m = ev.message, uid = ev.source && ev.source.userId;
   if (m.type === 'text' && m.text.startsWith('/')) {
     const t = m.text.trim();
+    const mj = /^\/จำ\s+([\s\S]+)/.exec(t);
+    if (mj || /^\/(ลืม|ความจำ)/.test(t)) {
+      if (!env.MODES) return reply(env, ev, [{ type: 'text', text: '⚠️ ยังไม่ได้ผูก KV MODES จึงจำไม่ได้ค่ะ' }]);
+      const mm0 = await getMem(env, uid);
+      if (mj) { mm0.facts.push(mj[1].trim().slice(0, 200)); await setMem(env, uid, mm0); return reply(env, ev, [{ type: 'text', text: '🧠 จำไว้แล้วค่ะ: ' + mj[1].trim() }]); }
+      if (/^\/ลืม/.test(t)) { await env.MODES.delete('mem:' + uid); return reply(env, ev, [{ type: 'text', text: '🗑️ ล้างความจำทั้งหมดแล้วค่ะ' }]); }
+      return reply(env, ev, [{ type: 'text', text: '🧠 ความจำของเลขา\n' + (mm0.facts.map((x, i) => (i + 1) + '. ' + x).join('\n') || '(ยังไม่มี)') + '\n/จำ ข้อความ = เพิ่ม · /ลืม = ล้าง' }]);
+    }
     if (/^\/(วิเคราะห์|analyst)/i.test(t)) { await setMode(env, uid, ''); return reply(env, ev, [{ type: 'text', text: '📈 กลับสู่โหมดวิเคราะห์ทองแล้วค่ะ' }]); }
     const mm = /^\/(แปล|translate|tr)\s*([a-z]{2})?/i.exec(t);
     if (mm) {
@@ -89,19 +102,27 @@ async function handleEvent(env, ev) {
     return reply(env, ev, [{ type: 'text', text: ('🌐 ' + out).slice(0, 4500), quickReply: quick() }]);
   }
   const now = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' });
-  const out = await gemini(env, CHAT_MODEL, {
-    systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-    contents: [{ role: 'user', parts: [{ text: 'เวลาไทยตอนนี้: ' + now + '\n\nบริบทตลาด:\n' + await context() }, ...parts] }],
+  const mem = await getMem(env, uid);
+  const memP = (mem.facts.length ? '\n\nสิ่งที่จำเกี่ยวกับผู้ใช้:\n- ' + mem.facts.join('\n- ') : '') + '\n\nถ้าผู้ใช้บอกข้อมูลที่ควรจำระยะยาว ให้ใส่ [[จำ: ข้อความสั้น]] ท้ายคำตอบ';
+  let out = await gemini(env, CHAT_MODEL, {
+    systemInstruction: { parts: [{ text: SYSTEM_PROMPT + memP }] },
+    contents: [...mem.hist.map(h => ({ role: h.r, parts: [{ text: h.t }] })), { role: 'user', parts: [{ text: 'เวลาไทยตอนนี้: ' + now + '\n\nบริบทตลาด:\n' + await context() }, ...parts] }],
     generationConfig: { temperature: 0.4, maxOutputTokens: 1200 } });
+  const add = []; out = out.replace(/\[\[\s*จำ\s*:\s*([^\]]+)\]\]/g, (_, x) => { add.push(x.trim()); return ''; }).trim();
+  add.forEach(x => { if (!mem.facts.includes(x)) mem.facts.push(x); }); if (add.length) out += '\n\n🧠 จำไว้แล้วค่ะ: ' + add.join(' · ');
+  mem.hist.push({ r: 'user', t: (m.type === 'text' ? m.text : '[' + m.type + ']').slice(0, 400) }, { r: 'model', t: out.slice(0, 600) });
+  await setMem(env, uid, mem);
   return reply(env, ev, [{ type: 'text', text: out.slice(0, 4500) }]);
 }
 
 async function context() {
   const out = [];
-  const [p, d, k] = await Promise.allSettled([fetch(PRICE_URL).then(r => r.ok ? r.text() : ''), fetch(DASHBOARD_URL + '?t=' + Date.now()).then(r => r.ok ? r.text() : ''),
-    fetch(KNOWLEDGE_URL, { cf: { cacheTtl: 3600, cacheEverything: true } }).then(r => r.ok ? r.text() : '')]);
+  const [p, d, k, ls, jn] = await Promise.allSettled([fetch(PRICE_URL).then(r => r.ok ? r.text() : ''), fetch(DASHBOARD_URL + '?t=' + Date.now()).then(r => r.ok ? r.text() : ''),
+    fetch(KNOWLEDGE_URL, { cf: { cacheTtl: 3600, cacheEverything: true } }).then(r => r.ok ? r.text() : ''),
+    fetch(LESSONS_URL, { cf: { cacheTtl: 600 } }).then(r => r.ok ? r.text() : ''), fetch(JOURNAL_URL, { cf: { cacheTtl: 600 } }).then(r => r.ok ? r.text() : '')]);
   if (p.value) out.push('ราคาสด XAU: ' + p.value.slice(0, 500));
   if (d.value) out.push('ข้อมูลแดชบอร์ด (JSON): ' + d.value.slice(0, 12000));
+  if (ls.value || jn.value) out.push('บทเรียน/ประวัติเทรด:\n' + ((ls.value || '').slice(-3000) + '\nบันทึกเทรดล่าสุด:\n' + (jn.value || '').trim().split('\n').slice(-15).join('\n')).slice(0, 5000));
   if (k.value) out.push('คลังความรู้ (หลักการตัดสินใจ):\n' + k.value.slice(0, 9000));
   return out.join('\n\n') || 'ไม่มีข้อมูลบริบท';
 }
