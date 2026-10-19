@@ -156,6 +156,9 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.card,.m{opacity:1;transform:none}}
 .newsarts{display:grid;gap:10px;margin-bottom:12px}@media(min-width:900px){.newsarts{grid-template-columns:repeat(3,1fr)}}
 .narts{display:block;text-decoration:none;color:var(--tx);border:1px solid var(--bd);border-left:4px solid var(--c,#9aa3b5);border-radius:12px;padding:10px 12px;background:rgba(255,255,255,.03);transition:transform .2s,background .2s}.narts:hover{transform:translateY(-2px);background:rgba(245,197,66,.06)}
+.narts{padding:0;overflow:hidden}.narts .nb{padding:10px 12px}.narts .nf{position:relative;aspect-ratio:20/9;background:radial-gradient(70% 90% at 20% 20%,color-mix(in srgb,var(--c) 45%,transparent),transparent 70%),linear-gradient(135deg,#120d02,#07080d);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.narts .nf b{font:900 15px Prompt,sans-serif;letter-spacing:4px;color:#f5c542aa}.narts .nf img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s,transform 4s}.narts .nf img.ld{opacity:1}.narts:hover .nf img{transform:scale(1.07)}
+.narts .nf i{display:none}.narts .nf.hasimg i{display:block}.narts .nf i{position:absolute;right:6px;bottom:5px;font:normal 10px 'Noto Sans Thai';color:#e6e9f0cc;background:rgba(0,0,0,.45);padding:1px 7px;border-radius:999px}
 .narts .nt{font-size:11px;color:var(--mut);display:flex;gap:6px;flex-wrap:wrap}.narts .nt b{color:var(--c)}.narts .nh{font:600 13.5px/1.5 Prompt,sans-serif;margin-top:4px}
 </style>
 </head>
@@ -707,7 +710,7 @@ pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 15000); setInterval(
 (function(){fetch("news.json?t="+Date.now(),{cache:"no-store"}).then(r=>r.json()).then(d=>{const L=window.LANG==="en"?"en":"th",el=document.getElementById("newsArts");if(!el)return;
 const C={bullish:"#22e39a",bearish:"#ff4d6d",neutral:"#9aa3b5"},N={th:{bullish:"▲ หนุนทองขึ้น",bearish:"▼ กดดันทองลง",neutral:"◆ เป็นกลาง"},en:{bullish:"▲ Bullish",bearish:"▼ Bearish",neutral:"◆ Neutral"}}[L];
 const e=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="narts" href="news.html?lang=${L}#${e(i.id)}" style="--c:${C[i.impact]||C.neutral}"><div class="nt"><b>${N[i.impact]||N.neutral}</b><span>${e(i.source)}</span><span>${e(i.published)}</span></div><div class="nh">${e(L==="en"?i.title_en:i.title_th)}</div></a>`).join("")}).catch(()=>{})})();
+el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="narts" href="news.html?lang=${L}#${e(i.id)}" style="--c:${C[i.impact]||C.neutral}"><div class="nf"><b>PUREGOLD</b>${/^https:\/\//.test(i.image||"")?`<img src="${e(i.image)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onload="this.classList.add('ld');this.parentNode.classList.add('hasimg')" onerror="this.remove()">`:""}<i>${L==="en"?"Image":"ภาพ"}: ${e(i.source)}</i></div><div class="nb"><div class="nt"><b>${N[i.impact]||N.neutral}</b><span>${e(i.source)}</span><span>${e(i.published)}</span></div><div class="nh">${e(L==="en"?i.title_en:i.title_th)}</div></div></a>`).join("")}).catch(()=>{})})();
 </script>
 </body>
 </html>

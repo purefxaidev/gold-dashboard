@@ -71,6 +71,16 @@ header .wrap{display:flex;align-items:center;gap:10px;padding:10px 14px;flex-wra
 .sk{height:120px;border-radius:var(--r);background:linear-gradient(90deg,rgba(255,255,255,.03),rgba(255,255,255,.08),rgba(255,255,255,.03));background-size:200% 100%;animation:shine 1.4s linear infinite}
 @media(max-width:600px){.hero h1{font-size:21px}.art h2{font-size:16px}.pill{font-size:11px;padding:5px 9px}.nav{margin-left:0;width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:6px}.nav::-webkit-scrollbar{display:none}.nav .langtog{margin-right:0}header{position:relative}header .wrap{row-gap:8px}.top .t{margin-left:0;width:100%}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.art{opacity:1;transform:none}}
+.fig{margin:-16px -16px 12px -20px;position:relative;aspect-ratio:20/9;overflow:hidden;background:#0b0d12}
+.fig img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.04);transition:transform 6s ease,opacity .5s;opacity:0}
+.fig img.ld{opacity:1}.art:hover .fig img{transform:scale(1.1)}
+.fig:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(7,8,13,.85))}
+.fig .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(60% 90% at 20% 20%,color-mix(in srgb,var(--c) 45%,transparent),transparent 70%),radial-gradient(60% 80% at 90% 90%,rgba(245,197,66,.35),transparent 70%),linear-gradient(135deg,#120d02,#07080d);background-size:200% 200%;animation:phm 9s ease-in-out infinite alternate}
+.fig .ph b{font:900 26px Prompt,sans-serif;letter-spacing:6px;background:linear-gradient(90deg,#a8740a,#fff4c2,#f5c542,#a8740a);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite;opacity:.85}
+@keyframes phm{to{background-position:100% 100%}}
+.fig .cr{display:none}.fig.hasimg .cr{display:block}.fig .cr{position:absolute;right:10px;bottom:8px;z-index:2;font-size:10.5px;color:#e6e9f0cc;background:rgba(0,0,0,.45);padding:2px 8px;border-radius:999px}
+@media(max-width:600px){.fig{aspect-ratio:16/9}.fig .ph b{font-size:20px}}
+@media(prefers-reduced-motion:reduce){.fig img{opacity:1}}
 </style>
 </head>
 <body class="notr">
@@ -100,13 +110,13 @@ header .wrap{display:flex;align-items:center;gap:10px;padding:10px 14px;flex-wra
       lead: "ระบบสแกนข่าวที่มีผลกับราคาทอง แล้วเขียนสรุปเป็นภาษาง่ายๆ ว่าเกิดอะไรขึ้น ทำไมสำคัญ และน่าจะส่งผลกับทองทางไหน ทุกบทความมีลิงก์ข่าวต้นฉบับให้ตรวจสอบเอง",
       disc: "ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน · ทิศทางในบทความเป็นการประเมิน อาจผิดได้ · การเทรดมีความเสี่ยงสูง",
       all: "ทั้งหมด", bullish: "หนุนทองขึ้น", bearish: "กดดันทองลง", neutral: "เป็นกลาง", high: "ผลกระทบสูง", medium: "ผลกระทบกลาง", low: "ผลกระทบต่ำ",
-      more: "อ่านบทความ", less: "ย่อ", orig: "ข่าวต้นฉบับ", copy: "คัดลอกลิงก์", copied: "คัดลอกแล้ว", src: "แหล่งข่าว", srcHl: "พาดหัวต้นฉบับ",
+      more: "อ่านบทความ", less: "ย่อ", orig: "ข่าวต้นฉบับ", copy: "คัดลอกลิงก์", copied: "คัดลอกแล้ว", src: "แหล่งข่าว", srcHl: "พาดหัวต้นฉบับ", img: "ภาพ",
       upd: "อัปเดตล่าสุด", items: "บทความ", tz: "น. เวลาไทย", none: "ยังไม่มีบทความในหมวดนี้", err: "โหลดข่าวไม่สำเร็จ ลองรีเฟรชอีกครั้ง"},
     en: {dash: "Dashboard", ctl: "Control Center", su: "Open Exness account", h1: "Gold news articles",
       lead: "The system scans news that moves gold and explains it in plain language: what happened, why it matters and which way it may push gold. Every article links to the original source so you can check it yourself.",
       disc: "For education only, not investment advice · Directions are estimates and can be wrong · Trading is high risk",
       all: "All", bullish: "Bullish gold", bearish: "Bearish gold", neutral: "Neutral", high: "High impact", medium: "Medium impact", low: "Low impact",
-      more: "Read article", less: "Collapse", orig: "Original source", copy: "Copy link", copied: "Copied", src: "Source", srcHl: "Original headline",
+      more: "Read article", less: "Collapse", orig: "Original source", copy: "Copy link", copied: "Copied", src: "Source", srcHl: "Original headline", img: "Image",
       upd: "Last updated", items: "articles", tz: "Bangkok time", none: "No articles in this category yet", err: "Could not load news, please refresh"}
   }[L];
   const $ = id => document.getElementById(id);
@@ -126,7 +136,9 @@ header .wrap{display:flex;align-items:center;gap:10px;padding:10px 14px;flex-wra
   }
   function card(it, idx) {
     const title = L === "en" ? it.title_en : it.title_th, sum = L === "en" ? it.summary_en : it.summary_th, paras = (L === "en" ? it.article_en : it.article_th) || [];
+    const img = /^https:\/\//.test(it.image || "") ? it.image : "";
     return `<article class="art ${esc(it.impact)}" id="${esc(it.id)}" style="animation-delay:${Math.min(idx, 10) * 70}ms">
+      <div class="fig"><div class="ph"><b>PUREGOLD</b></div>${img ? `<img src="${esc(img)}" alt="${esc(title)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onload="this.classList.add('ld');this.parentNode.classList.add('hasimg')" onerror="this.remove()">` : ""}<span class="cr">${esc(T.img)}: ${esc(it.source)}</span></div>
       <div class="top"><span class="tag">${it.impact === "bullish" ? "▲ " : it.impact === "bearish" ? "▼ " : "◆ "}${esc(T[it.impact] || it.impact)}</span>${it.level ? `<span class="lv ${esc(it.level)}">${esc(T[it.level] || it.level)}</span>` : ""}<span>${esc(it.source)}</span><span class="t">${esc(it.published)} ${esc(T.tz)}</span></div>
       <h2>${esc(title)}</h2><p class="sum">${esc(sum)}</p>
       <div class="body"><div>${paras.map(p => `<p>${esc(p)}</p>`).join("")}

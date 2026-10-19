@@ -15,6 +15,12 @@ Workflow (run by the agent each news cycle):
      Facts must come only from the source headline/summary; direction must state uncertainty.
   3) python3 news.py add articles.json      -> merges into news.json (newest first, keep 50), prints new ids
        python3 news.py skip <cand-key> ...   -> mark candidates as not worth an article (stored in news.json "skipped")
+     Images: add() fills "image" automatically: RSS media:content/media:thumbnail/enclosure from scan, otherwise the
+       og:image / twitter:image of the article page (https only). Google News links cannot be resolved without an
+       undocumented Google endpoint, so for those give "publisher_url" (the publisher's own article URL, e.g. from a
+       web search of the headline) in the article JSON; it then becomes the "url" and its og:image is used. You may
+       also pass "image" directly. Items with no image show a PUREGOLD placeholder on the site and no LINE hero.
+       python3 news.py backfill [map.json]   -> fill missing images ({"<id>": "<publisher_url>"} optional map)
   4) python3 news.py card <id>              -> prints the JSON for:  bash /workspace/line_flex.sh news_article '<json>'
        python3 news.py send <id>             -> builds the card and calls line_flex.sh (honours DRY_RUN / VALIDATE)
   5) publish.sh (or git add news.json && commit && push) to update news.html on GitHub Pages.
@@ -64,6 +70,48 @@ def ptime(s):
         try: return datetime.datetime.fromisoformat(s.replace("Z", "+00:00")).astimezone(BKK)
         except Exception: return None
 
+UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36"
+MRSS = "{http://search.yahoo.com/mrss/}"
+def https(u): u = html.unescape((u or "").strip()); return u if u.startswith("https://") and len(u) < 1000 and not re.search(r"[\s\"'<>]", u) else ""
+def rss_image(it):
+    for tag in (MRSS + "content", MRSS + "thumbnail"):
+        for m in it.iter(tag):
+            u = https(m.get("url")); t = (m.get("type") or m.get("medium") or "image").lower()
+            if u and ("image" in t or re.search(r"\.(jpe?g|png|webp|gif)(\?|$)", u, re.I)): return u
+    for e in it.findall("enclosure"):
+        if (e.get("type") or "").startswith("image/") and https(e.get("url")): return https(e.get("url"))
+    return ""
+META = re.compile(r"<meta\b[^>]*>", re.I)
+def page_image(url):
+    """og:image / twitter:image of an article page (not Google News redirect pages)"""
+    if not url or "news.google.com" in url: return ""
+    try:
+        r = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "text/html"})
+        with urllib.request.urlopen(r, timeout=15) as f:
+            if f.status != 200: return ""
+            h = f.read(400000).decode("utf-8", "ignore")
+    except Exception: return ""
+    found = {}
+    for m in META.finditer(h):
+        tag = m.group(0); k = re.search(r"(?:property|name)\s*=\s*[\"']([^\"']+)", tag, re.I); c = re.search(r"content\s*=\s*[\"']([^\"']+)", tag, re.I)
+        if k and c: found.setdefault(k.group(1).lower(), c.group(1))
+    for k in ("og:image:secure_url", "og:image", "og:image:url", "twitter:image", "twitter:image:src"):
+        u = https(found.get(k))
+        if u: return u
+    return ""
+def line_image_ok(u):
+    """LINE hero needs https JPEG/PNG that actually loads (<= 10 MB)"""
+    if not https(u): return False
+    for meth in ("HEAD", "GET"):
+        try:
+            r = urllib.request.Request(u, method=meth, headers={"User-Agent": UA, **({"Range": "bytes=0-1023"} if meth == "GET" else {})})
+            with urllib.request.urlopen(r, timeout=12) as f:
+                ct = (f.headers.get("Content-Type") or "").split(";")[0].strip().lower(); n = f.headers.get("Content-Length")
+                if f.status in (200, 206) and ct in ("image/jpeg", "image/jpg", "image/png") and (meth == "GET" or not n or int(n) <= 10_000_000): return True
+                if f.status in (200, 206) and ct.startswith("image/"): return False
+        except Exception: pass
+    return False
+
 def scan(hours=12, mx=15):
     db = load(); seen = {i.get("key") for i in db["items"]} | set(db.get("skipped", []))
     seen_urls = {i.get("url") for i in db["items"]}; now = datetime.datetime.now(BKK); out = {}; errs = []
@@ -77,14 +125,15 @@ def scan(hours=12, mx=15):
             text = title + " " + desc
             gold = bool(GOLD.search(text)); macro = bool(MACRO.search(text))
             if not (gold or (macro and src != "Google News") or (macro and "Fed" in u)): continue
-            source = src
+            source = src; site = ""
             s = it.find("source")
-            if s is not None and s.text: source = clean(s.text)
+            if s is not None and s.text: source = clean(s.text); site = https(s.get("url"))
             if src == "Google News": title = re.sub(r"\s+-\s+[^-]+$", "", title); desc = ""   # GN description is only the title again
             k = key(link, title)
             if k in seen or link in seen_urls or k in out: continue
             out[k] = {"cand": k, "headline_src": title, "summary_src": desc, "source": source, "url": link,
-                      "published": pub.strftime("%Y-%m-%d %H:%M"), "published_ts": int(pub.timestamp()), "gold": gold}
+                      "published": pub.strftime("%Y-%m-%d %H:%M"), "published_ts": int(pub.timestamp()), "gold": gold,
+                      "image": rss_image(it), "site": site}
     c = sorted(out.values(), key=lambda x: (x["gold"], "news.google.com" not in x["url"], x["published_ts"]), reverse=True)[:mx]
     json.dump(c, open(CAND, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(json.dumps({"candidates": len(c), "file": CAND, "feed_errors": errs}, ensure_ascii=False))
@@ -100,7 +149,10 @@ def add(path):
         base = dict(cands.get(a.get("cand"), {})); base.update({k: v for k, v in a.items() if v not in (None, "")})
         miss = [k for k in REQ + ("url", "source", "published") if not base.get(k)]
         if miss: print("skip (missing " + ",".join(miss) + "):", a.get("cand") or a.get("title_en"), file=sys.stderr); continue
+        if https(base.get("publisher_url")) and https(base.get("publisher_url")) != base["url"]:
+            base["gn_url"] = base["url"] if "news.google.com" in base["url"] else base.get("gn_url"); base["url"] = https(base["publisher_url"])
         if not str(base["url"]).startswith("https://"): print("skip non-https url", file=sys.stderr); continue
+        img = https(base.get("image")) or page_image(base["url"])
         imp = str(base["impact"]).lower(); imp = {"up": "bullish", "down": "bearish"}.get(imp, imp)
         if imp not in ("bullish", "bearish", "neutral"): imp = "neutral"
         k = base.get("cand") or key(base["url"], base.get("headline_src") or base["title_en"])
@@ -117,9 +169,21 @@ def add(path):
                 "summary_th": clean(base.get("summary_th") or " ".join(para(base["article_th"])[:1])),
                 "summary_en": clean(base.get("summary_en") or " ".join(para(base["article_en"])[:1])),
                 "headline_src": clean(base.get("headline_src") or ""), "source": clean(base["source"]), "url": base["url"],
+                "image": img, **({"gn_url": base["gn_url"]} if base.get("gn_url") else {}),
                 "published": pub, "published_ts": ts, "added": datetime.datetime.now(BKK).strftime("%Y-%m-%d %H:%M")}
         db["items"].append(item); have.add(nid); new.append(nid)
     save(db); print(json.dumps({"added": new, "total": len(db["items"])}))
+
+def backfill(mp=None):
+    m = json.load(open(mp, encoding="utf-8")) if mp else {}; db = load(); n = 0
+    for it in db["items"]:
+        pu = https(m.get(it["id"], ""))
+        if pu and pu != it["url"]:
+            if "news.google.com" in it["url"]: it["gn_url"] = it["url"]
+            it["url"] = pu
+        if not https(it.get("image")):
+            it["image"] = page_image(it["url"]); n += bool(it["image"])
+    save(db); print(json.dumps({"filled": n, "with_image": sum(1 for i in db["items"] if i.get("image")), "total": len(db["items"])}))
 
 def skip(keys):
     db = load(); db.setdefault("skipped", []).extend(k for k in keys if k not in db["skipped"]); save(db); print("skipped", len(keys))
@@ -128,7 +192,8 @@ def card(nid):
     db = load(); it = next((i for i in db["items"] if i["id"] == nid), None)
     if not it: sys.exit("no such id " + nid)
     return {"id": it["id"], "headline": it["title_th"], "summary": it["summary_th"], "impact": it["impact"], "level": it.get("level"),
-            "source": it["source"], "url": it["url"], "article_url": f"{SITE}#{it['id']}", "time": it["published"] + " น. (เวลาไทย)"}
+            "source": it["source"], "url": it["url"], "article_url": f"{SITE}#{it['id']}", "time": it["published"] + " น. (เวลาไทย)",
+            **({"image": it["image"]} if it.get("image") and line_image_ok(it["image"]) else {})}
 
 if __name__ == "__main__":
     a = sys.argv[1:] or ["help"]
@@ -136,6 +201,7 @@ if __name__ == "__main__":
         h = float(a[a.index("--hours") + 1]) if "--hours" in a else 12; m = int(a[a.index("--max") + 1]) if "--max" in a else 15; scan(h, m)
     elif a[0] == "add": add(a[1])
     elif a[0] == "skip": skip(a[1:])
+    elif a[0] == "backfill": backfill(a[1] if len(a) > 1 else None)
     elif a[0] == "card": print(json.dumps(card(a[1]), ensure_ascii=False))
     elif a[0] == "send":
         sys.exit(subprocess.call(["bash", "/workspace/line_flex.sh", "news_article", json.dumps(card(a[1]), ensure_ascii=False)]))

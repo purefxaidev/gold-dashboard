@@ -22,7 +22,8 @@
 #              plan {side, entry, sl, tp, ev}, events [..]
 #   news:      headline*, summary, impact (high|medium|low), effect (up|down), url (https only)
 #   news_article: headline* (TH), summary (2-3 sentences TH), impact (bullish|bearish|neutral), level (high|medium|low),
-#              source, url (original, https), article_url (https://purefxaidev.github.io/gold-dashboard/news.html#<id>), time
+#              source, url (original, https), image (optional hero, https JPEG/PNG; news.py card only includes it after
+#              checking it loads), article_url (https://purefxaidev.github.io/gold-dashboard/news.html#<id>), time
 #              build input with: python3 /workspace/gold-dashboard/news.py card <id>
 #   status:    text*, level (info|warning|error), rows {label: value}
 # Win rate: when wins/total are not given, it is computed from today's closed trades
@@ -250,6 +251,9 @@ def b_news_article():
     hdr = [tx("PUREGOLD AI", color="#FFFFFFB3", size="xxs", weight="bold"), tx("บทความข่าวทองคำ", color="#FFFFFF", weight="bold", size="lg")] + ([tx(s(d.get("time")), color="#FFFFFFCC", size="xs")] if d.get("time") else [])
     b = {"type": "bubble", "header": {"type": "box", "layout": "vertical", "backgroundColor": c, "contents": hdr, "paddingAll": "14px"},
          "body": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": body}, "footer": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": btns}}
+    im = s(d.get("image"), "")
+    if ok(im) and not re.search(r"\.(webp|gif|svg)(\?|$)|format=webp", im, re.I):
+        b["hero"] = {"type": "image", "url": im, "size": "full", "aspectRatio": "20:11", "aspectMode": "cover", **({"action": {"type": "uri", "label": "อ่านบทความ", "uri": au}} if ok(au) else {})}
     lines = ["บทความข่าวทองคำ (" + il + (", " + lv if lv else "") + ")", hl] + ([sm] if sm else []) + (["อ่านบทความ: " + au] if ok(au) else []) + (["ข่าวต้นฉบับ: " + ou] if ok(ou) else [])
     return b, "ข่าวทอง: " + hl, lines
 def b_portfolio():
