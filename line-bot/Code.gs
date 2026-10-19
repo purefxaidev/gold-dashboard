@@ -14,14 +14,14 @@
 
 var CHAT_MODEL = 'gemini-3.8-flash';      // REST generateContent รับ text/ภาพ/เสียง
 var TTS_MODEL  = 'gemini-3.8-flash-tts';  // REST TTS -> PCM 16-bit mono (24 kHz)
-var TTS_VOICE  = 'Kore';
+var TTS_VOICE  = 'Sulafat';
 var DASHBOARD_URL = 'https://purefxaidev.github.io/gold-dashboard/view.json';
 var PRICE_URL     = 'https://api.gold-api.com/price/XAU';
 var MAX_REPLY_CHARS = 4500;
 var DRIVE_FOLDER_NAME = 'line-gold-bot-audio';
 
 var SYSTEM_PROMPT = [
-  'คุณคือผู้ช่วยนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) ตอบเป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ',
+  'คุณคือ 'เลขา' ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นผู้ช่วยนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) ตอบเป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ',
   'ใช้ข้อมูลบริบท (ราคาสด แนวรับแนวต้าน แผนเทรด % ความมั่นใจ AI ค่า EV และข่าว) ที่แนบมาเป็นหลัก ถ้าข้อมูลไม่พอให้บอกตรงๆ',
   'ถ้าผู้ใช้ส่งภาพกราฟ ให้อ่านเทรนด์ แนวรับแนวต้าน และรูปแบบแท่งเทียนจากภาพ ถ้าส่งเสียง ให้ฟังคำถามแล้วตอบ',
   'ทุกครั้งที่แนะนำจุดเข้า ต้องระบุ ฝั่ง (Buy/Sell) จุดเข้า SL และ TP ชัดเจน พร้อมเหตุผลสั้นๆ',
@@ -59,7 +59,7 @@ function doPost(e) {
     try { handleEvent_(ev); } catch (err) {
       console.error(err);
       if (ev.replyToken) lineSend_('reply', { replyToken: ev.replyToken,
-        messages: [{ type: 'text', text: 'ขออภัย ระบบขัดข้องชั่วคราว ลองใหม่อีกครั้งครับ' }] });
+        messages: [{ type: 'text', text: 'ขออภัย ระบบขัดข้องชั่วคราว ลองใหม่อีกครั้งค่ะ' }] });
     }
   });
   return json_({ ok: true });
@@ -96,7 +96,7 @@ function handleCommand_(ev, t) {
   var uid = ev.source && ev.source.userId, rt = ev.replyToken;
   if (/^\/(วิเคราะห์|analyst)/i.test(t)) {
     setMode_(uid, '');
-    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: '📈 กลับสู่โหมดวิเคราะห์ทองแล้วครับ' }] });
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: '📈 กลับสู่โหมดวิเคราะห์ทองแล้วค่ะ' }] });
     return true;
   }
   var mm = /^\/(แปล|translate|tr)\s*([a-z]{2})?/i.exec(t);
@@ -124,7 +124,7 @@ function translate_(parts, code) {
   var ps = (((j.candidates || [])[0] || {}).content || {}).parts || [];
   var full = ps.map(function (x) { return x.text || ''; }).join('').trim();
   var mt = /แปล\s*:\s*([\s\S]*)$/.exec(full);
-  return { full: full || 'แปลไม่สำเร็จ ลองใหม่ครับ', translation: mt ? mt[1].trim() : full };
+  return { full: full || 'แปลไม่สำเร็จ ลองใหม่ค่ะ', translation: mt ? mt[1].trim() : full };
 }
 
 function handleEvent_(ev) {
@@ -142,7 +142,7 @@ function handleEvent_(ev) {
     parts.push({ text: trCode ? (m.type === 'image' ? 'Translate the text in this image.' : 'Transcribe and translate this audio.')
       : (m.type === 'image' ? 'วิเคราะห์ภาพกราฟนี้สำหรับเทรดทองระยะสั้น' : 'นี่คือข้อความเสียงจากผู้ใช้ ฟังแล้วตอบคำถาม') });
   } else {
-    lineSend_('reply', { replyToken: ev.replyToken, messages: [{ type: 'text', text: 'ตอนนี้รองรับข้อความ ภาพ และเสียงครับ' }] });
+    lineSend_('reply', { replyToken: ev.replyToken, messages: [{ type: 'text', text: 'ตอนนี้รองรับข้อความ ภาพ และเสียงค่ะ' }] });
     return;
   }
   if (trCode) {
@@ -193,7 +193,7 @@ function askGemini_(userParts) {
     generationConfig: { temperature: 0.4, maxOutputTokens: 1200 }
   });
   var ps = (((j.candidates || [])[0] || {}).content || {}).parts || [];
-  return ps.map(function (x) { return x.text || ''; }).join('').trim() || 'ขออภัย ยังตอบไม่ได้ ลองถามใหม่ครับ';
+  return ps.map(function (x) { return x.text || ''; }).join('').trim() || 'ขออภัย ยังตอบไม่ได้ ลองถามใหม่ค่ะ';
 }
 
 // ===== เสียง (TTS) =====
@@ -201,7 +201,7 @@ function ttsPcm_(text) {
   if (!text) return { ok: false, error: 'empty' };
   var speak = text.replace(/[*#_`>]/g, '').replace(/https?:\/\/\S+/g, '').slice(0, 600);
   var j = gemini_(TTS_MODEL, {
-    contents: [{ parts: [{ text: 'อ่านด้วยน้ำเสียงนักวิเคราะห์ที่สุภาพ ชัดเจน: ' + speak }] }],
+    contents: [{ parts: [{ text: 'อ่านด้วยน้ำเสียงเลขาผู้หญิงที่สุภาพ ชัดเจน: ' + speak }] }],
     generationConfig: { responseModalities: ['AUDIO'],
       speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: TTS_VOICE } } } }
   });
@@ -215,7 +215,7 @@ function buildVoiceMessage_(text, raw) {
   if (mode === 'off') return null;
   var speak = text.replace(/[*#_`>]/g, '').replace(/https?:\/\/\S+/g, '').slice(0, 600);
   var j = gemini_(TTS_MODEL, {
-    contents: [{ parts: [{ text: raw ? speak : 'อ่านด้วยน้ำเสียงนักวิเคราะห์ที่สุภาพ ชัดเจน: ' + speak }] }],
+    contents: [{ parts: [{ text: raw ? speak : 'อ่านด้วยน้ำเสียงเลขาผู้หญิงที่สุภาพ ชัดเจน: ' + speak }] }],
     generationConfig: { responseModalities: ['AUDIO'],
       speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: TTS_VOICE } } } }
   });

@@ -1,12 +1,12 @@
 // LINE x Gemini gold bot — Cloudflare Worker version
 // Secrets (wrangler secret put): LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET, GEMINI_API_KEY, ALERT_SECRET
 // Optional KV binding MODES (translate mode per user). Voice replies: not in Worker (no m4a encoder) — use line_notify_voice.sh for voice alerts.
-const CHAT_MODEL = 'gemini-3.8-flash', TTS_MODEL = 'gemini-3.8-flash-tts', TTS_VOICE = 'Kore';
+const CHAT_MODEL = 'gemini-3.8-flash', TTS_MODEL = 'gemini-3.8-flash-tts', TTS_VOICE = 'Sulafat';
 const DASHBOARD_URL = 'https://purefxaidev.github.io/gold-dashboard/view.json';
 const PRICE_URL = 'https://api.gold-api.com/price/XAU';
 const LANGS = { th: 'Thai', en: 'English', zh: 'Chinese (Simplified)', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese', lo: 'Lao', my: 'Burmese', fr: 'French', de: 'German' };
 const SYSTEM_PROMPT = [
-  'คุณคือผู้ช่วยนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) ตอบเป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ',
+  'คุณคือ 'เลขา' ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นผู้ช่วยนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) ตอบเป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ',
   'ใช้ข้อมูลบริบท (ราคาสด แนวรับแนวต้าน แผนเทรด % ความมั่นใจ AI ค่า EV และข่าว) ที่แนบมาเป็นหลัก ถ้าข้อมูลไม่พอให้บอกตรงๆ',
   'ถ้าผู้ใช้ส่งภาพกราฟ ให้อ่านเทรนด์ แนวรับแนวต้านจากภาพ ถ้าส่งเสียง ให้ฟังคำถามแล้วตอบ',
   'ทุกครั้งที่แนะนำจุดเข้า ต้องระบุ Buy/Sell จุดเข้า SL และ TP พร้อมเหตุผลสั้นๆ',
@@ -39,7 +39,7 @@ export default {
     const body = JSON.parse(raw);
     ctx.waitUntil(Promise.all((body.events || []).map(ev => handleEvent(env, ev).catch(async e => {
       console.error(e);
-      if (ev.replyToken) await line(env, 'reply', { replyToken: ev.replyToken, messages: [{ type: 'text', text: 'ขออภัย ระบบขัดข้องชั่วคราว ลองใหม่อีกครั้งครับ' }] });
+      if (ev.replyToken) await line(env, 'reply', { replyToken: ev.replyToken, messages: [{ type: 'text', text: 'ขออภัย ระบบขัดข้องชั่วคราว ลองใหม่อีกครั้งค่ะ' }] });
     }))));
     return new Response('ok');
   }
@@ -58,7 +58,7 @@ async function handleEvent(env, ev) {
   const m = ev.message, uid = ev.source && ev.source.userId;
   if (m.type === 'text' && m.text.startsWith('/')) {
     const t = m.text.trim();
-    if (/^\/(วิเคราะห์|analyst)/i.test(t)) { await setMode(env, uid, ''); return reply(env, ev, [{ type: 'text', text: '📈 กลับสู่โหมดวิเคราะห์ทองแล้วครับ' }]); }
+    if (/^\/(วิเคราะห์|analyst)/i.test(t)) { await setMode(env, uid, ''); return reply(env, ev, [{ type: 'text', text: '📈 กลับสู่โหมดวิเคราะห์ทองแล้วค่ะ' }]); }
     const mm = /^\/(แปล|translate|tr)\s*([a-z]{2})?/i.exec(t);
     if (mm) {
       const c = (mm[2] || '').toLowerCase();
@@ -78,7 +78,7 @@ async function handleEvent(env, ev) {
     parts.push({ inlineData: { mimeType: mime, data: b64(await r.arrayBuffer()) } });
     parts.push({ text: tr ? (m.type === 'image' ? 'Translate the text in this image.' : 'Transcribe and translate this audio.')
       : (m.type === 'image' ? 'วิเคราะห์ภาพกราฟนี้สำหรับเทรดทองระยะสั้น' : 'นี่คือข้อความเสียงจากผู้ใช้ ฟังแล้วตอบคำถาม') });
-  } else return reply(env, ev, [{ type: 'text', text: 'ตอนนี้รองรับข้อความ ภาพ และเสียงครับ' }]);
+  } else return reply(env, ev, [{ type: 'text', text: 'ตอนนี้รองรับข้อความ ภาพ และเสียงค่ะ' }]);
 
   if (tr) {
     const lang = LANGS[tr];
@@ -110,12 +110,12 @@ async function geminiRaw(env, model, payload) {
 }
 async function gemini(env, model, payload) {
   const j = await geminiRaw(env, model, payload);
-  return (j.candidates?.[0]?.content?.parts || []).map(x => x.text || '').join('').trim() || 'ขออภัย ยังตอบไม่ได้ ลองถามใหม่ครับ';
+  return (j.candidates?.[0]?.content?.parts || []).map(x => x.text || '').join('').trim() || 'ขออภัย ยังตอบไม่ได้ ลองถามใหม่ค่ะ';
 }
 async function tts(env, text) {
   if (!text) return { ok: false, error: 'empty' };
   const speak = text.replace(/[*#_`>]/g, '').replace(/https?:\/\/\S+/g, '').slice(0, 600);
-  const j = await geminiRaw(env, TTS_MODEL, { contents: [{ parts: [{ text: 'อ่านด้วยน้ำเสียงนักวิเคราะห์ที่สุภาพ ชัดเจน: ' + speak }] }],
+  const j = await geminiRaw(env, TTS_MODEL, { contents: [{ parts: [{ text: 'อ่านด้วยน้ำเสียงเลขาผู้หญิงที่สุภาพ ชัดเจน: ' + speak }] }],
     generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: TTS_VOICE } } } } });
   const inl = j.candidates[0].content.parts[0].inlineData;
   return { ok: true, format: 's16le', channels: 1, sampleRate: Number((/rate=(\d+)/.exec(inl.mimeType || '') || [0, 24000])[1]), pcmBase64: inl.data };

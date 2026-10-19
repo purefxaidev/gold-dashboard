@@ -19,7 +19,7 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
   <option>models/gemini-3.8-live</option><option>models/gemini-3.8-live-extended-thinking</option>
   <option>models/gemini-3.1-flash-live-preview</option><option>models/gemini-2.5-flash-native-audio-preview-12-2025</option>
   <option value="models/gemini-3.5-live-translate-preview">models/gemini-3.5-live-translate-preview (ล่ามแปล)</option></select></div>
- <div><small>เสียง</small><input id="voice" value="Sulafat"></div></div>
+ <div><small>เสียง (ผู้หญิง)</small><select id="voice"><option>Sulafat</option><option>Kore</option><option>Aoede</option><option>Leda</option><option>Zephyr</option><option>Despina</option><option>Callirrhoe</option><option>Autonoe</option><option>Laomedeia</option><option>Achernar</option><option>Gacrux</option><option>Pulcherrima</option><option>Vindemiatrix</option><option>Erinome</option></select></div></div>
  <small id="keyst"></small>
 </div>
 <button class="big" id="call">📞</button><div id="st">กดเพื่อเริ่มคุย (ต้องอนุญาตไมค์)</div>
@@ -32,16 +32,16 @@ const LC = {English:"en",Thai:"th",Chinese:"zh",Japanese:"ja",Korean:"ko",Vietna
 const KEY = localStorage.getItem("gd_gemini_key") || "";
 $("keyst").textContent = KEY ? "🟢 พบ Gemini key ในเครื่องนี้ (…" + KEY.slice(-4) + ")" : "⚪ ยังไม่มี key — ไปตั้งค่าที่แชทในหน้าแดชบอร์ดก่อน";
 const P = new URLSearchParams(location.search);
-for (const k of ["mode", "lang", "model", "voice"]) { const v = P.get(k) || localStorage.getItem("gc_" + k); if (v) $(k).value = v; $(k).onchange = () => { localStorage.setItem("gc_" + k, $(k).value); ui(); }; }
+for (const k of ["mode", "lang", "model", "voice"]) { const v = P.get(k) || localStorage.getItem("gc_" + k); if (v) $(k).value = v; if (k === "voice" && !$(k).value) $(k).value = "Sulafat"; $(k).onchange = () => { localStorage.setItem("gc_" + k, $(k).value); ui(); }; }
 function ui() { const t = $("mode").value === "tr" || /translate/.test($("model").value); $("lw").style.visibility = t ? "visible" : "hidden"; if (/translate/.test($("model").value) && !localStorage.getItem("gc_lang")) $("lang").value = "Thai"; } ui();
 function log(c, t) { const d = document.createElement("div"); d.className = c; d.textContent = t; $("log").appendChild(d); $("log").scrollTop = 1e9; return d; }
 
 async function sysPrompt() {
-  if ($("mode").value === "tr") return `คุณคือล่ามแปลภาษาแบบเรียลไทม์ ฟังสิ่งที่ผู้ใช้พูดแล้วพูดคำแปลเป็นภาษา ${$("lang").value} ทันที ถ้าผู้ใช้พูดภาษา ${$("lang").value} อยู่แล้ว ให้แปลเป็นภาษาไทย ห้ามเพิ่มความเห็น`;
+  if ($("mode").value === "tr") return `คุณคือ 'เลขา' ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) ทำหน้าที่ล่ามแปลภาษาแบบเรียลไทม์ ฟังสิ่งที่ผู้ใช้พูดแล้วพูดคำแปลเป็นภาษา ${$("lang").value} ทันที ถ้าผู้ใช้พูดภาษา ${$("lang").value} อยู่แล้ว ให้แปลเป็นภาษาไทย ห้ามเพิ่มความเห็น`;
   let ctx = "";
   try { const [v, p] = await Promise.all([fetch("view.json?t=" + Date.now()).then(r => r.json()), fetch("https://api.gold-api.com/price/XAU").then(r => r.json()).catch(() => null)]);
     ctx = JSON.stringify({live_price: p, dashboard: v}).slice(0, 15000); } catch (e) {}
-  return "คุณคือนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + "\nข้อมูล: " + ctx;
+  return "คุณคือ 'เลขา' ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + "\nข้อมูล: " + ctx;
 }
 
 // mic -> 16 kHz PCM16 via AudioWorklet

@@ -26,8 +26,8 @@ if key:
     speak=re.sub(r"https?://\S+","",re.sub(r"[*#_`>]","",msg))[:600]
     for model in os.environ.get("TTS_MODELS","gemini-3.8-flash-tts gemini-3.8-flash-lite-tts gemini-2.5-flash-preview-tts").split():
         try:
-            body=json.dumps({"contents":[{"parts":[{"text":"อ่านด้วยน้ำเสียงนักวิเคราะห์ที่สุภาพ ชัดเจน: "+speak}]}],
-              "generationConfig":{"responseModalities":["AUDIO"],"speechConfig":{"voiceConfig":{"prebuiltVoiceConfig":{"voiceName":"Kore"}}}}}).encode()
+            body=json.dumps({"contents":[{"parts":[{"text":"อ่านด้วยน้ำเสียงเลขาผู้หญิงที่สุภาพ ชัดเจน: "+speak}]}],
+              "generationConfig":{"responseModalities":["AUDIO"],"speechConfig":{"voiceConfig":{"prebuiltVoiceConfig":{"voiceName":"Sulafat"}}}}}).encode()
             rq=urllib.request.Request("https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent"%model,body,
               {"Content-Type":"application/json","x-goog-api-key":key})
             inl=json.load(urllib.request.urlopen(rq,timeout=60))["candidates"][0]["content"]["parts"][0]["inlineData"]
