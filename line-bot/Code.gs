@@ -10,6 +10,12 @@
  *   VOICE_MODE    = off (ค่าเริ่มต้น) | wav_experimental | converter
  *   CONVERTER_URL = บริการแปลง WAV->M4A ของคุณเอง ตอบกลับ {"url":"https://....m4a"}
  *   WEBHOOK_KEY   = ถ้าตั้งไว้ ต้องใส่ ?key=... ท้าย Webhook URL ใน LINE
+ *   OWNER_PIN_HASH = PIN เจ้าของสำหรับสั่งเทรดจากหน้าโทรบนเว็บ (salt:sha256) ตั้งด้วยฟังก์ชัน setOwnerPin()
+ *
+ * คำสั่งเทรดจากหน้าโทร (call.html) ใช้ POST แบบ text/plain (ไม่มี CORS preflight):
+ *   {"action":"webcmd","pin":"...","nonce":"...","cmd":{"type":"open|close|modify","symbol","side","lot","sl","tp","scope","breakeven"}}
+ *   {"action":"webstatus","pin":"...","id":"c..."}   (ไม่ใส่ id = 5 คำสั่งล่าสุดจากเว็บ)
+ *   คำสั่งเข้าคิวเดียวกับ LINE (action=commands) โดยมี source = 'web-call'
  */
 
 var CHAT_MODEL = 'gemini-3.8-flash';      // REST generateContent รับ text/ภาพ/เสียง
@@ -71,6 +77,10 @@ function doPost(e) {
     return json_({ ok: !!hit });
   }
 
+  // --- คำสั่งเทรดจากหน้าโทรบนเว็บ (เฉพาะเจ้าของ ต้องใช้ PIN) ---
+  if (body.action === 'webcmd') return json_(webCmd_(body));
+  if (body.action === 'webstatus') return json_(webStatus_(body));
+
   // --- LINE webhook ---
   // Apps Script อ่าน HTTP header ไม่ได้ จึงตรวจ X-Line-Signature ไม่ได้ -> ใช้ WEBHOOK_KEY ใน URL แทน
   var wk = prop_('WEBHOOK_KEY');
@@ -91,6 +101,7 @@ function doGet(e) {
     if (!sec || q.secret !== sec) return json_({ ok: false, error: 'unauthorized' });
     return json_({ ok: true, enabled: (prop_('AUTO_TRADE') || 'on') === 'on' });
   }
+  if (q.action === 'webstatus') return json_(webStatus_(q));
   if (q.action === 'commands') {
     if (!prop_('ALERT_SECRET') || q.secret !== prop_('ALERT_SECRET')) return json_({ ok: false, error: 'unauthorized' });
     return json_({ ok: true, commands: getQueue_().filter(function (c) { return c.status === 'pending'; }) });
@@ -114,12 +125,142 @@ function handleAlert_(text, wantVoice) {
 // ===== คิวคำสั่งจากเจ้าของ (LINE -> ระบบเทรด) =====
 var ORDER_ACTIONS = ['close_all', 'close_side', 'move_sl_breakeven', 'modify_sl_tp', 'place_order', 'cancel_pending'];
 function getQueue_() { try { return JSON.parse(prop_('CMD_QUEUE') || '[]'); } catch (e) { return []; } }
-function setQueue_(q) { PropertiesService.getScriptProperties().setProperty('CMD_QUEUE', JSON.stringify(q.slice(-40))); }
+function setQueue_(q) {
+  // Script Property จำกัด ~9 KB ต่อค่า: ตัดคำสั่งเก่าที่ทำเสร็จแล้วออกก่อน จนขนาดพอดี
+  q = q.slice(-40); var j = JSON.stringify(q);
+  while (Utilities.newBlob(j).getBytes().length > 8500 && q.length > 1) {
+    var k = 0; for (var i = 0; i < q.length; i++) if (q[i].status !== 'pending') { k = i; break; }
+    q.splice(k, 1); j = JSON.stringify(q);
+  }
+  PropertiesService.getScriptProperties().setProperty('CMD_QUEUE', j);
+}
+function enqueueNoLock_(cmd) { var q = getQueue_(), t = Date.now(); while (q.some(function (c) { return c.id === 'c' + t; })) t++; cmd.id = 'c' + t; cmd.status = 'pending'; cmd.created_at = new Date().toISOString(); q.push(cmd); setQueue_(q); return cmd.id; }
 function enqueue_(cmd) {
   var lock = LockService.getScriptLock(); lock.waitLock(10000);
-  try { var q = getQueue_(); cmd.id = 'c' + Date.now(); cmd.status = 'pending'; cmd.created_at = new Date().toISOString(); q.push(cmd); setQueue_(q); return cmd.id; }
+  try { return enqueueNoLock_(cmd); }
   finally { lock.releaseLock(); }
 }
+
+// ===== คำสั่งเทรดจากหน้าโทรบนเว็บ (call.html) -> คิวเดียวกัน =====
+var WEB_SYMBOLS = ['XAUUSD', 'EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD', 'BTCUSD'];
+var WEB_RATE_PER_HOUR = 10, WEB_MAX_BAD_PIN = 5, WEB_LOCK_MIN = 60, WEB_MAX_LOT = 1;
+function sha256Hex_(s) {
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, s, Utilities.Charset.UTF_8)
+    .map(function (b) { return ('0' + (b & 255).toString(16)).slice(-2); }).join('');
+}
+function safeEq_(a, b) { a = String(a); b = String(b); if (a.length !== b.length) return false; var d = 0; for (var i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i); return d === 0; }
+function pinMatches_(pin) {
+  var h = prop_('OWNER_PIN_HASH'); if (!h || !pin) return false;
+  var i = h.indexOf(':'); pin = String(pin);
+  return i > 0 ? safeEq_(sha256Hex_(h.slice(0, i) + pin), h.slice(i + 1).toLowerCase()) : safeEq_(sha256Hex_(pin), h.toLowerCase());
+}
+/** ตรวจ PIN + ล็อกหลังผิด 5 ครั้ง (เรียกภายใน script lock) คืน null ถ้าผ่าน */
+function checkPin_(pin) {
+  var sp = PropertiesService.getScriptProperties();
+  if (!prop_('OWNER_PIN_HASH')) return { ok: false, error: 'not_configured' };
+  var until = Number(prop_('WEB_LOCK_UNTIL') || 0);
+  if (until > Date.now()) return { ok: false, error: 'locked', retry_min: Math.ceil((until - Date.now()) / 60000) };
+  if (pinMatches_(pin)) { if (prop_('WEB_BAD_PIN')) sp.deleteProperty('WEB_BAD_PIN'); return null; }
+  var bad = Number(prop_('WEB_BAD_PIN') || 0) + 1;
+  if (bad >= WEB_MAX_BAD_PIN) {
+    sp.setProperty('WEB_LOCK_UNTIL', String(Date.now() + WEB_LOCK_MIN * 60000)); sp.deleteProperty('WEB_BAD_PIN');
+    return { ok: false, error: 'locked', retry_min: WEB_LOCK_MIN };
+  }
+  sp.setProperty('WEB_BAD_PIN', String(bad));
+  return { ok: false, error: 'bad_pin', tries_left: WEB_MAX_BAD_PIN - bad };
+}
+function num_(x) { if (x === undefined || x === null || x === '') return null; var n = Number(x); return isFinite(n) && n > 0 ? Math.round(n * 100000) / 100000 : NaN; }
+/** ตรวจและแปลงคำสั่งจากเว็บเป็นรูปแบบคิวเดิม {action, params, summary} */
+function validateWebCmd_(c) {
+  var type = String(c.type || '').toLowerCase();
+  var sym = String(c.symbol || 'XAUUSD').toUpperCase().replace(/[^A-Z]/g, '');
+  if (sym === 'GOLD' || sym === 'XAU') sym = 'XAUUSD';
+  var anySym = sym === 'ALL' && type !== 'open';
+  if (!anySym && WEB_SYMBOLS.indexOf(sym) < 0) return { error: 'symbol' };
+  var side = String(c.side || '').toLowerCase(), scope = String(c.scope || '').toLowerCase();
+  var sl = num_(c.sl), tp = num_(c.tp), lot = num_(c.lot);
+  if (sl !== sl || tp !== tp || lot !== lot) return { error: 'number' }; // NaN
+  var gold = sym === 'XAUUSD', notes = [], action, p, sum, symTh = anySym ? 'ทุกสินค้า' : sym;
+  var sideTxt = function (x) { return x === 'buy' ? 'Buy' : x === 'sell' ? 'Sell' : 'ทุกฝั่ง'; };
+  if (type === 'open') {
+    if (side !== 'buy' && side !== 'sell') return { error: 'side' };
+    if (lot === null) lot = gold ? 0.1 : 0.01;
+    if (lot > WEB_MAX_LOT) return { error: 'lot_too_large' };
+    if (sl === null || tp === null) return { error: 'sl_tp_required' };
+    if (side === 'buy' ? !(sl < tp) : !(sl > tp)) return { error: 'sl_tp_side' };
+    if (gold && lot > 0.1) notes.push('gold lot above 0.1 per trade');
+    if (!gold && lot > 0.01) notes.push('lot above minimum for ' + sym);
+    action = 'place_order'; p = { symbol: sym, side: side, order_type: 'market', lot: lot, sl: sl, tp: tp };
+    sum = 'เปิด ' + sideTxt(side) + ' ' + sym + ' ' + lot + ' ล็อต ราคาตลาด SL ' + sl + ' TP ' + tp;
+  } else if (type === 'close' || type === 'modify') {
+    if (!scope && (side === 'buy' || side === 'sell')) scope = side;
+    if (['all', 'buy', 'sell'].indexOf(scope) < 0) return { error: 'scope' };
+    var ps = scope === 'all' ? 'any' : scope;
+    if (type === 'close') {
+      action = scope === 'all' ? 'close_all' : 'close_side'; p = { symbol: sym, side: ps, scope: scope };
+      sum = 'ปิดไม้ ' + sideTxt(ps) + ' ' + symTh;
+    } else {
+      var be = c.breakeven === true || c.breakeven === 'true';
+      if (!be && sl === null && tp === null) return { error: 'nothing_to_modify' };
+      if (!be && sl !== null && tp !== null && ps !== 'any' && (ps === 'buy' ? !(sl < tp) : !(sl > tp))) return { error: 'sl_tp_side' };
+      action = be ? 'move_sl_breakeven' : 'modify_sl_tp'; p = { symbol: sym, side: ps, scope: scope };
+      if (sl !== null && !be) p.sl = sl; if (tp !== null) p.tp = tp;
+      sum = (be ? 'เลื่อน SL กันทุน' : 'แก้') + ' ไม้ ' + sideTxt(ps) + ' ' + symTh + (p.sl ? ' SL ' + p.sl : '') + (p.tp ? ' TP ' + p.tp : '');
+    }
+  } else return { error: 'type' };
+  return { cmd: { action: action, params: p, summary: sum, text: '[web-call] ' + sum, rule_ok: !notes.length, rule_note: notes.join('; ') } };
+}
+function webCmd_(b) {
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) return { ok: false, error: 'busy' };
+  try {
+    var pe = checkPin_(b.pin); if (pe) return pe;
+    var v = validateWebCmd_(b.cmd || {}); if (v.error) return { ok: false, error: 'invalid', detail: v.error };
+    var q = getQueue_(), nonce = String(b.nonce || '').replace(/[^\w-]/g, '').slice(0, 40);
+    if (nonce) for (var i = 0; i < q.length; i++) if (q[i].nonce === nonce) return { ok: true, id: q[i].id, status: q[i].status, summary: q[i].summary, duplicate: true };
+    var now = Date.now(), rl = [];
+    try { rl = JSON.parse(prop_('WEB_RATE') || '[]'); } catch (e) {}
+    rl = rl.filter(function (t) { return now - t < 3600000; });
+    if (rl.length >= WEB_RATE_PER_HOUR) return { ok: false, error: 'rate_limited', retry_min: Math.max(1, Math.ceil((rl[0] + 3600000 - now) / 60000)) };
+    rl.push(now); PropertiesService.getScriptProperties().setProperty('WEB_RATE', JSON.stringify(rl));
+    var cmd = v.cmd; cmd.source = 'web-call'; if (nonce) cmd.nonce = nonce;
+    var id = enqueueNoLock_(cmd);
+    return { ok: true, id: id, status: 'pending', summary: cmd.summary, rule_ok: cmd.rule_ok, rule_note: cmd.rule_note };
+  } finally { lock.releaseLock(); }
+}
+function webPick_(c) { return { id: c.id, status: c.status, summary: c.summary, result: c.result || '', created_at: c.created_at, done_at: c.done_at || '', rule_ok: c.rule_ok !== false, rule_note: c.rule_note || '' }; }
+function webStatus_(b) {
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) return { ok: false, error: 'busy' };
+  try { var pe = checkPin_(b.pin); if (pe) return pe; } finally { lock.releaseLock(); }
+  var q = getQueue_().filter(function (c) { return c.source === 'web-call'; });
+  if (b.id) {
+    for (var i = q.length - 1; i >= 0; i--) if (q[i].id === String(b.id)) { var r = webPick_(q[i]); r.ok = true; return r; }
+    return { ok: false, error: 'not_found' };
+  }
+  return { ok: true, commands: q.slice(-5).map(webPick_) };
+}
+/**
+ * ตั้ง PIN เจ้าของ (รันครั้งเดียวจาก Editor):
+ * 1) เพิ่ม Script Property ชื่อ OWNER_PIN_NEW = PIN ที่ต้องการ (6-32 ตัว ไม่มีช่องว่าง)
+ * 2) เลือกฟังก์ชัน setOwnerPin แล้วกด เรียกใช้ -> เก็บเป็น OWNER_PIN_HASH (salt:sha256) และลบ OWNER_PIN_NEW ให้อัตโนมัติ
+ */
+function setOwnerPin() {
+  var sp = PropertiesService.getScriptProperties(), pin = String(prop_('OWNER_PIN_NEW') || '').trim();
+  if (!/^\S{6,32}$/.test(pin)) throw new Error('ตั้ง Script Property OWNER_PIN_NEW เป็น PIN 6-32 ตัว (ไม่มีช่องว่าง) ก่อน แล้วรันใหม่');
+  var salt = Utilities.getUuid().replace(/-/g, '');
+  sp.setProperty('OWNER_PIN_HASH', salt + ':' + sha256Hex_(salt + pin));
+  sp.deleteProperty('OWNER_PIN_NEW'); sp.deleteProperty('WEB_BAD_PIN'); sp.deleteProperty('WEB_LOCK_UNTIL');
+  console.log('ตั้ง PIN เรียบร้อย และลบ OWNER_PIN_NEW แล้ว');
+}
+/** สร้าง ALERT_SECRET แบบสุ่มให้ ถ้ายังไม่มี (ดูค่าได้ที่ การตั้งค่าโปรเจกต์ > คุณสมบัติของสคริปต์ ระบบจะไม่พิมพ์ค่าลงบันทึก) */
+function makeAlertSecret() {
+  if (prop_('ALERT_SECRET')) { console.log('มี ALERT_SECRET อยู่แล้ว ไม่ได้เปลี่ยน'); return; }
+  PropertiesService.getScriptProperties().setProperty('ALERT_SECRET', Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, ''));
+  console.log('สร้าง ALERT_SECRET แล้ว ดูค่าได้ในคุณสมบัติของสคริปต์');
+}
+/** ปลดล็อกหลังใส่ PIN ผิดครบ 5 ครั้ง (รันจาก Editor) */
+function unlockWebCmd() { var sp = PropertiesService.getScriptProperties(); sp.deleteProperty('WEB_LOCK_UNTIL'); sp.deleteProperty('WEB_BAD_PIN'); console.log('ปลดล็อกแล้ว'); }
 /** แปลงข้อความภาษาธรรมชาติเป็นคำสั่ง (Gemini structured output) */
 function parseCommand_(text) {
   var j = gemini_(CHAT_MODEL, {

@@ -100,3 +100,6 @@
 - Endpoint: Apps Script `GET /exec?action=commands&secret=...` · `POST {"action":"ack","secret","id","ok","result"}` · Worker `GET /commands?secret=` · `POST /ack` (ตั้ง `LINE_BACKEND=worker`)
 - ผู้ใช้อื่นคุยได้อย่างเดียว สั่งงานไม่ได้ · push message ใช้โควตาข้อความของ LINE OA (แผนฟรีมีจำกัด/เดือน)
 - `/สมัคร` → ส่งลิงก์สมัคร Exness (partner) + หน้าสอนสมัคร signup.html
+
+## สั่งเทรดด้วยเสียงจากหน้าโทรบนเว็บ
+- ดูขั้นตอนใน `SETUP_WEBCMD_TH.md` (ตั้ง PIN เจ้าของ, deploy, ใส่ URL ในหน้าโทร)

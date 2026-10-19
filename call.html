@@ -11,6 +11,10 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
 .big{display:block;margin:18px auto 10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;width:120px;height:120px;border-radius:50%;border:0;font-size:44px;background:#1db954;color:#fff;box-shadow:0 0 30px #1db95488;cursor:pointer}
 .big.on{background:#e53935;box-shadow:0 0 40px #e5393588;animation:p 1.4s infinite}.big.on.spk{box-shadow:0 0 0 6px #f5c54255,0 0 50px #f5c542aa}@keyframes p{50%{transform:scale(1.05)}}
 #st{text-align:center;color:#aaa;font-size:14px}#log{max-height:40vh;overflow:auto;font-size:14px}
+.btn{padding:10px 14px;border-radius:10px;border:0;background:#f5c542;color:#111;font-weight:700;cursor:pointer}.btn.g{background:#2a2d36;color:#eee}
+#tcModal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:50;padding:16px}#tcModal.on{display:flex}
+#tcBox{background:#11131a;border:1px solid #f5c542;border-radius:16px;padding:16px;max-width:420px;width:100%}#tcBox h3{margin:0 0 8px;color:#f5c542;font-size:17px}
+#tcOrder{font-size:16px;font-weight:700;margin:6px 0}#tcOrderEn{color:#aaa;font-size:13px;margin-bottom:8px}#tcWarn{color:#fb8c00;font-size:13px}#tcErr{color:#ff7b7b;font-size:13px;min-height:1em;display:block}
 .u{color:#9ecbff}.a{color:#f5c542}.e{color:#ff7b7b}a{color:#f5c542}small{color:#888}
 </style></head><body><div class="w">
 <h1 id="cTitle">คุยสดกับ เลขา PUREGOLD</h1><small><span id="cSub">PUREGOLD AI · เสียงต่อเสียงแบบเรียลไทม์</span> · <a href="./">← แดชบอร์ด</a></small>
@@ -19,6 +23,18 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
  <div id="lw"><small>ภาษาปลายทาง</small><select id="lang"><option value="English">English</option><option value="Thai">ไทย</option><option value="Chinese">中文</option><option value="Japanese">日本語</option><option value="Korean">한국어</option><option value="Vietnamese">Tiếng Việt</option><option value="Lao">ລາວ</option><option value="Burmese">မြန်မာ</option><option value="French">Français</option><option value="German">Deutsch</option></select></div></div>
  <small id="keyst"></small>
 </div>
+<details class="card" id="tcCard"><summary id="tcSum" style="cursor:pointer;color:#f5c542;font-size:14px">คำสั่งเทรดด้วยเสียง (เฉพาะเจ้าของ)</summary>
+ <small id="tcInfo"></small>
+ <input id="tcUrl" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://script.google.com/macros/s/.../exec">
+ <div class="row"><button class="btn" id="tcSave"></button><button class="btn g" id="tcForget"></button></div>
+ <small id="tcSt"></small>
+</details>
+<div id="tcModal" role="dialog" aria-modal="true" aria-labelledby="tcTitle"><div id="tcBox">
+ <h3 id="tcTitle"></h3><div id="tcOrder"></div><div id="tcOrderEn"></div><div id="tcWarn"></div>
+ <div id="tcPinW"><small id="tcPinL"></small><input id="tcPin" type="password" inputmode="numeric" autocomplete="off" maxlength="32"></div>
+ <small id="tcErr"></small>
+ <div class="row" style="margin-top:8px"><button class="btn g" id="tcNo"></button><button class="btn" id="tcYes"></button></div>
+</div></div>
 <button class="big" id="call"><svg class="ic" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><div id="callLbl" style="text-align:center;font-weight:700;color:#f5c542;margin-top:-6px">อนุญาตไมค์และเริ่มสาย</div>
 <div id="st">แตะปุ่มด้านบน แล้วกด "อนุญาต" เมื่อเบราว์เซอร์ถามสิทธิ์ไมค์</div>
 <button id="resumeBtn" style="display:none;margin:10px auto;padding:10px 16px;border-radius:12px;border:0;background:#f5c542;color:#111;font-weight:700">แตะเพื่อเปิดเสียงต่อ</button>
@@ -63,8 +79,154 @@ async function sysPrompt() {
   try { const [hs, v, p, kb] = await Promise.all([Promise.all([fetch("lessons.md?t=" + Date.now()).then(r => r.ok ? r.text() : ""), fetch("history/trade_journal.jsonl?t=" + Date.now()).then(r => r.ok ? r.text() : "")]).then(([l, j]) => (l.slice(-3000) + "\n\nบันทึกเทรดล่าสุด:\n" + j.trim().split("\n").slice(-15).join("\n")).slice(0, 5000)).catch(() => ""), fetch("view.json?t=" + Date.now()).then(r => r.json()), fetch("https://api.gold-api.com/price/XAU").then(r => r.json()).catch(() => null), fetch("knowledge.md?t=" + Date.now()).then(r => r.text()).catch(() => "")]);
     const mc = await PGAI.context(); ctx = "ราคาทองสด: " + JSON.stringify(p) + "\nบริบทตลาดทั้งหมด (ทองคำ + FX + BTC + MTF + SMC + ความสัมพันธ์ + Edge):\n" + (mc || JSON.stringify(v).slice(0, 12000)) + "\nคลังความรู้:\n" + (kb || "").slice(0, 8000) + "\nบทเรียน/ประวัติ:\n" + (hs || ""); } catch (e) {}
   const EN_RULE = window.LANG === "en" ? "\n\nLANGUAGE OVERRIDE: the user selected English. Speak only natural, polite English as a female assistant (the PUREGOLD assistant). No emoji, no markdown. Use *_en fields of the dashboard data when present.\n" : "";
-  return EN_RULE + memText() + "\n" + "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย ห้ามใช้อีโมจิ ห้ามใช้ markdown พูดเป็นข้อความธรรมดา สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + PGAI.rules().replace(/และใส่ข้อความ \[\[SIGNUP\]\][^\n]*/, "และเรียกเครื่องมือ show_signup เพื่อเปิดหน้าต่างสมัครบนหน้าจอ แล้วพูดอธิบายขั้นตอนทีละขั้นสั้นๆ") + "\nข้อมูล: " + ctx + EN_RULE;
+  return EN_RULE + memText() + "\n" + "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย ห้ามใช้อีโมจิ ห้ามใช้ markdown พูดเป็นข้อความธรรมดา สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + PGAI.rules().replace(/และใส่ข้อความ \[\[SIGNUP\]\][^\n]*/, "และเรียกเครื่องมือ show_signup เพื่อเปิดหน้าต่างสมัครบนหน้าจอ แล้วพูดอธิบายขั้นตอนทีละขั้นสั้นๆ") + tcRules() + "\nข้อมูล: " + ctx + EN_RULE;
 }
+
+// ===== voice trade commands (owner only) =====
+// The page never talks to the broker. A confirmed order goes to the owner's own backend URL (saved on this device as gc_cmd_url)
+// with the owner PIN (kept only in sessionStorage for this tab). The trading routine executes it and acks the result.
+const TC_SYMS = ["XAUUSD", "EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCHF", "USDCAD", "BTCUSD"];
+const tcUrl = () => (localStorage.getItem("gc_cmd_url") || "").trim();
+const tcOn = () => /^https:\/\/[^\s]+$/.test(tcUrl());
+const tcPin = () => sessionStorage.getItem("gc_cmd_pin") || "";
+const T2 = (th, en) => CEN() ? en : th;
+const TRADE_TOOLS = [
+  {name: "place_trade", description: "Send a new market order to the owner's trading system after the owner clearly asked for it and you repeated the exact order. The page shows a confirmation popup and asks the owner PIN. SL and TP are required. Default gold lot 0.1. The order is queued and executed within about 10 minutes.",
+    parameters: {type: "OBJECT", properties: {symbol: {type: "STRING", description: "XAUUSD (gold, default), EURUSD, GBPUSD, USDJPY, AUDUSD, USDCHF, USDCAD or BTCUSD"}, side: {type: "STRING", enum: ["buy", "sell"]}, lot: {type: "NUMBER", description: "Lot size. Gold 0.1 per trade by rule."}, sl: {type: "NUMBER", description: "Stop loss price (required)"}, tp: {type: "NUMBER", description: "Take profit price (required)"}}, required: ["side", "sl", "tp"]}},
+  {name: "close_trade", description: "Close open positions in the owner's account after the owner asked for it. scope all, buy or sell. Queued, executed within about 10 minutes after the owner confirms on screen.",
+    parameters: {type: "OBJECT", properties: {scope: {type: "STRING", enum: ["all", "buy", "sell"]}, symbol: {type: "STRING", description: "XAUUSD (default), another listed symbol, or ALL for every symbol"}}, required: ["scope"]}},
+  {name: "modify_trade", description: "Change SL and/or TP of open positions, or move SL to breakeven, after the owner asked for it. Queued, executed within about 10 minutes after the owner confirms on screen.",
+    parameters: {type: "OBJECT", properties: {scope: {type: "STRING", enum: ["all", "buy", "sell"]}, symbol: {type: "STRING", description: "XAUUSD (default) or ALL"}, sl: {type: "NUMBER", description: "New stop loss price"}, tp: {type: "NUMBER", description: "New take profit price"}, breakeven: {type: "BOOLEAN", description: "true = move SL to the entry price"}}, required: ["scope"]}},
+  {name: "get_status", description: "Get the status (queued, done or failed, with the result text) of the latest trade commands sent from this call page.", parameters: {type: "OBJECT", properties: {}}}
+];
+function tcRules() {
+  return "\n\nคำสั่งเทรดด้วยเสียง: " + (tcOn() ? "ตั้งค่าแล้วในเครื่องนี้" : "ยังไม่ได้ตั้งค่าในเครื่องนี้ ถ้าผู้ใช้สั่งเปิด ปิด หรือแก้ไม้ ให้บอกว่าระบบคำสั่งเทรดยังไม่ได้ตั้งค่า ต้องใส่ URL ระบบคำสั่งในหัวข้อ คำสั่งเทรดด้วยเสียง บนหน้านี้ก่อน") +
+    "\nใช้ place_trade close_trade modify_trade get_status เฉพาะเมื่อผู้ใช้สั่งชัดเจนเท่านั้น ห้ามเรียกเองจากการวิเคราะห์ ก่อนเรียกให้ทวนคำสั่งสั้นๆ (ฝั่ง สินค้า ล็อต SL TP) แล้วเรียกเครื่องมือ หน้าจอจะแสดงหน้าต่างยืนยันและขอ PIN ให้เอง ห้ามขอหรือพูด PIN" +
+    "\nกติกา: ทองไม้ละ 0.1 ล็อต ทองรวมไม่เกิน 0.5 ล็อต FX และ BTC ใช้ล็อตต่ำสุด เปิดไม้ต้องมี SL และ TP ทุกครั้ง ถ้าผู้ใช้ไม่บอก SL หรือ TP ให้เสนอระดับจากข้อมูลตลาดแล้วถามยืนยันก่อน Buy ต้อง SL ต่ำกว่าราคาเข้าและ TP สูงกว่า Sell กลับกัน ถ้าคำสั่งเกินกติกา ให้บอกว่าระบบเทรดจะขอยืนยันในแชทก่อนทำ" +
+    "\nหลังเรียกเครื่องมือแล้วได้ผล queued ให้บอกว่ารับคำสั่งแล้ว ระบบจะทำภายในราว 10 นาที แล้วจะแจ้งผล ห้ามบอกว่าทำเสร็จแล้วจนกว่าจะได้ข้อความผลคำสั่งจากระบบ ถ้าผลเป็น error ให้อธิบายสั้นๆ ตามข้อความ message";
+}
+function tcFmt(n) { return Number(n).toLocaleString("en-US", {maximumFractionDigits: 5}); }
+function tcNorm(name, a) {
+  a = a || {}; const num = x => x === undefined || x === null || x === "" ? null : Number(x);
+  let sym = String(a.symbol || "XAUUSD").toUpperCase().replace(/[^A-Z]/g, ""); if (sym === "GOLD" || sym === "XAU") sym = "XAUUSD";
+  const sl = num(a.sl), tp = num(a.tp); let lot = num(a.lot); const bad = v => v !== null && !(isFinite(v) && v > 0);
+  if (bad(sl) || bad(tp) || bad(lot)) return {error: "invalid_number", message: "SL, TP and lot must be positive numbers"};
+  if (name === "place_trade") {
+    const side = String(a.side || "").toLowerCase(); if (!TC_SYMS.includes(sym)) return {error: "symbol", message: "Unsupported symbol " + sym};
+    if (side !== "buy" && side !== "sell") return {error: "side", message: "side must be buy or sell"};
+    if (sl === null || tp === null) return {error: "sl_tp_required", message: "Every new trade needs both SL and TP. Ask the owner for them."};
+    if (side === "buy" ? !(sl < tp) : !(sl > tp)) return {error: "sl_tp_side", message: "For buy SL must be below TP, for sell SL above TP"};
+    if (lot === null) lot = sym === "XAUUSD" ? 0.1 : 0.01; if (lot > 1) return {error: "lot_too_large", message: "Lot above 1 is not accepted from voice"};
+    const warn = sym === "XAUUSD" ? lot > 0.1 : lot > 0.01;
+    return {cmd: {type: "open", symbol: sym, side, lot, sl, tp}, warn};
+  }
+  const scope = String(a.scope || "").toLowerCase(); if (!["all", "buy", "sell"].includes(scope)) return {error: "scope", message: "scope must be all, buy or sell"};
+  if (sym !== "ALL" && !TC_SYMS.includes(sym)) return {error: "symbol", message: "Unsupported symbol " + sym};
+  if (name === "close_trade") return {cmd: {type: "close", symbol: sym, scope}};
+  const be = a.breakeven === true || a.breakeven === "true";
+  if (!be && sl === null && tp === null) return {error: "nothing_to_modify", message: "Give a new SL, a new TP, or breakeven"};
+  const c = {type: "modify", symbol: sym, scope, breakeven: be}; if (sl !== null && !be) c.sl = sl; if (tp !== null) c.tp = tp; return {cmd: c};
+}
+function tcDesc(c) {
+  const sideTh = {buy: "Buy", sell: "Sell", all: "ทุกฝั่ง"}, sideEn = {buy: "Buy", sell: "Sell", all: "all"};
+  const symTh = c.symbol === "ALL" ? "ทุกสินค้า" : c.symbol, symEn = c.symbol === "ALL" ? "all symbols" : c.symbol;
+  if (c.type === "open") return {th: `เปิด ${sideTh[c.side]} ${c.symbol} ${c.lot} ล็อต ราคาตลาด · SL ${tcFmt(c.sl)} · TP ${tcFmt(c.tp)}`, en: `Open ${sideEn[c.side]} ${c.symbol} ${c.lot} lot at market, SL ${tcFmt(c.sl)}, TP ${tcFmt(c.tp)}`};
+  if (c.type === "close") return {th: `ปิดไม้ ${sideTh[c.scope]} ของ ${symTh}`, en: `Close ${sideEn[c.scope]} ${symEn} positions`};
+  if (c.breakeven) return {th: `เลื่อน SL ไปที่ทุน ไม้ ${sideTh[c.scope]} ของ ${symTh}` + (c.tp ? ` · TP ${tcFmt(c.tp)}` : ""), en: `Move SL to breakeven on ${sideEn[c.scope]} ${symEn} positions` + (c.tp ? `, TP ${tcFmt(c.tp)}` : "")};
+  return {th: `แก้ไม้ ${sideTh[c.scope]} ของ ${symTh}` + (c.sl ? ` · SL ${tcFmt(c.sl)}` : "") + (c.tp ? ` · TP ${tcFmt(c.tp)}` : ""), en: `Modify ${sideEn[c.scope]} ${symEn} positions` + (c.sl ? `, SL ${tcFmt(c.sl)}` : "") + (c.tp ? `, TP ${tcFmt(c.tp)}` : "")};
+}
+async function tcPost(body) {
+  const r = await fetch(tcUrl(), {method: "POST", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(body), redirect: "follow", cache: "no-store", credentials: "omit"});
+  if (!r.ok) throw new Error("HTTP " + r.status); return r.json();
+}
+const TC_ERR = {bad_pin: ["PIN ไม่ถูกต้อง", "Wrong PIN"], locked: ["ใส่ PIN ผิดหลายครั้ง ระบบล็อกชั่วคราว", "Too many wrong PINs, temporarily locked"], rate_limited: ["ส่งคำสั่งเกิน 10 ครั้งต่อชั่วโมง", "More than 10 commands in an hour"],
+  not_configured: ["ยังไม่ได้ตั้ง PIN เจ้าของในระบบหลังบ้าน", "Owner PIN is not set on the backend"], invalid: ["ระบบหลังบ้านไม่รับคำสั่งนี้", "The backend rejected this command"], busy: ["ระบบไม่ว่าง ลองใหม่", "Backend busy, try again"]};
+const tcErrTxt = j => { const e = TC_ERR[j && j.error] || ["ส่งคำสั่งไม่สำเร็จ", "Command failed"]; return T2(e[0], e[1]) + (j && j.retry_min ? T2(` (รอ ${j.retry_min} นาที)`, ` (wait ${j.retry_min} min)`) : "") + (j && j.tries_left ? T2(` เหลือ ${j.tries_left} ครั้ง`, `, ${j.tries_left} tries left`) : "") + (j && j.detail ? " [" + j.detail + "]" : ""); };
+// modal: one at a time
+let tcCur = null, tcChain = Promise.resolve();
+function tcModal(o) { // o: {title, th, en, warn, ok, send(pin) -> Promise<{done, value} | {err}>}
+  return new Promise(res => {
+    tcCur = {fcId: o.fcId, cancel: () => { close(); res({cancelled: true}); }};
+    const m = $("tcModal"), pinW = $("tcPinW"), pin = $("tcPin"), yes = $("tcYes"), no = $("tcNo"), err = $("tcErr");
+    $("tcTitle").textContent = o.title; $("tcOrder").textContent = CEN() ? o.en : o.th; $("tcOrderEn").textContent = CEN() ? o.th : o.en; $("tcWarn").textContent = o.warn || "";
+    $("tcPinL").textContent = T2("PIN เจ้าของ (ถามครั้งเดียวต่อการเปิดหน้านี้)", "Owner PIN (asked once per session)");
+    pin.value = ""; pinW.style.display = tcPin() ? "none" : "block"; err.textContent = ""; yes.textContent = o.ok; no.textContent = T2("ยกเลิก", "Cancel"); yes.disabled = false;
+    m.classList.add("on"); setTimeout(() => (tcPin() ? yes : pin).focus(), 50);
+    function close() { m.classList.remove("on"); yes.onclick = no.onclick = pin.onkeydown = null; pin.value = ""; tcCur = null; }
+    no.onclick = () => { close(); res({cancelled: true}); };
+    pin.onkeydown = e => { if (e.key === "Enter") yes.click(); };
+    yes.onclick = async () => {
+      const p = tcPin() || pin.value.trim(); if (!p) { err.textContent = T2("กรุณาใส่ PIN", "Please enter the PIN"); return; }
+      yes.disabled = true; err.textContent = T2("กำลังส่ง...", "Sending...");
+      let j; try { j = await o.send(p); } catch (e) { j = {ok: false, error: "network", net: String(e && e.message || e)}; }
+      if (j && j.ok) { sessionStorage.setItem("gc_cmd_pin", p); close(); res({value: j}); return; }
+      if (j && (j.error === "bad_pin" || j.error === "locked")) { sessionStorage.removeItem("gc_cmd_pin"); pinW.style.display = "block"; pin.value = ""; }
+      err.textContent = j && j.error === "network" ? T2("เชื่อมต่อระบบคำสั่งไม่ได้ ตรวจ URL", "Cannot reach the command backend, check the URL") : tcErrTxt(j); yes.disabled = false;
+      if (j && (j.error === "locked" || j.error === "rate_limited" || j.error === "not_configured" || j.error === "invalid")) { yes.disabled = true; setTimeout(() => { close(); res({value: j}); }, 2500); }
+    };
+  });
+}
+function tcCancel(ids) { if (tcCur && ids.includes(tcCur.fcId)) { dbg("tool call cancelled by server"); tcCur.cancel(); } }
+async function tcRun(fc) {
+  if (!tcOn()) return {result: "error", error: "not_configured", message: "Trade commands are not set up on this device. The owner must paste the command backend URL in the Voice trade commands section of this page."};
+  if (fc.name === "get_status") {
+    const r = await tcModal({fcId: fc.id, title: T2("ดูสถานะคำสั่งเทรด", "Trade command status"), th: "สถานะคำสั่งล่าสุดจากหน้านี้", en: "Latest commands from this page", ok: T2("ดูสถานะ", "Show"), send: p => tcPost({action: "webstatus", pin: p})});
+    if (r.cancelled) return {result: "cancelled", message: "Owner cancelled"};
+    const j = r.value; if (!j.ok) return {result: "error", error: j.error, message: tcErrTxt(j)};
+    return {result: "ok", commands: (j.commands || []).map(c => ({status: c.status === "pending" ? "queued" : c.status, order: c.summary, result: c.result, created_at: c.created_at}))};
+  }
+  const n = tcNorm(fc.name, fc.args); if (n.error) return {result: "error", error: n.error, message: n.message};
+  const d = tcDesc(n.cmd), nonce = "w" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  const r = await tcModal({fcId: fc.id, title: T2("ยืนยันคำสั่งเทรด", "Confirm trade command"), th: d.th, en: d.en, ok: T2("ยืนยันส่งคำสั่ง", "Confirm and send"),
+    warn: n.warn ? T2("ล็อตเกินกติกา ระบบเทรดจะขอยืนยันในแชทก่อนทำ", "Lot is above the rule, the trading system will ask you in chat first") : "",
+    send: p => tcPost({action: "webcmd", pin: p, nonce, cmd: n.cmd})});
+  if (r.cancelled) { log("e", T2("ยกเลิกคำสั่ง: ", "Cancelled: ") + (CEN() ? d.en : d.th)); return {result: "cancelled", message: "The owner cancelled on screen. Nothing was sent."}; }
+  const j = r.value; if (!j.ok) { log("e", tcErrTxt(j)); return {result: "error", error: j.error, message: tcErrTxt(j)}; }
+  log("a", T2("ส่งคำสั่งเข้าคิวแล้ว: ", "Command queued: ") + (CEN() ? d.en : d.th)); tcWatch(j.id, CEN() ? d.en : d.th);
+  return {result: "queued", order: d.en, message: "Queued, will execute within about 10 minutes. The result will be announced." + (j.rule_ok === false ? " This order is outside the trading rules (" + (j.rule_note || "") + "), so the trading system will ask the owner to confirm in chat before executing." : "")};
+}
+async function onToolCall(sock, tc) {
+  const fr = [];
+  for (const fc of tc.functionCalls || []) {
+    if (fc.name === "show_signup") { PGAI.showSignup({force: true}); fr.push({id: fc.id, name: fc.name, response: {result: "popup shown"}}); continue; }
+    let out; try { out = await (tcChain = tcChain.catch(() => {}).then(() => tcRun(fc))); } catch (e) { out = {result: "error", message: "internal error"}; }
+    fr.push({id: fc.id, name: fc.name, response: out});
+  }
+  if (sock.readyState === 1) { try { sock.send(JSON.stringify({toolResponse: {functionResponses: fr}})); } catch (e) {} }
+  else fr.forEach(f => tcSay("[ผลการเรียกเครื่องมือ " + f.name + ": " + JSON.stringify(f.response) + "]"));
+}
+function tcSay(text) { if (inCall && ws && ws.readyState === 1 && wsReady) try { ws.send(JSON.stringify({clientContent: {turns: [{role: "user", parts: [{text}]}], turnComplete: true}})); } catch (e) {} }
+// poll the result of queued commands (ids only kept in sessionStorage)
+const tcW = JSON.parse(sessionStorage.getItem("gc_cmd_watch") || "{}");
+function tcSaveW() { sessionStorage.setItem("gc_cmd_watch", JSON.stringify(tcW)); }
+function tcWatch(id, label) { if (!id) return; tcW[id] = {label, t: Date.now()}; tcSaveW(); tcPollSoon(15000); }
+let tcPT = 0;
+function tcPollSoon(ms) { clearTimeout(tcPT); tcPT = setTimeout(tcPoll, ms); }
+async function tcPoll() {
+  const ids = Object.keys(tcW); if (!ids.length) return;
+  const p = tcPin(); if (!p || !tcOn()) return;
+  for (const id of ids) {
+    if (Date.now() - tcW[id].t > 40 * 60000) { delete tcW[id]; continue; }
+    let j; try { j = await tcPost({action: "webstatus", pin: p, id}); } catch (e) { continue; }
+    if (!j.ok) { if (j.error === "bad_pin" || j.error === "locked") { sessionStorage.removeItem("gc_cmd_pin"); return; } if (j.error === "not_found") delete tcW[id]; continue; }
+    if (j.status === "done" || j.status === "failed") {
+      const okd = j.status === "done", txt = (okd ? T2("ทำคำสั่งแล้ว: ", "Command done: ") : T2("ทำคำสั่งไม่สำเร็จ: ", "Command failed: ")) + tcW[id].label + (j.result ? " · " + j.result : "");
+      log(okd ? "a" : "e", txt); delete tcW[id];
+      tcSay("[ผลคำสั่งเทรดจากระบบ ให้แจ้งผู้ใช้สั้นๆ ทันที: " + (okd ? "สำเร็จ" : "ไม่สำเร็จ") + " · " + (j.summary || "") + (j.result ? " · ผล: " + j.result : "") + "]");
+    }
+  }
+  tcSaveW(); if (Object.keys(tcW).length) tcPollSoon(30000);
+}
+function tcUi() {
+  $("tcSum").textContent = T2("คำสั่งเทรดด้วยเสียง (เฉพาะเจ้าของ)", "Voice trade commands (owner only)");
+  $("tcInfo").textContent = T2("ใส่ URL ระบบคำสั่งของคุณ (Apps Script /exec) เก็บไว้ในเบราว์เซอร์นี้เท่านั้น PIN จะถามตอนส่งคำสั่งครั้งแรก และจำไว้แค่จนปิดแท็บนี้", "Paste your command backend URL (Apps Script /exec). It is stored only in this browser. The PIN is asked on the first command and kept only until this tab closes.");
+  $("tcSave").textContent = T2("บันทึก URL", "Save URL"); $("tcForget").textContent = T2("ล้าง PIN รอบนี้", "Forget PIN");
+  $("tcUrl").value = tcUrl(); $("tcSt").textContent = tcOn() ? T2("ตั้งค่าแล้ว", "Configured") + (tcPin() ? T2(" · ใส่ PIN แล้วในแท็บนี้", " · PIN entered in this tab") : "") : T2("ยังไม่ได้ตั้งค่า", "Not set up");
+}
+$("tcSave").onclick = () => { const v = $("tcUrl").value.trim(); if (v && !/^https:\/\/[^\s]+$/.test(v)) { $("tcSt").textContent = T2("URL ต้องขึ้นต้นด้วย https://", "URL must start with https://"); return; }
+  if (v) localStorage.setItem("gc_cmd_url", v); else localStorage.removeItem("gc_cmd_url"); sessionStorage.removeItem("gc_cmd_pin"); tcUi(); };
+$("tcForget").onclick = () => { sessionStorage.removeItem("gc_cmd_pin"); tcUi(); };
+tcUi(); if (Object.keys(tcW).length) tcPollSoon(3000);
 
 // ===== audio engine v2 (PCM jitter-buffer player, fixed mic frames, wake lock, auto-reconnect) =====
 const dbgOn = () => $("dbg") && $("dbg").open;
@@ -253,7 +415,7 @@ function start() {
         systemInstruction: {parts: [{text: sys}]}, inputAudioTranscription: {}, outputAudioTranscription: {},
         ...(!useLite ? {realtimeInputConfig: {automaticActivityDetection: {disabled: false}, activityHandling: "START_OF_ACTIVITY_INTERRUPTS"},
           sessionResumption: resumeHandle ? {handle: resumeHandle} : {}, contextWindowCompression: {slidingWindow: {}}} : {}),
-        ...(!tr ? {tools: [{functionDeclarations: [{name: "show_signup", description: "Show the Exness account sign-up popup (link, QR code and steps) on the user's screen when they want to open an account, sign up or start trading."}]}]} : {}),
+        ...(!tr ? {tools: [{functionDeclarations: [{name: "show_signup", description: "Show the Exness account sign-up popup (link, QR code and steps) on the user's screen when they want to open an account, sign up or start trading."}, ...TRADE_TOOLS]}]} : {}),
         ...(trans ? {translationConfig: {targetLanguageCode: LC[$("lang").value] || "th", echoTargetLanguage: true}} : {})}})); };
       sock.onmessage = async ev => {
         if (sock !== ws) return;
@@ -262,8 +424,8 @@ function start() {
           dbg("setupComplete" + (micQ.length ? " · sending " + micQ.length + " buffered frames" : "")); $("st").textContent = listenTxt(); return; }
         if (m.sessionResumptionUpdate) { const u = m.sessionResumptionUpdate; if (u.resumable && u.newHandle) resumeHandle = u.newHandle; }
         if (m.goAway) { dbg("goAway " + (m.goAway.timeLeft || "")); sock.__mine = true; scheduleReconnect("goAway"); setTimeout(() => { try { sock.close(1000); } catch (e) {} }, 50); return; }
-        if (m.toolCall) { const fr = (m.toolCall.functionCalls || []).map(fc => { if (fc.name === "show_signup") PGAI.showSignup({force: true}); return {id: fc.id, name: fc.name, response: {result: "popup shown"}}; });
-          try { sock.send(JSON.stringify({toolResponse: {functionResponses: fr}})); } catch (e) {} return; }
+        if (m.toolCall) { onToolCall(sock, m.toolCall); return; }
+        if (m.toolCallCancellation) { tcCancel(m.toolCallCancellation.ids || []); return; }
         const sc = m.serverContent; if (!sc) return;
         if (sc.interrupted) { stopPlay(); aLine = null; dbg("interrupted: playback flushed"); }
         if (sc.inputTranscription?.text) { uLine = uLine || log("u", "คุณ: "); uLine.textContent += sc.inputTranscription.text; aLine = null; if (!tr && !uLine.dataset.su && PGAI.intent(uLine.textContent)) { uLine.dataset.su = "1"; PGAI.showSignup(); } }
