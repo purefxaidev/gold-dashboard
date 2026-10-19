@@ -115,10 +115,17 @@ header .wrap{display:flex;align-items:center;gap:12px;padding:10px 14px}
 footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;line-height:1.7}
 .fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:30;width:56px;height:56px;border-radius:50%;border:0;font-size:24px;background:linear-gradient(135deg,var(--gold),#c8901a);box-shadow:0 8px 30px rgba(245,197,66,.45);cursor:pointer}
 @media(min-width:900px){.fab{display:none}}
+.updb{position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:50;font-size:12px;padding:4px 12px;border-radius:999px;background:#0b0d12cc;border:1px solid #f5c54255;color:#ddd;backdrop-filter:blur(6px);white-space:nowrap}
+.updb.hot{animation:hot 1.6s ease-out 2}@keyframes hot{0%{box-shadow:0 0 0 0 #f5c542cc;color:#f5c542}100%{box-shadow:0 0 0 18px #f5c54200}}
+#pnlCard.hot{animation:rise .7s forwards,cardglow 1.5s ease-out}@keyframes cardglow{0%{box-shadow:0 0 0 2px #f5c542,0 0 40px #f5c54288}}
+.eq{stroke-dasharray:2000;stroke-dashoffset:2000;animation:draw 1.6s ease-out forwards}@keyframes draw{to{stroke-dashoffset:0}}
+.cu{transition:color .4s}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.card,.m{opacity:1;transform:none}}
 </style>
 </head>
 <body>
+<canvas id="fx" aria-hidden="true" style="position:fixed;inset:0;z-index:-1;pointer-events:none"></canvas>
+<div id="liveUpd" class="updb">กำลังโหลดข้อมูล…</div>
 <header><div class="wrap"><div class="logo">◆ GOLD AI · XAUUSD</div><div class="live"><span class="dot"></span><span id="liveTxt">กำลังเชื่อมต่อ…</span></div></div></header>
 <main class="wrap grid">
 
@@ -279,7 +286,7 @@ async function pollPrice() {
     live.prev = live.price; live.price = p;
     live.time = new Date(j.updatedAt || Date.now()).toLocaleTimeString("th-TH", {timeZone: "Asia/Bangkok"});
     showPrice(p, "สปอต · gold-api.com", live.time + " น. (เวลาไทย)");
-    $("liveTxt").textContent = "LIVE · " + live.time; renderLadder();
+    $("liveTxt").textContent = "LIVE · " + live.time; renderLadder(); renderPnl();
   } catch (e) { $("liveTxt").textContent = "ราคาสดไม่พร้อม · ใช้ราคาจากบทวิเคราะห์"; }
 }
 
@@ -301,8 +308,11 @@ async function pollThai() {
   } catch (e) { $("tgSrc").textContent = "โหลดราคาทองไทยไม่สำเร็จ จะลองใหม่"; }
 }
 
+let lastSig = "";
 async function pollData() {
-  try { const r = await fetch("view.json?t=" + Date.now(), {cache: "no-store"}); if (r.ok) { D = await r.json(); render(); } } catch (e) {}
+  try { const r = await fetch("view.json?t=" + Date.now(), {cache: "no-store"}); if (r.ok) { const t = await r.text(); const sig = t.length + ":" + t.slice(-400);
+    if (sig !== lastSig) { const first = !lastSig; lastSig = sig; D = JSON.parse(t); render(); renderPnl(); if (!first) pulseUpd(); }
+    $("liveUpd").textContent = "อัปเดตล่าสุด " + new Date().toLocaleTimeString("th-TH", {timeZone: "Asia/Bangkok"}) + " น. (เวลาไทย)" + (D.built ? " · ข้อมูล " + D.built : ""); } } catch (e) {}
 }
 
 // TradingView
@@ -403,16 +413,17 @@ function renderPnl() {
   const tot = tr.reduce((a, t) => a + (t.pl_usc || 0), 0), pts = tr.reduce((a, t) => a + (t.pl_points || 0), 0);
   const closed = tr.filter(t => t.status === "closed"), wr = closed.length ? Math.round(100 * closed.filter(t => t.pl_usc > 0).length / closed.length) + "%" : (P.win_rate != null ? P.win_rate + "%" : "–");
   const col = v => v >= 0 ? "#1db954" : "#ff5c5c", sg = v => (v >= 0 ? "+" : "") + v.toFixed(2);
-  const card = (k, v, c) => `<div style="background:#0b0d12;border:1px solid #f5c54222;border-radius:12px;padding:10px"><small>${k}</small><div style="font-size:22px;font-weight:700;color:${c || "#eee"}">${v}</div></div>`;
-  $("pnlSum").innerHTML = card("กำไร/ขาดทุนวันนี้", sg(tot) + " USC", col(tot)) + card("จุด (ดอลลาร์)", sg(pts), col(pts)) + card("อัตราชนะ (ไม้ที่ปิด)", wr) + card("ไม้เปิด / ปิด", tr.filter(t => t.status === "open").length + " / " + closed.length);
-  $("pnlNote").textContent = P.note || "";
+  const card = (k, v, c, n, suf) => `<div style="background:#0b0d12;border:1px solid #f5c54222;border-radius:12px;padding:10px"><small>${k}</small><div class="cu" ${n != null ? `data-n="${n}" data-suf="${suf || ""}"` : ""} style="font-size:22px;font-weight:700;color:${c || "#eee"}">${v}</div></div>`;
+  $("pnlSum").innerHTML = card("กำไร/ขาดทุนวันนี้", sg(tot) + " USC", col(tot), tot, " USC") + card("จุด (ดอลลาร์)", sg(pts), col(pts), pts, "") + card("อัตราชนะ (ไม้ที่ปิด)", wr) + card("ไม้เปิด / ปิด", tr.filter(t => t.status === "open").length + " / " + closed.length);
+  countUp(); $("pnlNote").textContent = (P.note || "") + " · ไม้ที่เปิดอยู่คำนวณสดจากราคาปัจจุบัน";
   $("pnlTr").innerHTML = `<table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="color:#999;text-align:left"><th>เวลา</th><th>ฝั่ง</th><th>ล็อต</th><th>เข้า</th><th>ออก</th><th>จุด</th><th>USC</th><th>สถานะ</th><th>โดย</th></tr>` +
     tr.map(t => `<tr style="border-top:1px solid #222"><td>${esc((t.time || "").slice(11) || t.time)}</td><td style="color:${t.side === "buy" ? "#1db954" : "#ff5c5c"}">${esc(t.side.toUpperCase())}</td><td>${esc(t.lot)}</td><td>${esc(t.entry)}</td><td>${t.exit == null ? "–" : esc(t.exit)}</td><td style="color:${col(t.pl_points)}">${sg(t.pl_points)}</td><td style="color:${col(t.pl_usc)}">${sg(t.pl_usc)}</td><td>${t.status === "open" ? "🟢 เปิด" : "⚪ ปิด"}</td><td>${esc(t.by)}</td></tr>`).join("") + "</table>";
   // cumulative P/L curve
+  const sigEq = tr.map(t => t.time + t.status).join("|"); const animEq = sigEq !== window._eqSig; window._eqSig = sigEq;
   let c = 0; const pts2 = [0].concat(tr.slice().sort((a, b) => String(a.time).localeCompare(b.time)).map(t => c += t.pl_usc || 0));
   const mn = Math.min(0, ...pts2), mx = Math.max(0, ...pts2), rg = (mx - mn) || 1, W = 600, H = 140, y = v => H - 10 - (v - mn) / rg * (H - 20);
   const xy = pts2.map((v, i) => `${(i / Math.max(1, pts2.length - 1)) * W},${y(v)}`).join(" ");
-  $("pnlChart").innerHTML = `<line x1="0" x2="${W}" y1="${y(0)}" y2="${y(0)}" stroke="#444" stroke-dasharray="4"/><polyline points="${xy}" fill="none" stroke="${col(c)}" stroke-width="3"/>` + pts2.map((v, i) => `<circle cx="${(i / Math.max(1, pts2.length - 1)) * W}" cy="${y(v)}" r="4" fill="${col(v)}"/>`).join("");
+  $("pnlChart").innerHTML = `<line x1="0" x2="${W}" y1="${y(0)}" y2="${y(0)}" stroke="#444" stroke-dasharray="4"/><polyline class="${animEq ? "eq" : ""}" points="${xy}" fill="none" stroke="${col(c)}" stroke-width="3"/>` + pts2.map((v, i) => `<circle cx="${(i / Math.max(1, pts2.length - 1)) * W}" cy="${y(v)}" r="4" fill="${col(v)}"/>`).join("");
 }
 // first-run Gemini key prompt (stored only in this browser)
 function keyPrompt() {
@@ -427,6 +438,32 @@ function keyPrompt() {
   $("kpSave").onclick = () => { const k = $("kpIn").value.trim(); if (!k) return; localStorage.setItem(KEY, k); o.remove(); syncSet(); bubble("a", "บันทึก key แล้วค่ะ ✅ ใช้ได้ทั้งแชท แปล และคุยสด"); };
   $("kpSkip").onclick = () => { sessionStorage.setItem("gd_kp_skip", "1"); o.remove(); };
 }
+
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const prevN = {};
+function countUp() {
+  document.querySelectorAll("#pnlSum [data-n]").forEach((el, i) => {
+    const to = Number(el.dataset.n), from = prevN[i] ?? 0, suf = el.dataset.suf; prevN[i] = to;
+    if (RM || from === to) { el.textContent = (to >= 0 ? "+" : "") + to.toFixed(2) + suf; return; }
+    const t0 = performance.now(), d = 900;
+    const step = now => { const k = Math.min(1, (now - t0) / d), e = 1 - Math.pow(1 - k, 3), v = from + (to - from) * e;
+      el.textContent = (v >= 0 ? "+" : "") + v.toFixed(2) + suf; if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  });
+}
+function pulseUpd() { for (const id of ["liveUpd", "pnlCard"]) { const el = $(id); el.classList.remove("hot"); void el.offsetWidth; el.classList.add("hot"); } }
+// lightweight gold particles (off for reduced motion / hidden tab)
+(function fx() {
+  if (RM) return; const cv = $("fx"), cx = cv.getContext("2d"); let W, H, ps;
+  const N = innerWidth < 700 ? 22 : 45;
+  const rs = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; ps = Array.from({length: N}, () => ({x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.8 + .4, vy: -(Math.random() * .25 + .05), vx: (Math.random() - .5) * .15, a: Math.random() * .5 + .2})); };
+  rs(); addEventListener("resize", rs);
+  const loop = () => { if (!document.hidden) { cx.clearRect(0, 0, W, H);
+    for (const p of ps) { p.x += p.vx; p.y += p.vy; if (p.y < -5) { p.y = H + 5; p.x = Math.random() * W; }
+      cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.283); cx.fillStyle = `rgba(245,197,66,${p.a})`; cx.shadowBlur = 8; cx.shadowColor = "#f5c542"; cx.fill(); } }
+    requestAnimationFrame(loop); };
+  loop();
+})();
 // realtime call overlay (same page)
 function openCall() { if (!$("callFr").src) $("callFr").src = "call.html?embed=1"; $("callOv").style.display = "block"; if (location.hash !== "#call") history.replaceState(null, "", "#call"); }
 function closeCall() { try { $("callFr").contentWindow.stopCall && $("callFr").contentWindow.stopCall(); } catch (e) {} $("callOv").style.display = "none"; history.replaceState(null, "", location.pathname + location.search); }
@@ -437,7 +474,7 @@ window.addEventListener("hashchange", () => { if (location.hash === "#call") ope
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text.replace(/\*\*/g, "")));
 if (!hist.length) bubble("a", "สวัสดีค่ะ 👋 ดิฉันคือ เลขา ผู้ช่วยวิเคราะห์ทองค่ะ ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ต้องใส่ Gemini API key ใน ⚙️ ตั้งค่า ก่อนใช้ครั้งแรก)");
 syncSet(); setMode(mode); render(); renderPnl(); keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
-pollPrice(); pollThai(); setInterval(pollPrice, 15000); setInterval(pollThai, 30000); setInterval(pollData, 300000);
+pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 15000); setInterval(pollThai, 30000); setInterval(pollData, 20000);
 </script>
 </body>
 </html>
