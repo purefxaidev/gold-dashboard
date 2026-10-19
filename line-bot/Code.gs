@@ -54,6 +54,20 @@ function doPost(e) {
     catch (err) { return json_({ ok: false, error: String(err).slice(0, 200) }); }
   }
 
+  // --- ระบบเทรดรายงานผลคำสั่ง ---
+  if (body.action === 'ack') {
+    if (!prop_('ALERT_SECRET') || body.secret !== prop_('ALERT_SECRET')) return json_({ ok: false, error: 'unauthorized' });
+    var lock = LockService.getScriptLock(); lock.waitLock(10000);
+    try {
+      var qq = getQueue_(), hit = null;
+      qq.forEach(function (c) { if (c.id === body.id) { c.status = body.ok === false ? 'failed' : 'done'; c.result = String(body.result || '').slice(0, 500); c.done_at = new Date().toISOString(); hit = c; } });
+      setQueue_(qq);
+    } finally { lock.releaseLock(); }
+    if (hit && prop_('OWNER_USER_ID')) lineSend_('push', { to: prop_('OWNER_USER_ID'), messages: [{ type: 'text',
+      text: (hit.status === 'done' ? 'ทำคำสั่งเรียบร้อยค่ะ' : 'ทำคำสั่งไม่สำเร็จค่ะ') + '\n' + hit.summary + (hit.result ? '\nผล: ' + hit.result : '') }] });
+    return json_({ ok: !!hit });
+  }
+
   // --- LINE webhook ---
   // Apps Script อ่าน HTTP header ไม่ได้ จึงตรวจ X-Line-Signature ไม่ได้ -> ใช้ WEBHOOK_KEY ใน URL แทน
   var wk = prop_('WEBHOOK_KEY');
@@ -74,6 +88,10 @@ function doGet(e) {
     if (!sec || q.secret !== sec) return json_({ ok: false, error: 'unauthorized' });
     return json_({ ok: true, enabled: (prop_('AUTO_TRADE') || 'on') === 'on' });
   }
+  if (q.action === 'commands') {
+    if (!prop_('ALERT_SECRET') || q.secret !== prop_('ALERT_SECRET')) return json_({ ok: false, error: 'unauthorized' });
+    return json_({ ok: true, commands: getQueue_().filter(function (c) { return c.status === 'pending'; }) });
+  }
   return ContentService.createTextOutput('LINE gold bot OK');
 }
 function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
@@ -88,6 +106,58 @@ function handleAlert_(text, wantVoice) {
   var code = lineSend_('broadcast', { messages: msgs });
   if (code !== 200 && voiceOk) code = lineSend_('broadcast', { messages: [msgs[0]] }), voiceOk = false;
   return { ok: code === 200, voice: voiceOk, line: code };
+}
+
+// ===== คิวคำสั่งจากเจ้าของ (LINE -> ระบบเทรด) =====
+var ORDER_ACTIONS = ['close_all', 'close_side', 'move_sl_breakeven', 'modify_sl_tp', 'place_order', 'cancel_pending'];
+function getQueue_() { try { return JSON.parse(prop_('CMD_QUEUE') || '[]'); } catch (e) { return []; } }
+function setQueue_(q) { PropertiesService.getScriptProperties().setProperty('CMD_QUEUE', JSON.stringify(q.slice(-40))); }
+function enqueue_(cmd) {
+  var lock = LockService.getScriptLock(); lock.waitLock(10000);
+  try { var q = getQueue_(); cmd.id = 'c' + Date.now(); cmd.status = 'pending'; cmd.created_at = new Date().toISOString(); q.push(cmd); setQueue_(q); return cmd.id; }
+  finally { lock.releaseLock(); }
+}
+/** แปลงข้อความภาษาธรรมชาติเป็นคำสั่ง (Gemini structured output) */
+function parseCommand_(text) {
+  var j = gemini_(CHAT_MODEL, {
+    systemInstruction: { parts: [{ text: 'แยกว่าข้อความของเจ้าของบอทเป็นคำสั่งเทรดทอง XAUUSD หรือไม่ ถ้าเป็นคำถาม/คุยทั่วไป ให้ is_command=false. action: close_all=ปิดทุกไม้, close_side=ปิดเฉพาะฝั่ง buy/sell, move_sl_breakeven=เลื่อน SL กันทุน, modify_sl_tp=แก้ SL/TP, place_order=เปิดไม้ใหม่หรือตั้ง limit/stop, cancel_pending=ยกเลิกออเดอร์รอ, pause_trading=หยุดเทรดอัตโนมัติ, resume_trading=เปิดเทรดอัตโนมัติ, status=ขอสถานะพอร์ต. summary_th = สรุปคำสั่งภาษาไทยสั้นๆ ชัดเจน ห้ามใช้อีโมจิ ถ้าไม่ระบุล็อตให้ใช้ 0.1' }] },
+    contents: [{ role: 'user', parts: [{ text: text }] }],
+    generationConfig: { temperature: 0, responseMimeType: 'application/json', responseSchema: { type: 'OBJECT', properties: {
+      is_command: { type: 'BOOLEAN' },
+      action: { type: 'STRING', enum: ['none', 'close_all', 'close_side', 'move_sl_breakeven', 'modify_sl_tp', 'place_order', 'cancel_pending', 'pause_trading', 'resume_trading', 'status'] },
+      params: { type: 'OBJECT', properties: { side: { type: 'STRING', enum: ['buy', 'sell', 'any'] }, order_type: { type: 'STRING', enum: ['market', 'limit', 'stop'] },
+        lot: { type: 'NUMBER' }, entry: { type: 'NUMBER' }, sl: { type: 'NUMBER' }, tp: { type: 'NUMBER' } } },
+      summary_th: { type: 'STRING' } }, required: ['is_command', 'action', 'summary_th'] } }
+  });
+  var t = (((j.candidates || [])[0] || {}).content || {}).parts || [];
+  try { return JSON.parse(t.map(function (x) { return x.text || ''; }).join('')); } catch (e) { return { is_command: false }; }
+}
+/** เจ้าของส่งข้อความ (ไม่ใช่ /คำสั่ง): คืน true ถ้าจัดการเป็นคำสั่งแล้ว */
+function handleOwnerCommand_(ev, text) {
+  var rt = ev.replyToken, sp = PropertiesService.getScriptProperties(), t = text.trim();
+  var pend = prop_('PENDING_CMD');
+  if (/^ยืนยัน$/.test(t) && pend) {
+    var c = JSON.parse(pend); sp.deleteProperty('PENDING_CMD');
+    if (Date.now() - c.asked > 10 * 60000) { lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'คำสั่งหมดอายุแล้ว (เกิน 10 นาที) กรุณาสั่งใหม่ค่ะ' }] }); return true; }
+    delete c.asked; var id = enqueue_(c);
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'รับคำสั่งแล้วค่ะ (' + id + ')\n' + c.summary + '\nระบบเทรดจะดำเนินการในรอบถัดไป และแจ้งผลกลับมาค่ะ' }] }); return true;
+  }
+  if (/^ยกเลิก$/.test(t) && pend) { sp.deleteProperty('PENDING_CMD'); lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'ยกเลิกคำสั่งแล้วค่ะ' }] }); return true; }
+  var p = parseCommand_(t);
+  if (!p || !p.is_command || !p.action || p.action === 'none') return false;
+  var cmd = { action: p.action, params: p.params || {}, summary: p.summary_th || p.action, text: t.slice(0, 300) };
+  if (ORDER_ACTIONS.indexOf(p.action) >= 0) {
+    if (p.action === 'place_order' && !(cmd.params.sl && cmd.params.tp)) {
+      lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'ทุกไม้ต้องมี SL (ตัดขาดทุน) และ TP (รับกำไร) ค่ะ กรุณาระบุให้ครบ เช่น buy 0.1 ที่ 4163 sl 4145 tp 4191' }] }); return true; }
+    cmd.asked = Date.now(); sp.setProperty('PENDING_CMD', JSON.stringify(cmd));
+    lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'ตรวจสอบคำสั่งค่ะ\n' + cmd.summary + '\n\nพิมพ์ "ยืนยัน" เพื่อส่งคำสั่ง หรือ "ยกเลิก" (หมดอายุใน 10 นาที)',
+      quickReply: { items: [{ type: 'action', action: { type: 'message', label: 'ยืนยัน', text: 'ยืนยัน' } }, { type: 'action', action: { type: 'message', label: 'ยกเลิก', text: 'ยกเลิก' } }] } }] });
+    return true;
+  }
+  if (p.action === 'pause_trading' || p.action === 'resume_trading') sp.setProperty('AUTO_TRADE', p.action === 'pause_trading' ? 'off' : 'on');
+  var id2 = enqueue_(cmd);
+  lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'รับคำสั่งแล้วค่ะ (' + id2 + ')\n' + cmd.summary }] });
+  return true;
 }
 
 // ===== ความจำต่อผู้ใช้ (Script Properties, จำกัดขนาด) =====
@@ -178,6 +248,7 @@ function handleEvent_(ev) {
   var m = ev.message, parts = [];
   if (m.type === 'text' && m.text.charAt(0) === '/' && handleCommand_(ev, m.text.trim())) return;
   var trCode = getMode_(ev.source && ev.source.userId);
+  if (m.type === 'text' && !trCode && ev.source && ev.source.userId && ev.source.userId === prop_('OWNER_USER_ID') && handleOwnerCommand_(ev, m.text)) return;
   if (m.type === 'text') {
     parts.push({ text: m.text });
   } else if (m.type === 'image' || m.type === 'audio') {
@@ -327,7 +398,7 @@ function getLineContent_(id) {
   if (r.getResponseCode() !== 200) throw new Error('LINE content ' + r.getResponseCode());
   return r.getBlob();
 }
-function lineSend_(kind, payload) { // kind = reply | broadcast
+function lineSend_(kind, payload) { // kind = reply | broadcast | push
   if (payload.messages) payload.messages = payload.messages.slice(0, 5);
   var r = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/' + kind, {
     method: 'post', contentType: 'application/json', muteHttpExceptions: true,

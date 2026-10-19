@@ -92,3 +92,10 @@
    Apps Script `GET <URL>/exec?action=autotrade&secret=...` · Worker `GET <URL>/autotrade?secret=...` → `{"ok":true,"enabled":true}`
    ถ้าอ่านไม่ได้ ระบบจะใช้ค่าเดิม (data.json `auto_trade`)
 - หน้าเว็บแสดงสถานะอย่างเดียว ควบคุมจากเว็บไม่ได้
+
+## สั่งงานระบบเทรดผ่าน LINE (เฉพาะเจ้าของ)
+- เจ้าของ (ตั้งด้วย `/ตั้งเจ้าของ`) พิมพ์ภาษาธรรมชาติได้ เช่น "ปิดทุกไม้", "เลื่อน SL กันทุน", "หยุดเทรด", "buy 0.1 ที่ 4163 sl 4145 tp 4191", "สถานะพอร์ต"
+- Gemini แปลงเป็นคำสั่ง `{action, params}` (structured JSON output) — คำสั่งที่เกี่ยวกับออเดอร์ (ปิด/เปิด/แก้/ยกเลิก) ต้องพิมพ์ **ยืนยัน** ภายใน 10 นาที · เปิดไม้ใหม่ต้องมี SL และ TP เสมอ
+- คำสั่งเข้าคิว → ระบบเทรดบนคอมดึงทุกรอบด้วย `line_commands.sh fetch` แล้วรายงานผล `line_commands.sh ack <id> ok|fail "ผล"` → บอทส่งผลกลับหาเจ้าของ (push message)
+- Endpoint: Apps Script `GET /exec?action=commands&secret=...` · `POST {"action":"ack","secret","id","ok","result"}` · Worker `GET /commands?secret=` · `POST /ack` (ตั้ง `LINE_BACKEND=worker`)
+- ผู้ใช้อื่นคุยได้อย่างเดียว สั่งงานไม่ได้ · push message ใช้โควตาข้อความของ LINE OA (แผนฟรีมีจำกัด/เดือน)

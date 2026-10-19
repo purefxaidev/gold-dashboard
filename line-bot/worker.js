@@ -34,8 +34,21 @@ export default {
       const v = env.MODES ? await env.MODES.get('auto_trade') : null;
       return json({ ok: true, enabled: (v || 'on') === 'on' });
     }
+    if (req.method === 'GET' && url.pathname === '/commands') {
+      if (!env.ALERT_SECRET || url.searchParams.get('secret') !== env.ALERT_SECRET) return json({ ok: false, error: 'unauthorized' }, 401);
+      return json({ ok: true, commands: (await getQueue(env)).filter(c => c.status === 'pending') });
+    }
     if (req.method !== 'POST') return new Response('LINE gold bot OK');
     const raw = await req.text();
+    if (url.pathname === '/ack') {
+      let b; try { b = JSON.parse(raw); } catch { return json({ ok: false }, 400); }
+      if (!env.ALERT_SECRET || b.secret !== env.ALERT_SECRET) return json({ ok: false, error: 'unauthorized' }, 401);
+      const q = await getQueue(env); const hit = q.find(c => c.id === b.id);
+      if (hit) { hit.status = b.ok === false ? 'failed' : 'done'; hit.result = String(b.result || '').slice(0, 500); hit.done_at = new Date().toISOString(); await setQueue(env, q);
+        const owner = await getOwner(env);
+        if (owner) await line(env, 'push', { to: owner, messages: [{ type: 'text', text: (hit.status === 'done' ? 'ทำคำสั่งเรียบร้อยค่ะ' : 'ทำคำสั่งไม่สำเร็จค่ะ') + '\n' + hit.summary + (hit.result ? '\nผล: ' + hit.result : '') }] }); }
+      return json({ ok: !!hit });
+    }
     if (url.pathname === '/alert' || url.pathname === '/tts') {
       let b; try { b = JSON.parse(raw); } catch { return json({ ok: false }, 400); }
       if (!env.ALERT_SECRET || b.secret !== env.ALERT_SECRET) return json({ ok: false, error: 'unauthorized' }, 401);
@@ -56,6 +69,42 @@ export default {
 // ---- memory (KV binding MODES, optional) ----
 async function getMem(env, uid) { if (!uid || !env.MODES) return { facts: [], hist: [] }; try { return JSON.parse(await env.MODES.get('mem:' + uid)) || { facts: [], hist: [] }; } catch { return { facts: [], hist: [] }; } }
 async function setMem(env, uid, m) { if (!uid || !env.MODES) return; m.facts = m.facts.slice(-20); m.hist = m.hist.slice(-20); await env.MODES.put('mem:' + uid, JSON.stringify(m)); }
+// ---- owner command queue (KV) ----
+const ORDER_ACTIONS = ['close_all', 'close_side', 'move_sl_breakeven', 'modify_sl_tp', 'place_order', 'cancel_pending'];
+const getOwner = async env => env.OWNER_USER_ID || (env.MODES ? await env.MODES.get('owner') : null);
+async function getQueue(env) { if (!env.MODES) return []; try { return JSON.parse(await env.MODES.get('cmdq')) || []; } catch { return []; } }
+async function setQueue(env, q) { if (env.MODES) await env.MODES.put('cmdq', JSON.stringify(q.slice(-40))); }
+async function enqueue(env, cmd) { const q = await getQueue(env); Object.assign(cmd, { id: 'c' + Date.now(), status: 'pending', created_at: new Date().toISOString() }); q.push(cmd); await setQueue(env, q); return cmd.id; }
+async function parseCommand(env, text) {
+  const j = await geminiRaw(env, CHAT_MODEL, {
+    systemInstruction: { parts: [{ text: 'แยกว่าข้อความของเจ้าของบอทเป็นคำสั่งเทรดทอง XAUUSD หรือไม่ ถ้าเป็นคำถาม/คุยทั่วไป ให้ is_command=false. action: close_all=ปิดทุกไม้, close_side=ปิดเฉพาะฝั่ง, move_sl_breakeven=เลื่อน SL กันทุน, modify_sl_tp=แก้ SL/TP, place_order=เปิดไม้ใหม่/ตั้ง limit, cancel_pending=ยกเลิกออเดอร์รอ, pause_trading=หยุดเทรดอัตโนมัติ, resume_trading=เปิดเทรดอัตโนมัติ, status=ขอสถานะพอร์ต. summary_th สรุปภาษาไทยสั้นๆ ห้ามใช้อีโมจิ ล็อตเริ่มต้น 0.1' }] },
+    contents: [{ role: 'user', parts: [{ text }] }],
+    generationConfig: { temperature: 0, responseMimeType: 'application/json', responseSchema: { type: 'OBJECT', properties: {
+      is_command: { type: 'BOOLEAN' }, action: { type: 'STRING', enum: ['none', ...ORDER_ACTIONS, 'pause_trading', 'resume_trading', 'status'] },
+      params: { type: 'OBJECT', properties: { side: { type: 'STRING', enum: ['buy', 'sell', 'any'] }, order_type: { type: 'STRING', enum: ['market', 'limit', 'stop'] }, lot: { type: 'NUMBER' }, entry: { type: 'NUMBER' }, sl: { type: 'NUMBER' }, tp: { type: 'NUMBER' } } },
+      summary_th: { type: 'STRING' } }, required: ['is_command', 'action', 'summary_th'] } } });
+  try { return JSON.parse((j.candidates?.[0]?.content?.parts || []).map(x => x.text || '').join('')); } catch { return { is_command: false }; }
+}
+async function handleOwnerCommand(env, ev, t) {
+  if (!env.MODES) return false;
+  const pend = await env.MODES.get('pend');
+  if (/^ยืนยัน$/.test(t) && pend) { const c = JSON.parse(pend); await env.MODES.delete('pend');
+    if (Date.now() - c.asked > 600000) { await reply(env, ev, [{ type: 'text', text: 'คำสั่งหมดอายุแล้ว (เกิน 10 นาที) กรุณาสั่งใหม่ค่ะ' }]); return true; }
+    delete c.asked; const id = await enqueue(env, c);
+    await reply(env, ev, [{ type: 'text', text: `รับคำสั่งแล้วค่ะ (${id})\n${c.summary}\nระบบเทรดจะดำเนินการในรอบถัดไป และแจ้งผลกลับมาค่ะ` }]); return true; }
+  if (/^ยกเลิก$/.test(t) && pend) { await env.MODES.delete('pend'); await reply(env, ev, [{ type: 'text', text: 'ยกเลิกคำสั่งแล้วค่ะ' }]); return true; }
+  const p = await parseCommand(env, t);
+  if (!p || !p.is_command || !p.action || p.action === 'none') return false;
+  const cmd = { action: p.action, params: p.params || {}, summary: p.summary_th || p.action, text: t.slice(0, 300) };
+  if (ORDER_ACTIONS.includes(p.action)) {
+    if (p.action === 'place_order' && !(cmd.params.sl && cmd.params.tp)) { await reply(env, ev, [{ type: 'text', text: 'ทุกไม้ต้องมี SL (ตัดขาดทุน) และ TP (รับกำไร) ค่ะ เช่น buy 0.1 ที่ 4163 sl 4145 tp 4191' }]); return true; }
+    cmd.asked = Date.now(); await env.MODES.put('pend', JSON.stringify(cmd));
+    await reply(env, ev, [{ type: 'text', text: `ตรวจสอบคำสั่งค่ะ\n${cmd.summary}\n\nพิมพ์ "ยืนยัน" เพื่อส่งคำสั่ง หรือ "ยกเลิก" (หมดอายุใน 10 นาที)`,
+      quickReply: { items: ['ยืนยัน', 'ยกเลิก'].map(x => ({ type: 'action', action: { type: 'message', label: x, text: x } })) } }]); return true;
+  }
+  if (p.action === 'pause_trading' || p.action === 'resume_trading') await env.MODES.put('auto_trade', p.action === 'pause_trading' ? 'off' : 'on');
+  const id = await enqueue(env, cmd); await reply(env, ev, [{ type: 'text', text: `รับคำสั่งแล้วค่ะ (${id})\n${cmd.summary}` }]); return true;
+}
 async function getMode(env, uid) { return uid && env.MODES ? (await env.MODES.get('m:' + uid)) || '' : ''; }
 async function setMode(env, uid, v) { if (!uid || !env.MODES) return; v ? await env.MODES.put('m:' + uid, v) : await env.MODES.delete('m:' + uid); }
 function quick() {
@@ -97,6 +146,7 @@ async function handleEvent(env, ev) {
     }
   }
   const tr = await getMode(env, uid), parts = [];
+  if (m.type === 'text' && !tr && uid && uid === await getOwner(env) && await handleOwnerCommand(env, ev, m.text.trim())) return;
   if (m.type === 'text') parts.push({ text: m.text });
   else if (m.type === 'image' || m.type === 'audio') {
     const r = await fetch(`https://api-data.line.me/v2/bot/message/${m.id}/content`, { headers: { Authorization: 'Bearer ' + env.LINE_CHANNEL_ACCESS_TOKEN } });
