@@ -9,7 +9,7 @@ body{margin:0;font-family:system-ui,"Noto Sans Thai",sans-serif;background:radia
 select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:10px;padding:8px;width:100%;box-sizing:border-box;margin:4px 0}
 .row{display:flex;gap:8px}.row>*{flex:1}
 .big{display:block;margin:18px auto 10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;width:120px;height:120px;border-radius:50%;border:0;font-size:44px;background:#1db954;color:#fff;box-shadow:0 0 30px #1db95488;cursor:pointer}
-.big.on{background:#e53935;box-shadow:0 0 40px #e5393588;animation:p 1.4s infinite}@keyframes p{50%{transform:scale(1.05)}}
+.big.on{background:#e53935;box-shadow:0 0 40px #e5393588;animation:p 1.4s infinite}.big.on.spk{box-shadow:0 0 0 6px #f5c54255,0 0 50px #f5c542aa}@keyframes p{50%{transform:scale(1.05)}}
 #st{text-align:center;color:#aaa;font-size:14px}#log{max-height:40vh;overflow:auto;font-size:14px}
 .u{color:#9ecbff}.a{color:#f5c542}.e{color:#ff7b7b}a{color:#f5c542}small{color:#888}
 </style></head><body><div class="w">
@@ -28,6 +28,7 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
 <div class="card"><small> ใช้ AI key ที่บันทึกไว้ในเบราว์เซอร์นี้ (ตั้งค่าได้ที่แชทในหน้าแดชบอร์ด) — ไม่มี key ในเว็บไซต์ · ถ้าเปิดใน LINE แล้วไมค์ใช้ไม่ได้ ให้กด ⋮ → <b>เปิดในเบราว์เซอร์ภายนอก</b> · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน</small></div>
 </div>
 <script>
+// PUREGOLD call engine v2 (pcm-player)
 const ICON_PHONE = `<svg class="ic" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`, ICON_STOP = `<svg class="ic" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`;
 const $ = id => document.getElementById(id);
 const LC = {English:"en",Thai:"th",Chinese:"zh",Japanese:"ja",Korean:"ko",Vietnamese:"vi",Lao:"lo",Burmese:"my",French:"fr",German:"de"};
@@ -65,31 +66,121 @@ async function sysPrompt() {
   return EN_RULE + memText() + "\n" + "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย ห้ามใช้อีโมจิ ห้ามใช้ markdown พูดเป็นข้อความธรรมดา สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + PGAI.rules().replace(/และใส่ข้อความ \[\[SIGNUP\]\][^\n]*/, "และเรียกเครื่องมือ show_signup เพื่อเปิดหน้าต่างสมัครบนหน้าจอ แล้วพูดอธิบายขั้นตอนทีละขั้นสั้นๆ") + "\nข้อมูล: " + ctx + EN_RULE;
 }
 
-// ===== audio engine (mobile-safe) =====
+// ===== audio engine v2 (PCM jitter-buffer player, fixed mic frames, wake lock, auto-reconnect) =====
 const dbgOn = () => $("dbg") && $("dbg").open;
 function dbg(t) { const d = $("dbgLog"); if (!d) return; const l = document.createElement("div"); l.textContent = new Date().toLocaleTimeString("th-TH") + " " + t; d.appendChild(l); while (d.children.length > 200) d.firstChild.remove(); d.scrollTop = 1e9; }
-const WORKLET = `class R extends AudioWorkletProcessor{constructor(){super();this.r=sampleRate/16000;this.p=0;this.b=[]}
-process(i){const c=i[0]&&i[0][0];if(!c)return true;let p=this.p;while(p<c.length){const k=Math.floor(p),f=p-k,a=c[k],b=k+1<c.length?c[k+1]:a;this.b.push(a+(b-a)*f);p+=this.r}this.p=p-c.length;
-if(this.b.length>=1600){const o=new Int16Array(this.b.length);for(let k=0;k<o.length;k++){const s=Math.max(-1,Math.min(1,this.b[k]));o[k]=s<0?s*32768:s*32767}this.port.postMessage(o.buffer,[o.buffer]);this.b=[]}return true}}
+// mic: resample to 16 kHz, emit fixed 60 ms frames (960 samples) of clamped Int16 PCM + frame RMS
+const WORKLET = `class R extends AudioWorkletProcessor{constructor(){super();this.r=sampleRate/16000;this.p=0;this.F=960;this.o=new Int16Array(this.F);this.k=0;this.e=0}
+process(i){const c=i[0]&&i[0][0];if(!c)return true;let p=this.p;while(p<c.length){const k=Math.floor(p),f=p-k,a=c[k],b=k+1<c.length?c[k+1]:a;let s=a+(b-a)*f;s=s>1?1:s<-1?-1:s;this.e+=s*s;this.o[this.k++]=s<0?s*32768:s*32767;
+if(this.k===this.F){const rms=Math.sqrt(this.e/this.F);this.port.postMessage({b:this.o.buffer,rms},[this.o.buffer]);this.o=new Int16Array(this.F);this.k=0;this.e=0}p+=this.r}this.p=p-c.length;return true}}
 registerProcessor("rec16",R);`;
-let ws, ac, stream, node, srcNode, playT = 0, srcs = [], aLine = null, uLine = null, inCall = false, spBuf = [], spPos = 0;
-const b64 = buf => { let s = "", u = new Uint8Array(buf); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
-function sendPcm(buf) { if (ws && ws.readyState === 1) ws.send(JSON.stringify({realtimeInput: {audio: {data: b64(buf), mimeType: "audio/pcm;rate=16000"}}})); }
-function play(data) {
-  if (!ac) return;
-  const bin = atob(data), n = bin.length >> 1, f = new Float32Array(n);
-  for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v > 32767) v -= 65536; f[i] = v / 32768; }
-  let buf;
-  try { buf = ac.createBuffer(1, n, 24000); buf.getChannelData(0).set(f); }
-  catch (e) { // very old engines: resample 24k -> device rate manually
-    const r = ac.sampleRate / 24000, m = Math.floor(n * r); buf = ac.createBuffer(1, m, ac.sampleRate); const o = buf.getChannelData(0);
-    for (let i = 0; i < m; i++) { const x = i / r, k = Math.floor(x), fr = x - k; o[i] = f[k] + ((f[k + 1] ?? f[k]) - f[k]) * fr; } }
-  const s = ac.createBufferSource(); s.buffer = buf; s.connect(ac.destination);
-  playT = Math.max(playT, ac.currentTime + 0.02); s.start(playT); playT += buf.duration;
-  srcs.push(s); s.onended = () => srcs = srcs.filter(x => x !== s);
+// playback core: ring buffer + jitter buffer + click-free fades; shared by the AudioWorklet and the ScriptProcessor fallback
+class PCore {
+  constructor(sr) { this.sr = sr; this.N = Math.round(sr * 60); this.q = new Float32Array(this.N); this.w = 0; this.r = 0; this.n = 0; this.on = false; this.spk = false; this.g = 0; this.lv = 0;
+    this.st = 1 / (sr * 0.006); this.pre = Math.round(sr * 0.18); this.re = Math.round(sr * 0.1); this.idle = 0; this.idle2 = 0; this.end = false; this.fast = false; this.under = 0; this.duck = 1; this.dg = 1; this.uc = 0; }
+  push(f) { for (let i = 0; i < f.length; i++) { if (this.n >= this.N) { this.r = (this.r + 1) % this.N; this.n--; } this.q[this.w] = f[i]; this.w = (this.w + 1) % this.N; this.n++; } this.idle = 0; this.end = false; this.fast = false; }
+  flush() { this.n = 0; this.r = this.w; this.on = false; this.end = false; this.fast = true; this.under = 0; }
+  fill(out) { const L = out.length; let ev = 0;
+    if (!this.on && this.n > 0 && (this.n >= (this.under ? this.re : this.pre) || this.end || this.idle > this.sr * 0.25)) { this.on = true; if (!this.spk) { this.spk = true; ev = 1; } }
+    if (!this.on && this.n > 0) this.idle += L;
+    for (let i = 0; i < L; i++) { this.dg += (this.duck - this.dg) * 0.004;
+      if (this.on && this.n > 0) { const s = this.q[this.r]; this.r = (this.r + 1) % this.N; this.n--; this.g = Math.min(1, this.g + this.st); this.lv = s; out[i] = s * this.g * this.dg; }
+      else { if (this.on) { this.on = false; this.under = 1; this.uc++; } this.g = Math.max(0, this.g - (this.fast ? 1 / L : this.st)); out[i] = this.lv * this.g * this.dg; } }
+    if (this.spk && !this.on && this.n === 0 && this.g === 0) { this.idle2 += L; if (this.end || this.fast || this.idle2 > this.sr * 0.8) { this.spk = false; this.under = 0; ev = 2; } } else this.idle2 = 0;
+    return ev; }
+  cmd(d) { if (d === "flush") this.flush(); else if (d === "end") this.end = true; else if (d && d.duck !== undefined) this.duck = d.duck; else if (d && d.length !== undefined) this.push(d); }
 }
-function stopPlay() { srcs.forEach(s => { try { s.stop(); } catch (e) {} }); srcs = []; playT = 0; }
+const PLAYER = PCore.toString() + `
+class PL extends AudioWorkletProcessor{constructor(){super();this.c=new PCore(sampleRate);this.port.onmessage=e=>this.c.cmd(e.data)}
+process(i,o){const ch=o[0];const ev=this.c.fill(ch[0]);for(let k=1;k<ch.length;k++)ch[k].set(ch[0]);if(ev)this.port.postMessage({ev,uc:this.c.uc,ms:Math.round(this.c.n*1000/sampleRate)});return true}}
+registerProcessor("pcmplay",PL);`;
+let ws, ac, stream, node, srcNode, player = null, aLine = null, uLine = null, inCall = false, spBuf = [], spPos = 0, speaking = false;
+const b64 = buf => { let s = "", u = new Uint8Array(buf); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
+// ---- mic send path: only when the socket is open and setup finished; buffer up to ~3 s while reconnecting ----
+let wsReady = false, reconnecting = false, micQ = [];
+function sendPcm(buf) {
+  if (ws && ws.readyState === 1 && wsReady) { while (micQ.length) wsSend(micQ.shift()); wsSend(buf); }
+  else if (inCall && reconnecting) { micQ.push(buf); while (micQ.length > 50) micQ.shift(); }
+}
+function wsSend(buf) { try { ws.send(JSON.stringify({realtimeInput: {audio: {data: b64(buf), mimeType: "audio/pcm;rate=16000"}}})); } catch (e) {} }
+// ---- local VAD: user speaking over the assistant -> duck playback at once (server interrupt then flushes) ----
+let vadFloor = 0.01, vadHot = 0, vadQuiet = 0, ducked = false;
+function onMicFrame(buf, rms) {
+  if (rms === undefined) { const a = new Int16Array(buf); let e = 0; for (let i = 0; i < a.length; i++) e += (a[i] / 32768) ** 2; rms = Math.sqrt(e / a.length); }
+  const ms = new Int16Array(buf).length / 16;
+  if (!speaking) vadFloor = vadFloor * 0.95 + Math.min(rms, 0.05) * 0.05;
+  const thr = Math.max(0.03, vadFloor * 3.5);
+  if (speaking && rms > thr) { vadHot += ms; vadQuiet = 0; if (vadHot >= 150 && !ducked) { ducked = true; playerCmd({duck: 0.15}); dbg("local VAD: duck"); } }
+  else { vadHot = 0; if (ducked) { vadQuiet += ms; if (vadQuiet >= 700) { ducked = false; playerCmd({duck: 1}); } } }
+  sendPcm(buf);
+}
+// ---- PCM player ----
+const rsS = {p: 0, last: 0};
+function resample24(f) { const sr = ac.sampleRate; if (sr === 24000) return f; const step = 24000 / sr, n = f.length, out = new Float32Array(Math.ceil((n + 1) / step) + 2); let p = rsS.p, j = 0;
+  while (p < n) { const k = Math.floor(p), fr = p - k, a = k === 0 ? rsS.last : f[k - 1], b = f[k]; out[j++] = a + (b - a) * fr; p += step; }
+  rsS.p = p - n; rsS.last = f[n - 1]; return out.subarray(0, j); }
+function playerCmd(d, tr) { if (!player) return; if (player.port) { if (tr) player.port.postMessage(d, tr); else player.port.postMessage(d); } else player.core.cmd(d); }
+function onPlayerEv(d) { if (d.ev === 1) setSpeaking(true); else if (d.ev === 2) { setSpeaking(false); if (d.uc) dbg("playback underruns: " + d.uc); } }
+function setSpeaking(v) { speaking = v; $("call").classList.toggle("spk", v); if (!v && ducked) { ducked = false; playerCmd({duck: 1}); } if (window.__callState) window.__callState.speaking = v; }
+function startPlayer() {
+  if (ac.audioWorklet && window.AudioWorkletNode) {
+    return ac.audioWorklet.addModule(URL.createObjectURL(new Blob([PLAYER], {type: "application/javascript"}))).then(() => {
+      player = new AudioWorkletNode(ac, "pcmplay", {numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [1]}); player.port.onmessage = e => onPlayerEv(e.data); player.connect(ac.destination);
+      dbg("player: AudioWorklet PCM @" + ac.sampleRate + "Hz"); });
+  }
+  const sp = ac.createScriptProcessor(2048, 1, 1), core = new PCore(ac.sampleRate);
+  sp.onaudioprocess = ev => { const o = ev.outputBuffer.getChannelData(0), e = core.fill(o); if (e) onPlayerEv({ev: e, uc: core.uc}); };
+  sp.connect(ac.destination); player = {node: sp, core}; dbg("player: ScriptProcessor fallback @" + ac.sampleRate + "Hz"); return Promise.resolve();
+}
+function play(data) {
+  if (!ac || !player) return;
+  const bin = atob(data), n = bin.length >> 1; if (!n) return; const f = new Float32Array(n);
+  for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v > 32767) v -= 65536; f[i] = v / 32768; }
+  const o = resample24(f), c = new Float32Array(o); playerCmd(c, [c.buffer]);
+}
+function stopPlay() { playerCmd("flush"); rsS.p = 0; rsS.last = 0; }
 function unlockOutput() { try { const b = ac.createBuffer(1, 1, ac.sampleRate), s = ac.createBufferSource(); s.buffer = b; s.connect(ac.destination); s.start(0); } catch (e) {} }
+// ---- keep the screen on: Wake Lock API, fallback tiny muted looping inline video ----
+let wakeL = null, wakeV = null;
+const WAKE_MP4 = "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAMqbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAB9AAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAlV0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAB9AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAABAAAAAQAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAfQAAAAAAABAAAAAAHNbWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAABAAAAAgABVxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAABeG1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAThzdGJsAAAAuHN0c2QAAAAAAAAAAQAAAKhhdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAABAAEABIAAAASAAAAAAAAAABFUxhdmM2MS4xOS4xMDEgbGlieDI2NAAAAAAAAAAAAAAAGP//AAAALmF2Y0MBQsAK/+EAFmdCwArZHsBEAAADAAQAAAMACDxImSABAAVoy4PEyAAAABBwYXNwAAAAAQAAAAEAAAAUYnRydAAAAAAAAApQAAAAAAAAABhzdHRzAAAAAAAAAAEAAAACAABAAAAAABRzdHNzAAAAAAAAAAEAAAABAAAAHHN0c2MAAAAAAAAAAQAAAAEAAAACAAAAAQAAABxzdHN6AAAAAAAAAAAAAAACAAACiQAAAAsAAAAUc3RjbwAAAAAAAAABAAADWgAAAGF1ZHRhAAAAWW1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAALGlsc3QAAAAkqXRvbwAAABxkYXRhAAAAAQAAAABMYXZmNjEuNy4xMDMAAAAIZnJlZQAAApxtZGF0AAACcgYF//9u3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE2NCByMzEwOCAzMWUxOWY5IC0gSC4yNjQvTVBFRy00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAyMyAtIGh0dHA6Ly93d3cudmlkZW9sYW4ub3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTAgcmVmPTMgZGVibG9jaz0xOi0zOi0zIGFuYWx5c2U9MHgxOjB4MTExIG1lPWhleCBzdWJtZT03IHBzeT0xIHBzeV9yZD0yLjAwOjAuNzAgbWl4ZWRfcmVmPTEgbWVfcmFuZ2U9MTYgY2hyb21hX21lPTEgdHJlbGxpcz0xIDh4OGRjdD0wIGNxbT0wIGRlYWR6b25lPTIxLDExIGZhc3RfcHNraXA9MSBjaHJvbWFfcXBfb2Zmc2V0PS00IHRocmVhZHM9MSBsb29rYWhlYWRfdGhyZWFkcz0xIHNsaWNlZF90aHJlYWRzPTAgbnI9MCBkZWNpbWF0ZT0xIGludGVybGFjZWQ9MCBibHVyYXlfY29tcGF0PTAgY29uc3RyYWluZWRfaW50cmE9MCBiZnJhbWVzPTAgd2VpZ2h0cD0wIGtleWludD0yNTAga2V5aW50X21pbj0xIHNjZW5lY3V0PTQwIGludHJhX3JlZnJlc2g9MCByY19sb29rYWhlYWQ9NDAgcmM9Y3JmIG1idHJlZT0xIGNyZj0yMy4wIHFjb21wPTAuNjAgcXBtaW49MCBxcG1heD02OSBxcHN0ZXA9NCBpcF9yYXRpbz0xLjQwIGFxPTE6MS4yMACAAAAAD2WIhAXzn///D0UAAVefgAAAAAdBmjgL5zqA";
+function wakeVideo() {
+  try { if (!wakeV) { wakeV = document.createElement("video"); wakeV.setAttribute("playsinline", ""); wakeV.setAttribute("muted", ""); wakeV.muted = true; wakeV.loop = true; wakeV.style.cssText = "position:fixed;width:1px;height:1px;opacity:0.01;left:0;bottom:0;pointer-events:none";
+      const c = document.createElement("canvas"); if (c.captureStream && !/iPhone|iPad|iPod/i.test(navigator.userAgent)) { c.width = c.height = 2; const x = c.getContext("2d"); let t = 0; wakeV.__tick = setInterval(() => { x.fillStyle = (t++ & 1) ? "#000" : "#010101"; x.fillRect(0, 0, 2, 2); }, 1000); wakeV.srcObject = c.captureStream(1); }
+      else wakeV.src = WAKE_MP4; document.body.appendChild(wakeV); }
+    const p = wakeV.play(); p && p.catch(e => dbg("wake video " + e.name)); dbg("wake: video fallback"); } catch (e) { dbg("wake video err " + e.message); }
+}
+function wakeOn() {
+  if (!inCall) return;
+  if ("wakeLock" in navigator) { if (wakeL || document.hidden) return; navigator.wakeLock.request("screen").then(l => { wakeL = l; dbg("wake: lock on");
+      l.addEventListener("release", () => { dbg("wake: lock released"); wakeL = null; if (inCall && !document.hidden) setTimeout(wakeOn, 400); }); })
+    .catch(e => { dbg("wake lock " + e.name); wakeVideo(); }); return; }
+  wakeVideo();
+}
+function wakeOff() { const l = wakeL; wakeL = null; try { l && l.release(); } catch (e) {} if (wakeV) { try { wakeV.pause(); clearInterval(wakeV.__tick); wakeV.remove(); } catch (e) {} wakeV = null; } }
+function mediaSession(on) { const m = navigator.mediaSession; if (!m) return;
+  try { if (on) { if (window.MediaMetadata) m.metadata = new MediaMetadata({title: "PUREGOLD call", artist: "PUREGOLD", album: CEN() ? "Live call" : "คุยสด", artwork: [{src: "icon-192.png", sizes: "192x192", type: "image/png"}, {src: "icon-512.png", sizes: "512x512", type: "image/png"}]});
+      m.playbackState = "playing"; try { m.setActionHandler("stop", () => { if (inCall) stop(); }); m.setActionHandler("pause", () => {}); m.setActionHandler("play", () => ac && ac.resume()); } catch (e) {} }
+    else { m.playbackState = "none"; m.metadata = null; } } catch (e) {} }
+// ---- AudioContext auto-resume (iOS "interrupted", "suspended") ----
+let resumeT = 0;
+function ctxCheck() { if (!inCall || !ac || ac.state === "running" || ac.state === "closed") { $("resumeBtn").style.display = "none"; return; }
+  clearTimeout(resumeT); resumeT = setTimeout(() => { if (!inCall || !ac || ac.state === "running") return; ac.resume().then(() => { dbg("ctx auto-resumed"); unlockOutput(); $("resumeBtn").style.display = "none"; })
+    .catch(() => {}).finally(() => { if (inCall && ac && ac.state !== "running") { $("resumeBtn").style.display = "block"; resumeT = setTimeout(ctxCheck, 2000); } }); }, 250); }
+// ---- mic loss: track ended / muted -> re-acquire ----
+let micT = 0, micBusy = false;
+function watchTracks(s) { s.getAudioTracks().forEach(t => { t.onended = () => { dbg("mic track ended"); micLost(0); }; t.onmute = () => { dbg("mic muted"); micLost(1500); }; t.onunmute = () => { dbg("mic unmuted"); clearTimeout(micT); }; }); }
+function micLost(delay) { if (!inCall) return; clearTimeout(micT); micT = setTimeout(reacquireMic, delay); }
+async function reacquireMic() {
+  if (!inCall || micBusy) return; const tk = stream && stream.getAudioTracks()[0]; if (tk && tk.readyState === "live" && !tk.muted) return;
+  micBusy = true; $("st").textContent = CEN() ? "Reconnecting microphone..." : "กำลังเชื่อมต่อไมค์ใหม่...";
+  try { const s = await navigator.mediaDevices.getUserMedia({audio: MIC_C}); if (!inCall) { s.getTracks().forEach(t => t.stop()); return; }
+    try { srcNode && srcNode.disconnect(); } catch (e) {} stream && stream.getTracks().forEach(t => t.stop()); stream = s; watchTracks(s);
+    srcNode = ac.createMediaStreamSource(s); srcNode.connect(node); dbg("mic re-acquired"); ctxCheck(); $("st").textContent = listenTxt(); }
+  catch (e) { dbg("mic re-acquire failed " + e.name); log("e", micError(e)); micT = setTimeout(reacquireMic, 3000); }
+  finally { micBusy = false; }
+}
+const MIC_C = {echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1};
+const listenTxt = () => CEN() ? "Listening... speak any time (you can interrupt)" : "กำลังฟัง… พูดได้เลย (พูดแทรกได้)";
 function micError(e) {
   const n = e && e.name, ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
   if (n === "NotAllowedError" || n === "PermissionDeniedError" || n === "SecurityError")
@@ -105,85 +196,115 @@ function startCapture() {
   srcNode = ac.createMediaStreamSource(stream);
   if (ac.audioWorklet && window.AudioWorkletNode) {
     return ac.audioWorklet.addModule(URL.createObjectURL(new Blob([WORKLET], {type: "application/javascript"}))).then(() => {
-      node = new AudioWorkletNode(ac, "rec16"); node.port.onmessage = e => sendPcm(e.data); srcNode.connect(node); dbg("capture: AudioWorklet @" + ac.sampleRate + "Hz -> 16k");
+      node = new AudioWorkletNode(ac, "rec16"); node.port.onmessage = e => onMicFrame(e.data.b, e.data.rms); srcNode.connect(node);
+      const mute = ac.createGain(); mute.gain.value = 0; node.connect(mute); mute.connect(ac.destination); // keeps the node pulled on all engines
+      dbg("capture: AudioWorklet @" + ac.sampleRate + "Hz -> 16k, 60 ms frames");
     });
   }
-  // fallback: ScriptProcessor + main-thread resample
+  // fallback: ScriptProcessor + main-thread resample, same fixed 960-sample frames
   node = ac.createScriptProcessor(4096, 1, 1); const r = ac.sampleRate / 16000;
   node.onaudioprocess = ev => { const c = ev.inputBuffer.getChannelData(0); let p = spPos;
     while (p < c.length) { const k = Math.floor(p), f = p - k, a = c[k], b = k + 1 < c.length ? c[k + 1] : a; spBuf.push(a + (b - a) * f); p += r; } spPos = p - c.length;
-    if (spBuf.length >= 1600) { const o = new Int16Array(spBuf.length); for (let k = 0; k < o.length; k++) { const s = Math.max(-1, Math.min(1, spBuf[k])); o[k] = s < 0 ? s * 32768 : s * 32767; } spBuf = []; sendPcm(o.buffer); } };
+    while (spBuf.length >= 960) { const fr = spBuf.splice(0, 960), o = new Int16Array(960); for (let k = 0; k < 960; k++) { const s = Math.max(-1, Math.min(1, fr[k])); o[k] = s < 0 ? s * 32768 : s * 32767; } onMicFrame(o.buffer); } };
   const mute = ac.createGain(); mute.gain.value = 0; srcNode.connect(node); node.connect(mute); mute.connect(ac.destination);
   dbg("capture: ScriptProcessor fallback @" + ac.sampleRate + "Hz -> 16k"); return Promise.resolve();
 }
+let resumeHandle = null, recoT = 0;
 function start() {
   // ---- synchronous part (must stay inside the user gesture for iOS) ----
   if (!window.isSecureContext) { log("e", "หน้านี้ไม่ได้เปิดผ่าน https จึงใช้ไมค์ไม่ได้ค่ะ"); return; }
   if (!KEY) { log("e", CEN() ? "No AI key yet, please add one first" : "ยังไม่มี AI key กรุณาใส่คีย์ก่อนค่ะ"); GKEY.prompt("first"); return; }
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { log("e", "เบราว์เซอร์นี้ไม่รองรับไมค์ค่ะ" + (INAPP ? " (กำลังเปิดในแอป ให้เปิดในเบราว์เซอร์ภายนอก)" : "")); return; }
   const AC = window.AudioContext || window.webkitAudioContext;
-  try { ac = new AC(); } catch (e) { log("e", "สร้างระบบเสียงไม่ได้: " + e.message); return; }
+  try { ac = new AC({latencyHint: "interactive"}); } catch (e) { try { ac = new AC(); } catch (e2) { log("e", "สร้างระบบเสียงไม่ได้: " + e2.message); return; } }
   const resumeP = ac.resume ? ac.resume() : Promise.resolve(); unlockOutput();
-  const micP = navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1}});
-  ac.onstatechange = () => { dbg("AudioContext: " + ac.state); if (inCall && ac.state !== "running") $("resumeBtn").style.display = "block"; };
-  inCall = true; $("st").textContent = "กำลังขอสิทธิ์ไมค์…"; $("call").classList.add("on"); $("call").innerHTML = ICON_STOP; $("callLbl").textContent = "วางสาย";
+  const micP = navigator.mediaDevices.getUserMedia({audio: MIC_C});
+  { const c0 = ac; c0.onstatechange = () => { dbg("AudioContext: " + c0.state); if (c0 === ac) ctxCheck(); }; }
+  inCall = true; resumeHandle = null; micQ = []; wsReady = false; reconnecting = false;
+  wakeOn(); mediaSession(true);
+  $("st").textContent = "กำลังขอสิทธิ์ไมค์…"; $("call").classList.add("on"); $("call").innerHTML = ICON_STOP; $("callLbl").textContent = "วางสาย";
   dbg("UA: " + navigator.userAgent); dbg("AudioContext rate " + ac.sampleRate + " state " + ac.state);
   // ---- async part ----
   Promise.all([micP, resumeP]).then(async ([s]) => {
+    if (!inCall) { s.getTracks().forEach(t => t.stop()); return; }
     stream = s; dbg("getUserMedia OK: " + s.getAudioTracks().map(t => t.label || "mic").join(",") + " · ctx " + ac.state);
     window.__callState = {mic: true, ctx: ac.state, rate: ac.sampleRate};
-    s.getAudioTracks().forEach(t => t.onended = () => { dbg("mic track ended"); if (inCall) log("e", "ไมค์ถูกตัด (อาจมีสายเข้า/แอปอื่นใช้ไมค์)"); });
-    await startCapture(); window.__callState.capture = node ? node.constructor.name : "none";
+    watchTracks(s);
+    await startPlayer(); await startCapture(); window.__callState.capture = node ? node.constructor.name : "none"; window.__callState.player = player && player.port ? "worklet" : "script";
     $("st").textContent = CEN() ? "Connecting to PUREGOLD AI..." : "กำลังเชื่อมต่อ เลขา PUREGOLD…";
     const sys = await sysPrompt(); window.__lastSys = sys;
+    if (!inCall) return;
     const tr = $("mode").value === "tr", list = tr ? [TR_MODEL, ...LIVE_MODELS] : LIVE_MODELS.slice();
-    let mi = Math.max(0, list.indexOf(localStorage.getItem("gc_live_ok"))), tries = 0;
+    let mi = Math.max(0, list.indexOf(localStorage.getItem("gc_live_ok"))), tries = 0, lite = localStorage.getItem("gc_live_lite") === list[mi], everReady = false, reco = 0;
+    const scheduleReconnect = why => {
+      if (!inCall || reconnecting && recoT) return;
+      if (reco >= 5) { log("e", CEN() ? "Could not reconnect, please call again" : "เชื่อมต่อใหม่ไม่สำเร็จ กรุณาโทรใหม่ค่ะ"); stop(true); return; }
+      reconnecting = true; wsReady = false; const d = [300, 1000, 2000, 4000, 8000][reco++];
+      $("st").textContent = CEN() ? "Reconnecting..." : "กำลังเชื่อมต่อใหม่...";
+      dbg("reconnect #" + reco + " in " + d + "ms (" + why + ")" + (resumeHandle ? " with resume handle" : ""));
+      recoT = setTimeout(() => { recoT = 0; if (inCall) connect(); }, d);
+    };
     const connect = () => {
       const model = list[mi], trans = /translate/.test(model); let ready = false; tries++;
-      ws = new WebSocket("wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=" + encodeURIComponent(KEY));
-      ws.onopen = () => { dbg("ws open #" + (mi + 1)); ws.send(JSON.stringify({setup: {model,
+      const sock = ws = new WebSocket("wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=" + encodeURIComponent(KEY));
+      const useLite = lite;
+      sock.onopen = () => { if (sock !== ws) return; dbg("ws open #" + (mi + 1) + (useLite ? " basic" : "")); sock.send(JSON.stringify({setup: {model,
         generationConfig: {responseModalities: ["AUDIO"], speechConfig: {voiceConfig: {prebuiltVoiceConfig: {voiceName: VOICE}}}},
         systemInstruction: {parts: [{text: sys}]}, inputAudioTranscription: {}, outputAudioTranscription: {},
+        ...(!useLite ? {realtimeInputConfig: {automaticActivityDetection: {disabled: false}, activityHandling: "START_OF_ACTIVITY_INTERRUPTS"},
+          sessionResumption: resumeHandle ? {handle: resumeHandle} : {}, contextWindowCompression: {slidingWindow: {}}} : {}),
         ...(!tr ? {tools: [{functionDeclarations: [{name: "show_signup", description: "Show the Exness account sign-up popup (link, QR code and steps) on the user's screen when they want to open an account, sign up or start trading."}]}]} : {}),
         ...(trans ? {translationConfig: {targetLanguageCode: LC[$("lang").value] || "th", echoTargetLanguage: true}} : {})}})); };
-      ws.onmessage = async ev => {
-        const m = JSON.parse(typeof ev.data === "string" ? ev.data : await ev.data.text());
-        if (m.setupComplete) { ready = true; localStorage.setItem("gc_live_ok", model); dbg("setupComplete"); $("st").textContent = CEN() ? "Listening... speak any time (you can interrupt)" : "กำลังฟัง… พูดได้เลย (พูดแทรกได้)"; return; }
+      sock.onmessage = async ev => {
+        if (sock !== ws) return;
+        let m; try { m = JSON.parse(typeof ev.data === "string" ? ev.data : await ev.data.text()); } catch (e) { return; }
+        if (m.setupComplete) { ready = everReady = true; wsReady = true; reco = 0; reconnecting = false; localStorage.setItem("gc_live_ok", model); if (useLite) localStorage.setItem("gc_live_lite", model); else localStorage.removeItem("gc_live_lite");
+          dbg("setupComplete" + (micQ.length ? " · sending " + micQ.length + " buffered frames" : "")); $("st").textContent = listenTxt(); return; }
+        if (m.sessionResumptionUpdate) { const u = m.sessionResumptionUpdate; if (u.resumable && u.newHandle) resumeHandle = u.newHandle; }
+        if (m.goAway) { dbg("goAway " + (m.goAway.timeLeft || "")); sock.__mine = true; scheduleReconnect("goAway"); setTimeout(() => { try { sock.close(1000); } catch (e) {} }, 50); return; }
         if (m.toolCall) { const fr = (m.toolCall.functionCalls || []).map(fc => { if (fc.name === "show_signup") PGAI.showSignup({force: true}); return {id: fc.id, name: fc.name, response: {result: "popup shown"}}; });
-          try { ws.send(JSON.stringify({toolResponse: {functionResponses: fr}})); } catch (e) {} return; }
-        const sc = m.serverContent; if (!sc) { if (m.goAway) log("e", CEN() ? "The session is about to time out" : "เซสชันใกล้หมดเวลา"); return; }
-        if (sc.interrupted) { stopPlay(); aLine = null; }
+          try { sock.send(JSON.stringify({toolResponse: {functionResponses: fr}})); } catch (e) {} return; }
+        const sc = m.serverContent; if (!sc) return;
+        if (sc.interrupted) { stopPlay(); aLine = null; dbg("interrupted: playback flushed"); }
         if (sc.inputTranscription?.text) { uLine = uLine || log("u", "คุณ: "); uLine.textContent += sc.inputTranscription.text; aLine = null; if (!tr && !uLine.dataset.su && PGAI.intent(uLine.textContent)) { uLine.dataset.su = "1"; PGAI.showSignup(); } }
         if (sc.outputTranscription?.text) { aLine = aLine || log("a", "เลขา: "); aLine.textContent += sc.outputTranscription.text; uLine = null; }
-        for (const p of sc.modelTurn?.parts || []) if (p.inlineData?.data) play(p.inlineData.data);
+        if (!sc.interrupted) for (const p of sc.modelTurn?.parts || []) if (p.inlineData?.data) play(p.inlineData.data);
+        if (sc.turnComplete || sc.generationComplete) playerCmd("end");
         if (sc.turnComplete) { aLine = null; uLine = null; }
       };
-      ws.onerror = () => dbg("ws error");
-      ws.onclose = e => { const rs = String(e.reason || "").replace(/models\/[\w.-]+|gemini[\w.-]*/gi, "AI"); dbg("ws close " + e.code + " " + rs);
+      sock.onerror = () => dbg("ws error");
+      sock.onclose = e => { const rs = String(e.reason || "").replace(/models\/[\w.-]+|gemini[\w.-]*/gi, "AI"); dbg("ws close " + e.code + " " + rs);
+        if (sock !== ws || sock.__mine) return; wsReady = false;
         const gk = e.code !== 1000 ? GKEY.classify(0, e.reason) : null;
         if (gk === "auth") { const was = inCall; GKEY.handle(gk); if (was) log("e", GKEY.message(gk)); stop(true); return; }
-        if (inCall && e.code !== 1000 && !ready && tries < list.length) { mi = (mi + 1) % list.length; dbg("fallback #" + (mi + 1)); connect(); return; }
+        if (inCall && !ready && !everReady && e.code !== 1000) {
+          if (!useLite) { lite = true; dbg("retry basic setup #" + (mi + 1)); connect(); return; }
+          if (tries < list.length * 2) { mi = (mi + 1) % list.length; lite = false; dbg("fallback #" + (mi + 1)); connect(); return; } }
         if (gk) { GKEY.handle(gk); if (inCall) log("e", GKEY.message(gk)); stop(true); return; }
+        if (inCall && everReady) { if (!ready && e.code === 1007 && resumeHandle) { dbg("resume handle rejected"); resumeHandle = null; } scheduleReconnect("close " + e.code); return; }
         if (inCall && e.code !== 1000) log("e", (CEN() ? "Connection closed (" : "ปิดการเชื่อมต่อ (") + e.code + "): " + (WS_CLOSE[e.code] || "") + (rs ? " · " + rs : "")); stop(true); };
     };
+    window.__reconnectTest = () => { if (ws) { try { ws.close(4000); } catch (e) {} } };
     connect();
     // refresh market context mid-call every 4 minutes (no reply requested)
-    clearInterval(window.__ctxTimer); if (!tr) window.__ctxTimer = setInterval(async () => { if (!inCall || !ws || ws.readyState !== 1) return; const mc = await PGAI.context();
+    clearInterval(window.__ctxTimer); if (!tr) window.__ctxTimer = setInterval(async () => { if (!inCall || !ws || ws.readyState !== 1 || !wsReady) return; const mc = await PGAI.context();
       if (mc) try { ws.send(JSON.stringify({clientContent: {turns: [{role: "user", parts: [{text: "[อัปเดตข้อมูลตลาดล่าสุด ใช้ตอบคำถามต่อจากนี้ ไม่ต้องตอบรับข้อความนี้]\n" + mc}]}], turnComplete: false}})); dbg("context refreshed"); } catch (e) {} }, 240000);
   }).catch(e => { dbg("start error " + (e && e.name) + " " + (e && e.message)); log("e", micError(e)); window.__callState = {mic: false, err: e && e.name}; stop(true, true); });
 }
 function stop(fromClose, quiet) {
-  const was = inCall; inCall = false; clearInterval(window.__ctxTimer);
-  if (!fromClose && ws) try { ws.close(1000); } catch (e) {}
-  ws = null; stopPlay(); try { node && node.disconnect(); srcNode && srcNode.disconnect(); } catch (e) {}
-  stream && stream.getTracks().forEach(t => t.stop()); try { ac && ac.close(); } catch (e) {} ac = stream = node = srcNode = null; spBuf = []; spPos = 0;
+  const was = inCall; inCall = false; clearInterval(window.__ctxTimer); clearTimeout(recoT); recoT = 0; clearTimeout(micT); clearTimeout(resumeT); reconnecting = false; wsReady = false; micQ = [];
+  if (ws) { ws.__mine = true; if (!fromClose) try { ws.close(1000); } catch (e) {} }
+  ws = null; stopPlay(); try { node && node.disconnect(); srcNode && srcNode.disconnect(); player && (player.port ? player : player.node).disconnect(); } catch (e) {}
+  stream && stream.getTracks().forEach(t => { t.onended = t.onmute = null; t.stop(); }); try { ac && ac.close(); } catch (e) {} ac = stream = node = srcNode = player = null; spBuf = []; spPos = 0; setSpeaking(false);
+  wakeOff(); mediaSession(false); resumeHandle = null;
   $("resumeBtn").style.display = "none";
   if (was && !quiet) saveCallMemory();
   $("call").classList.remove("on"); $("call").innerHTML = ICON_PHONE; $("callLbl").textContent = "อนุญาตไมค์และเริ่มสาย"; if (!quiet) $("st").textContent = "วางสายแล้ว · กดเพื่อเริ่มใหม่";
 }
 $("call").onclick = () => inCall ? stop() : start();
-$("resumeBtn").onclick = () => { if (ac) ac.resume().then(() => { unlockOutput(); $("resumeBtn").style.display = "none"; dbg("resumed"); }); };
-document.addEventListener("visibilitychange", () => { dbg("visibility " + document.visibilityState); if (!document.hidden && inCall && ac && ac.state !== "running") ac.resume().catch(() => $("resumeBtn").style.display = "block"); });
+$("resumeBtn").onclick = () => { if (ac) ac.resume().then(() => { unlockOutput(); $("resumeBtn").style.display = "none"; dbg("resumed"); }); wakeOn(); };
+document.addEventListener("visibilitychange", () => { dbg("visibility " + document.visibilityState); if (!document.hidden && inCall) { ctxCheck(); wakeOn(); if (stream) { const t = stream.getAudioTracks()[0]; if (!t || t.readyState !== "live") micLost(0); } } });
+window.addEventListener("pageshow", () => { if (inCall) { ctxCheck(); wakeOn(); } });
 // in-app browser detection
 const UA = navigator.userAgent, INAPP = /\bLine\//i.test(UA) ? "LINE" : /FBAN|FBAV|FB_IAB|Instagram/i.test(UA) ? "Facebook" : "";
 if (INAPP) {
