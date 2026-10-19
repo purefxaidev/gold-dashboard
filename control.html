@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PUREGOLD Control Center · XAUUSD</title>
+<meta name="description" content="PUREGOLD Control Center: live XAUUSD price, AI confidence, support and resistance, EV plans and trade results in one screen.">
+<meta name="theme-color" content="#030406">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="alternate" hreflang="th" href="https://purefxaidev.github.io/gold-dashboard/control.html?lang=th"><link rel="alternate" hreflang="en" href="https://purefxaidev.github.io/gold-dashboard/control.html?lang=en">
+<script src="i18n.js"></script>
+<style>
+:root{--bg:#030406;--pn:#07090d;--ln:#1a2230;--cy:#36e2ff;--gd:#f5c542;--mg:#ff3d9a;--gr:#3dff9a;--rd:#ff4d5e;--tx:#c9d3e0;--mu:#5d6b7e;--mono:ui-monospace,"SFMono-Regular","JetBrains Mono",Menlo,Consolas,monospace}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--tx);font:12px/1.45 var(--mono);-webkit-font-smoothing:antialiased}
+body{min-height:100vh;background:radial-gradient(1200px 700px at 50% 40%,#0c1018 0,#030406 70%)}
+a{color:var(--cy);text-decoration:none}
+.top{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--ln);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}.brand img{width:34px;height:34px;filter:drop-shadow(0 0 8px #f5c54266)}
+.brand b{font-size:15px;letter-spacing:3px;color:var(--gd)}.brand small{display:block;color:var(--cy);letter-spacing:2px;font-size:10px}
+.sp{flex:1}.back{border:1px solid #36e2ff55;padding:5px 10px;border-radius:3px;font-size:11px;letter-spacing:1px;white-space:nowrap}.back:hover{background:#36e2ff14}
+.meta{color:var(--mu);font-size:10.5px;letter-spacing:1px;text-align:right}.meta span{color:var(--tx)}
+.chips{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;border-bottom:1px solid var(--ln);scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--ln);padding:3px 8px;font-size:10px;letter-spacing:1px;color:var(--mu);border-radius:2px;display:flex;gap:6px;align-items:center}
+.chip i{width:6px;height:6px;border-radius:50%;background:#333;display:inline-block}.chip.on{color:var(--tx);border-color:#36e2ff44}.chip.on i{background:var(--cy);box-shadow:0 0 6px var(--cy)}
+.chip.g.on{border-color:#f5c54255}.chip.g.on i{background:var(--gd);box-shadow:0 0 6px var(--gd)}.chip.m.on{border-color:#ff3d9a55}.chip.m.on i{background:var(--mg);box-shadow:0 0 6px var(--mg)}
+.grid{display:grid;grid-template-columns:300px minmax(0,1fr) 300px;gap:10px;padding:10px 14px}
+.col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.pn{background:linear-gradient(180deg,#080b11,#05070a);border:1px solid var(--ln);padding:10px 12px;position:relative;min-width:0}
+.pn:before{content:"";position:absolute;left:-1px;top:-1px;width:10px;height:10px;border-left:1px solid var(--cy);border-top:1px solid var(--cy)}
+.pn h3{margin:0 0 8px;font-size:10px;letter-spacing:2px;color:var(--mu);font-weight:600;display:flex;justify-content:space-between;gap:8px}.pn h3 em{font-style:normal;color:var(--cy)}
+.big{font-size:26px;color:var(--gd);letter-spacing:1px;text-shadow:0 0 14px #f5c54255}.sub{color:var(--mu);font-size:10.5px}
+.up{color:var(--gr)}.dn{color:var(--rd)}.cy{color:var(--cy)}.gdc{color:var(--gd)}.mgc{color:var(--mg)}
+.bar{height:8px;background:#0e131b;border:1px solid var(--ln);display:flex;overflow:hidden;margin:6px 0}.bar b{display:block;height:100%;transition:width .8s}
+.r{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dashed #141b26}.r:last-child{border-bottom:0}.r span:first-child{color:var(--mu);min-width:0;overflow:hidden;text-overflow:ellipsis}
+.lv{display:grid;grid-template-columns:30px 70px 1fr;gap:6px;padding:3px 0;align-items:center;border-bottom:1px dashed #141b26}.lv small{color:var(--mu);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ev{border:1px solid var(--ln);padding:6px 8px;margin-bottom:6px}.ev:last-child{margin-bottom:0}.ev .h{display:flex;justify-content:space-between;gap:6px}.tag{font-size:10px;padding:1px 6px;border:1px solid}
+.tag.go{color:var(--gr);border-color:#3dff9a66}.tag.wt{color:var(--gd);border-color:#f5c54266}
+#sphereWrap{position:relative;flex:1;min-height:560px;border:1px solid var(--ln);background:radial-gradient(closest-side,#0b1220 0,#030406 100%);overflow:hidden}
+#sphere{position:absolute;inset:0}#sphere canvas{display:block}
+.ov{position:absolute;pointer-events:none;font-size:10px;letter-spacing:1px;white-space:nowrap;transform:translate(8px,-50%)}
+.ov.R{color:var(--mg)}.ov.S{color:var(--cy)}.ov.P{color:var(--gd);border:1px solid #f5c54299;background:#0a0800cc;padding:3px 6px}
+.hud{position:absolute;font-size:10px;letter-spacing:1px;color:var(--mu);pointer-events:none}.hud b{color:var(--tx);font-weight:500}
+.hud.tl{left:10px;top:8px}.hud.tr{right:10px;top:8px;text-align:right}.hud.bl{left:10px;bottom:8px}.hud.br{right:10px;bottom:8px;text-align:right}
+.gauge{display:flex;align-items:center;gap:12px}.gauge svg{width:120px;height:72px;flex:none}
+svg text{font-family:var(--mono)}
+.ticker{margin:0 14px 14px;border:1px solid var(--ln);overflow:hidden;white-space:nowrap;display:flex;align-items:center;background:#05070a}
+.ticker .lab{flex:none;padding:6px 10px;color:#000;background:var(--cy);font-size:10px;letter-spacing:2px;font-weight:700}
+.ticker .mv{display:inline-block;padding-left:100%;animation:tk 70s linear infinite}.ticker:hover .mv{animation-play-state:paused}
+.ticker a{color:var(--tx);margin-right:46px}.ticker a:before{content:"//  ";color:var(--gd)}
+@keyframes tk{to{transform:translateX(-100%)}}
+.at{display:flex;align-items:center;gap:10px}.led{width:12px;height:12px;border-radius:50%;background:#333}.led.on{background:var(--gr);box-shadow:0 0 10px var(--gr);animation:bl 1.6s infinite}.led.off{background:var(--rd);box-shadow:0 0 8px var(--rd)}
+@keyframes bl{50%{opacity:.45}}
+.foot{color:var(--mu);font-size:10px;padding:0 14px 18px;letter-spacing:.5px}
+.flash{animation:fl .9s}@keyframes fl{0%{box-shadow:0 0 0 1px var(--cy) inset}100%{box-shadow:none}}
+@media (max-width:1100px){.grid{grid-template-columns:1fr 1fr}.mid{grid-column:1/-1;order:-1}#sphereWrap{min-height:440px}}
+@media (max-width:680px){.grid{grid-template-columns:1fr;padding:8px}.top{padding:8px}.meta{display:none}#sphereWrap{min-height:340px}.chips{padding:6px 8px}.ticker{margin:0 8px 12px}.foot{padding:0 8px 16px}.big{font-size:24px}}
+</style>
+</head>
+<body class="notr">
+<div class="top" data-langtog>
+ <div class="brand"><img src="logo.svg" alt="PUREGOLD"><div><b>PUREGOLD</b><small id="tSub">CONTROL CENTER · XAUUSD</small></div></div>
+ <div class="sp"></div>
+ <div class="meta" id="meta">-</div>
+ <a class="back" id="back" href="./" data-langref>&lt; DASHBOARD</a>
+</div>
+<div class="chips" id="chips"></div>
+<div class="grid">
+ <div class="col">
+  <div class="pn" id="pPrice"><h3><span id="hPrice">LIVE PRICE</span><em id="pxSrc">-</em></h3>
+   <div class="big" id="px">-</div><div class="sub" id="pxChg">-</div>
+   <svg id="spark" viewBox="0 0 270 60" preserveAspectRatio="none" style="width:100%;height:60px;margin-top:6px"></svg>
+   <div class="sub" id="pxTime">-</div></div>
+  <div class="pn" id="pAi"><h3><span id="hAi">AI CONFIDENCE</span><em id="aiBias">-</em></h3>
+   <div style="display:flex;justify-content:space-between"><span class="up" id="aiUp">-</span><span class="dn" id="aiDn">-</span></div>
+   <div class="bar"><b id="aiUpB" style="width:50%;background:linear-gradient(90deg,#1a8f5c,var(--gr))"></b><b id="aiDnB" style="width:50%;background:linear-gradient(90deg,var(--rd),#8f1a2c)"></b></div>
+   <div id="aiWhy"></div></div>
+  <div class="pn" id="pSr"><h3><span id="hSr">SUPPORT / RESISTANCE</span><em>XAUUSD</em></h3><div id="sr">-</div></div>
+  <div class="pn" id="pEv"><h3><span id="hEv">EV PLANS</span><em>EV = p×RR-(1-p)</em></h3><div id="ev">-</div></div>
+ </div>
+ <div class="col mid">
+  <div id="sphereWrap"><div id="sphere"></div><div id="ovs"></div>
+   <div class="hud tl" id="hudTl">-</div><div class="hud tr" id="hudTr">-</div><div class="hud bl" id="hudBl">-</div><div class="hud br" id="hudBr">-</div></div>
+  <div class="pn" id="pCum"><h3><span id="hCum">CUMULATIVE P&amp;L (USC) · TODAY</span><em id="cumV">-</em></h3>
+   <svg id="cum" viewBox="0 0 600 120" preserveAspectRatio="none" style="width:100%;height:120px"></svg></div>
+ </div>
+ <div class="col">
+  <div class="pn" id="pToday"><h3><span id="hToday">TODAY P&amp;L</span><em id="tdCnt">-</em></h3>
+   <div class="big" id="tdUsc">-</div><div class="r"><span id="lPts">Points</span><span id="tdPts">-</span></div><div class="r"><span id="lOpen">Open</span><span id="tdOpen">-</span></div><div class="r"><span id="lPend">Pending</span><span id="tdPend">-</span></div></div>
+  <div class="pn" id="pWin"><h3><span id="hWin">WIN RATE</span><em id="winTxt">-</em></h3>
+   <div class="gauge"><svg viewBox="0 0 120 72"><path d="M10 66 A50 50 0 0 1 110 66" fill="none" stroke="#141b26" stroke-width="9"/><path id="gArc" d="M10 66 A50 50 0 0 1 110 66" fill="none" stroke="url(#gg)" stroke-width="9" stroke-dasharray="0 158" style="transition:stroke-dasharray 1s"/><defs><linearGradient id="gg"><stop offset="0" stop-color="#ff3d9a"/><stop offset=".5" stop-color="#f5c542"/><stop offset="1" stop-color="#36e2ff"/></linearGradient></defs><text id="gTxt" x="60" y="62" text-anchor="middle" fill="#f5c542" font-size="18">-</text></svg>
+   <div><div class="r"><span id="lWins">Wins</span><span class="up" id="wW">-</span></div><div class="r"><span id="lLoss">Losses</span><span class="dn" id="wL">-</span></div><div class="r"><span id="lTot">Closed</span><span id="wT">-</span></div></div></div></div>
+  <div class="pn" id="pBars"><h3><span id="hBars">PER-TRADE P&amp;L (USC)</span><em id="barsN">-</em></h3><svg id="bars" viewBox="0 0 270 110" preserveAspectRatio="none" style="width:100%;height:110px"></svg><div class="sub" id="barsLeg">-</div></div>
+  <div class="pn" id="pAt"><h3><span id="hAt">AUTO-TRADE</span><em id="atMode">STATUS ONLY</em></h3><div class="at"><div class="led" id="atLed"></div><div><div id="atTxt" style="font-size:14px">-</div><div class="sub" id="atSub">-</div></div></div></div>
+ </div>
+</div>
+<div class="ticker"><div class="lab">NEWS</div><div style="overflow:hidden;flex:1"><div class="mv" id="tick">-</div></div></div>
+<div class="foot" id="foot">-</div>
+<script>
+const EN = window.LANG === "en", T = (th, en) => EN ? en : th, $ = id => document.getElementById(id);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const num = v => (v === null || v === undefined || v === "" || isNaN(Number(v))) ? null : Number(v);
+const fmt = (v, d = 2) => num(v) == null ? "-" : Number(v).toLocaleString("en-US", {minimumFractionDigits: d, maximumFractionDigits: d});
+const sg = (v, d = 2) => num(v) == null ? "-" : (v >= 0 ? "+" : "") + fmt(v, d);
+const pick = (k) => (EN && D && D[k + "_en"] != null && D[k + "_en"] !== "" && (!Array.isArray(D[k + "_en"]) || D[k + "_en"].length)) ? D[k + "_en"] : (D ? D[k] : null);
+document.title = T("PUREGOLD ศูนย์ควบคุม · XAUUSD", "PUREGOLD Control Center · XAUUSD");
+$("back").href = "./" + (EN ? "?lang=en" : "?lang=th"); $("back").textContent = T("< กลับแดชบอร์ด", "< DASHBOARD");
+$("tSub").textContent = T("ศูนย์ควบคุม · XAUUSD", "CONTROL CENTER · XAUUSD");
+[["hPrice", "ราคาสด", "LIVE PRICE"], ["hAi", "ความมั่นใจ AI", "AI CONFIDENCE"], ["hSr", "แนวรับ / แนวต้าน", "SUPPORT / RESISTANCE"], ["hEv", "แผน EV", "EV PLANS"], ["hCum", "กำไรสะสมวันนี้ (USC)", "CUMULATIVE P&L TODAY (USC)"],
+ ["hToday", "กำไร/ขาดทุนวันนี้", "TODAY P&L"], ["lPts", "จุด (points)", "Points"], ["lOpen", "ไม้เปิดอยู่", "Open trades"], ["lPend", "ออเดอร์รอ", "Pending orders"], ["hWin", "อัตราชนะ", "WIN RATE"],
+ ["lWins", "ชนะ", "Wins"], ["lLoss", "แพ้", "Losses"], ["lTot", "ปิดแล้ว", "Closed"], ["hBars", "กำไร/ขาดทุนรายไม้ (USC)", "PER-TRADE P&L (USC)"], ["hAt", "เทรดอัตโนมัติ", "AUTO-TRADE"], ["atMode", "แสดงสถานะ", "STATUS ONLY"]].forEach(([id, th, en]) => $(id).textContent = T(th, en));
+$("foot").textContent = T("ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน · การเทรดมีความเสี่ยงสูง · ตัวเลขมาจากข้อมูลจริงของระบบ (view.json) และราคาสปอตจาก gold-api.com รีเฟรชทุก 10 วินาที · '-' = ยังไม่มีข้อมูล",
+ "For education only, not investment advice · Trading is high risk · Figures come from the system's real data (view.json) and spot price from gold-api.com, refreshed every 10 s · '-' = no data yet");
+
+let D = null, live = {price: null, open: null, t: null};
+let PX = JSON.parse(localStorage.getItem("gd_ctl_px") || "[]").filter(x => Date.now() - x[0] < 6 * 3600e3);
+const CHIPS = [["PRICE.FEED", "g", () => live.price != null], ["VIEW.JSON", "", () => !!D], ["AI.CONF", "", () => D && num(D.ai_up_pct) != null], ["SR.MAP", "m", () => D && (D.res_nums || []).length + (D.sup_nums || []).length > 0],
+ ["EV.MODEL", "", () => D && (D.ev_plans || []).length > 0], ["PNL.LEDGER", "g", () => D && D.pnl && (D.pnl.trades || []).length > 0], ["NEWS.STREAM", "m", () => D && (D.news || []).length > 0], ["AUTO.TRADE", "g", () => D && D.auto_trade && D.auto_trade.enabled === true], ["SPHERE.3D", "", () => !!S]];
+function chips() { $("chips").innerHTML = CHIPS.map(([n, c, f]) => { let on = false; try { on = !!f(); } catch (e) {} return `<span class="chip ${c} ${on ? "on" : ""}"><i></i>${n}</span>`; }).join(""); }
+
+function closedTrades() { const tr = (D && D.pnl && D.pnl.trades) || []; return tr.filter(t => t.status === "closed" && num(t.pl_usc) != null).sort((a, b) => String(a.time).localeCompare(String(b.time))); }
+function winStats() {
+  const c = closedTrades(), w = c.filter(t => t.pl_usc > 0).length, n = c.length;
+  let pct = D && D.pnl && num(D.pnl.win_rate) != null ? Number(D.pnl.win_rate) : (n ? 100 * w / n : null);
+  return {w, n, l: n - w, pct};
+}
+
+function renderPrice() {
+  const p = live.price != null ? live.price : (D ? num(D.price_num) : null);
+  $("px").textContent = fmt(p); $("pxSrc").textContent = live.price != null ? T("สปอต gold-api.com", "SPOT gold-api.com") : (D && D.price_num ? T("จากบทวิเคราะห์", "FROM ANALYSIS") : "-");
+  if (live.price != null && live.open != null) { const c = live.price - live.open; $("pxChg").innerHTML = `<span class="${c >= 0 ? "up" : "dn"}">${sg(c)} (${sg(c / live.open * 100)}%)</span> ${T("ตั้งแต่เริ่มเก็บข้อมูล", "since first sample")}`; } else $("pxChg").textContent = "-";
+  $("pxTime").textContent = live.t ? T("อัปเดต ", "Updated ") + live.t + T(" น. (เวลาไทย)", " (Bangkok time)") : "-";
+  const s = PX.map(x => x[1]);
+  if (s.length < 2) { $("spark").innerHTML = `<text x="135" y="34" text-anchor="middle" fill="#5d6b7e" font-size="11">${T("กำลังเก็บข้อมูลราคา -", "collecting samples -")}</text>`; return; }
+  const mn = Math.min(...s), mx = Math.max(...s), rg = (mx - mn) || 1, pts = s.map((v, i) => `${(i / (s.length - 1) * 270).toFixed(1)},${(56 - (v - mn) / rg * 52).toFixed(1)}`).join(" ");
+  $("spark").innerHTML = `<defs><linearGradient id="sf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5c542" stop-opacity=".35"/><stop offset="1" stop-color="#f5c542" stop-opacity="0"/></linearGradient></defs><polygon points="0,60 ${pts} 270,60" fill="url(#sf)"/><polyline points="${pts}" fill="none" stroke="#f5c542" stroke-width="1.4" vector-effect="non-scaling-stroke"/><text x="268" y="10" text-anchor="end" fill="#5d6b7e" font-size="9">H ${fmt(mx)}</text><text x="268" y="58" text-anchor="end" fill="#5d6b7e" font-size="9">L ${fmt(mn)}</text>`;
+}
+
+function renderData() {
+  if (!D) return;
+  const up = num(D.ai_up_pct), dn = num(D.ai_down_pct) != null ? num(D.ai_down_pct) : (up != null ? 100 - up : null);
+  $("aiUp").textContent = T("ขึ้น ", "UP ") + (up != null ? up + "%" : "-"); $("aiDn").textContent = (dn != null ? dn + "%" : "-") + T(" ลง", " DOWN");
+  $("aiUpB").style.width = (up != null ? up : 50) + "%"; $("aiDnB").style.width = (dn != null ? dn : 50) + "%";
+  $("aiBias").textContent = up == null ? "-" : up > dn ? T("เอียงขึ้น", "BIAS UP") : up < dn ? T("เอียงลง", "BIAS DOWN") : T("กลางๆ", "NEUTRAL");
+  const rs = pick("ai_reasons") || [];
+  $("aiWhy").innerHTML = rs.slice(0, 5).map(([d, t]) => `<div class="r"><span style="white-space:normal">${esc(t)}</span><span class="${d === "up" ? "up" : d === "down" ? "dn" : "cy"}">${d === "up" ? "+" : d === "down" ? "-" : "="}</span></div>`).join("") || "-";
+  const rl = pick("resistance") || [], sl = pick("support") || [], rn = D.res_nums || [], sn = D.sup_nums || [];
+  const lv = [...rl.map((t, i) => ["R" + (i + 1), rn[i], t, "mgc"]).reverse(), ...sl.map((t, i) => ["S" + (i + 1), sn[i], t, "cy"])];
+  $("sr").innerHTML = lv.map(([k, v, t, c]) => `<div class="lv"><b class="${c}">${k}</b><span>${fmt(v)}</span><small title="${esc(t)}">${esc(String(t).replace(/^[\d,.\s/~]+/, "").replace(/^\(|\)$/g, ""))}</small></div>`).join("") || "-";
+  $("ev").innerHTML = (D.ev_plans || []).map(p => { const go = p.ev > 0; return `<div class="ev"><div class="h"><b class="${p.side === "buy" ? "up" : "dn"}">${esc(EN && p.name_en ? p.name_en : p.name)}</b><span class="tag ${go ? "go" : "wt"}">${go ? T("เข้า", "ENTER") : T("รอ", "WAIT")}</span></div>
+    <div class="r"><span>${T("เข้า / SL / TP", "Entry / SL / TP")}</span><span>${fmt(p.entry, 1)} / <span class="dn">${fmt(p.sl, 1)}</span> / <span class="up">${fmt(p.tp, 1)}</span></span></div>
+    <div class="r"><span>p_win · RR · EV</span><span>${num(p.p_win) != null ? Math.round(p.p_win * 100) + "%" : "-"} · ${fmt(p.rr)} · <span class="${go ? "up" : "dn"}">${sg(p.ev)}R</span></span></div>
+    ${(EN ? p.status_en || p.status : p.status) ? `<div class="sub">${esc(EN ? p.status_en || p.status : p.status)}</div>` : ""}</div>`; }).join("") || "-";
+  // pnl
+  const P = D.pnl || {}, c = closedTrades(), all = (P.trades || []).slice().sort((a, b) => String(a.time).localeCompare(String(b.time)));
+  const usc = num(P.today_usc); $("tdUsc").textContent = usc == null ? "-" : sg(usc) + " USC"; $("tdUsc").style.color = usc == null ? "" : usc >= 0 ? "var(--gr)" : "var(--rd)";
+  $("tdPts").textContent = sg(P.today_points); $("tdCnt").textContent = (P.trade_count != null ? P.trade_count : c.length) + T(" ไม้ปิดแล้ว", " CLOSED");
+  const op = all.filter(t => t.status === "open"); $("tdOpen").textContent = op.length ? op.length + " · " + sg(op.reduce((a, t) => a + (num(t.pl_usc) || 0), 0)) + " USC" : "0";
+  const pe = P.pending || []; $("tdPend").textContent = pe.length ? pe.map(o => `${o.type} ${fmt(o.entry, 0)}`).join(" · ") : "0";
+  const W = winStats(); const pct = W.pct;
+  $("gArc").setAttribute("stroke-dasharray", `${pct == null ? 0 : (pct / 100 * 157.1).toFixed(1)} 158`); $("gTxt").textContent = pct == null ? "-" : Math.round(pct) + "%";
+  $("winTxt").textContent = W.n ? `${W.w}/${W.n}` : "-"; $("wW").textContent = W.n ? W.w : "-"; $("wL").textContent = W.n ? W.l : "-"; $("wT").textContent = W.n || "-";
+  // bars
+  if (!all.length) { $("bars").innerHTML = `<text x="135" y="58" text-anchor="middle" fill="#5d6b7e" font-size="11">-</text>`; $("barsN").textContent = "-"; $("barsLeg").textContent = "-"; }
+  else { const mx = Math.max(1, ...all.map(t => Math.abs(num(t.pl_usc) || 0))), bw = 270 / all.length;
+    $("bars").innerHTML = `<line x1="0" y1="55" x2="270" y2="55" stroke="#1a2230"/>` + all.map((t, i) => { const v = num(t.pl_usc) || 0, h = Math.abs(v) / mx * 50, o = t.status === "open";
+      const col = o ? "#36e2ff" : v >= 0 ? "#3dff9a" : "#ff4d5e"; return `<rect x="${(i * bw + bw * .15).toFixed(1)}" y="${(v >= 0 ? 55 - h : 55).toFixed(1)}" width="${(bw * .7).toFixed(1)}" height="${Math.max(h, .8).toFixed(1)}" fill="${col}" opacity="${o ? .55 : .9}"><title>${esc(t.time)} ${esc(String(t.side).toUpperCase())} ${sg(v)} USC</title></rect>`; }).join("");
+    $("barsN").textContent = all.length + T(" ไม้", " TRADES"); $("barsLeg").innerHTML = `<span class="up">${T("เขียว=กำไร", "green=win")}</span> · <span class="dn">${T("แดง=ขาดทุน", "red=loss")}</span> · <span class="cy">${T("ฟ้า=ยังเปิด", "cyan=open")}</span> · ${esc(all[0].time)}-${esc(all[all.length - 1].time)}`; }
+  // cumulative
+  if (c.length < 1) { $("cum").innerHTML = `<text x="300" y="64" text-anchor="middle" fill="#5d6b7e" font-size="12">-</text>`; $("cumV").textContent = "-"; }
+  else { let s = 0; const ys = [0, ...c.map(t => s += Number(t.pl_usc))], mn = Math.min(0, ...ys), mx = Math.max(0, ...ys), rg = (mx - mn) || 1, Y = v => 112 - (v - mn) / rg * 100;
+    const pts = ys.map((v, i) => `${(i / (ys.length - 1) * 600).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+    $("cum").innerHTML = `<defs><linearGradient id="cf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#36e2ff" stop-opacity=".3"/><stop offset="1" stop-color="#36e2ff" stop-opacity="0"/></linearGradient></defs><line x1="0" x2="600" y1="${Y(0)}" y2="${Y(0)}" stroke="#2a3446" stroke-dasharray="4 4"/><polygon points="0,${Y(0)} ${pts} 600,${Y(0)}" fill="url(#cf)"/><polyline points="${pts}" fill="none" stroke="#36e2ff" stroke-width="1.6" vector-effect="non-scaling-stroke"/>` +
+      ys.map((v, i) => i ? `<circle cx="${(i / (ys.length - 1) * 600).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="2.4" fill="${c[i - 1].pl_usc >= 0 ? "#3dff9a" : "#ff4d5e"}"/>` : "").join("");
+    $("cumV").textContent = sg(ys[ys.length - 1]) + " USC · " + c.length + T(" ไม้", " trades"); }
+  // auto trade
+  const at = D.auto_trade || null; $("atLed").className = "led " + (at ? (at.enabled ? "on" : "off") : "");
+  $("atTxt").textContent = at ? (at.enabled ? T("เปิดอยู่ (ON)", "ON") : T("ปิดอยู่ (OFF)", "OFF")) : "-";
+  $("atSub").textContent = at ? `${T("รอบตรวจ", "Interval")} ${(EN ? at.interval_en || at.interval : at.interval) || "-"} · ${T("ล็อต", "Lot")} ${at.lot != null ? at.lot : "-"} · SL/TP ${T("ทุกไม้", "on every trade")}` : "-";
+  // news
+  const nw = pick("news") || []; $("tick").innerHTML = nw.map(([t, u]) => /^https:\/\//.test(u || "") ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>` : `<a>${esc(t)}</a>`).join("") || "-";
+  $("meta").innerHTML = `${T("บทวิเคราะห์", "ANALYSIS")} <span>${esc(pick("updated") || "-")}</span><br>BUILD <span>${esc(D.built || "-")}</span>`;
+  hud();
+}
+function hud() {
+  const up = D ? num(D.ai_up_pct) : null, p = live.price != null ? live.price : D ? num(D.price_num) : null, W = D ? winStats() : {n: 0};
+  $("hudTl").innerHTML = `XAUUSD <b>${fmt(p)}</b><br>${T("AI ขึ้น/ลง", "AI UP/DN")} <b>${up != null ? up + " / " + (100 - up) : "-"}</b>`;
+  $("hudTr").innerHTML = `${T("หมุน", "SPIN")} <b>${S ? (S.spd * 57.3).toFixed(1) + "°/s" : "-"}</b><br>${T("เส้น", "LINES")} <b>${S ? S.n.toLocaleString() : "-"}</b>`;
+  $("hudBl").innerHTML = `<span style="color:var(--mg)">R</span> ${T("แนวต้าน", "resistance")} · <span style="color:var(--cy)">S</span> ${T("แนวรับ", "support")} · <span style="color:var(--gd)">P</span> ${T("ราคา", "price")}`;
+  $("hudBr").innerHTML = `${T("ชนะ", "WIN")} <b>${W.n ? Math.round(W.pct) + "% (" + W.w + "/" + W.n + ")" : "-"}</b><br>${T("วันนี้", "TODAY")} <b>${D && D.pnl ? sg(D.pnl.today_usc) + " USC" : "-"}</b>`;
+}
+
+async function pollPrice() {
+  try { const r = await fetch("https://api.gold-api.com/price/XAU", {cache: "no-store"}); const j = await r.json(); const p = Number(j.price); if (!p) throw 0;
+    live.price = p; live.t = new Date(j.updatedAt || Date.now()).toLocaleTimeString("th-TH", {timeZone: "Asia/Bangkok", hour12: false});
+    const last = PX[PX.length - 1]; if (!last || last[1] !== p || Date.now() - last[0] > 60e3) { PX.push([Date.now(), p]); PX = PX.slice(-240); localStorage.setItem("gd_ctl_px", JSON.stringify(PX)); }
+    if (live.open == null) live.open = PX.length ? PX[0][1] : p;
+  } catch (e) {}
+  renderPrice(); hud(); chips(); if (S) S.levels();
+}
+let sig = "";
+async function pollData() {
+  try { const r = await fetch("view.json?t=" + Date.now(), {cache: "no-store"}); if (!r.ok) throw 0; const t = await r.text(); const s = t.length + ":" + t.slice(-300);
+    if (s !== sig) { const first = !sig; sig = s; D = JSON.parse(t); renderData(); renderPrice(); if (S) { S.recolor(); S.levels(); } if (!first) document.querySelectorAll(".pn").forEach(e => { e.classList.remove("flash"); void e.offsetWidth; e.classList.add("flash"); }); }
+  } catch (e) {}
+  chips();
+}
+
+// ---------- 3D sphere ----------
+let S = null;
+async function initSphere() {
+  let THREE; try { THREE = await import("https://unpkg.com/three@0.160.0/build/three.module.min.js"); } catch (e) { $("sphere").innerHTML = `<div style="padding:20px;color:#5d6b7e">${T("โหลด 3D ไม่สำเร็จ", "3D failed to load")}</div>`; return; }
+  const box = $("sphere"), mob = matchMedia("(max-width:680px)").matches || navigator.hardwareConcurrency <= 4;
+  const N = mob ? 700 : 2600, SEG = mob ? 14 : 18;
+  const ren = new THREE.WebGLRenderer({antialias: !mob, alpha: true}); ren.setPixelRatio(Math.min(devicePixelRatio, mob ? 1.5 : 2)); box.appendChild(ren.domElement);
+  const scn = new THREE.Scene(), cam = new THREE.PerspectiveCamera(45, 1, .1, 100); cam.position.set(0, 0, 3.6);
+  const grp = new THREE.Group(); grp.rotation.x = .38; grp.rotation.z = -.18; scn.add(grp);
+  // flow lines over a sphere (curl-like field around a tilted axis + noise)
+  const pos = new Float32Array(N * SEG * 2 * 3), col = new Float32Array(N * SEG * 2 * 3), seeds = new Float32Array(N);
+  const v = new THREE.Vector3(), ax = new THREE.Vector3(.25, 1, .1).normalize(), tmp = new THREE.Vector3();
+  let k = 0;
+  for (let i = 0; i < N; i++) {
+    seeds[i] = Math.random();
+    const u = Math.random() * 2 - 1, th = Math.random() * Math.PI * 2, rr = 1 + (Math.random() - .5) * .08 + (Math.random() < .12 ? Math.random() * .45 : 0);
+    v.set(Math.sqrt(1 - u * u) * Math.cos(th), u, Math.sqrt(1 - u * u) * Math.sin(th));
+    const h = .045 + Math.random() * .05, tw = (Math.random() - .5) * 1.6;
+    let prev = v.clone().multiplyScalar(rr);
+    for (let s = 0; s < SEG; s++) {
+      tmp.crossVectors(ax, v).multiplyScalar(h); v.add(tmp);
+      v.x += Math.sin(v.y * 3 + tw) * h * .5; v.y += Math.cos(v.z * 3 - tw) * h * .35; v.z += Math.sin(v.x * 2.5) * h * .4; v.normalize();
+      const cur = v.clone().multiplyScalar(rr);
+      pos.set([prev.x, prev.y, prev.z, cur.x, cur.y, cur.z], k * 6); k++; prev = cur;
+    }
+  }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.BufferAttribute(pos, 3)); geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+  const mat = new THREE.LineBasicMaterial({vertexColors: true, transparent: true, opacity: mob ? .34 : .2, blending: THREE.AdditiveBlending, depthWrite: false});
+  grp.add(new THREE.LineSegments(geo, mat));
+  // faint dust
+  const dn = mob ? 600 : 2200, dp = new Float32Array(dn * 3); for (let i = 0; i < dn; i++) { v.randomDirection().multiplyScalar(1.15 + Math.random() * 1.2); dp.set([v.x, v.y, v.z], i * 3); }
+  const dg = new THREE.BufferGeometry(); dg.setAttribute("position", new THREE.BufferAttribute(dp, 3));
+  scn.add(new THREE.Points(dg, new THREE.PointsMaterial({color: 0x36e2ff, size: .008, transparent: true, opacity: .5, blending: THREE.AdditiveBlending, depthWrite: false})));
+  const lvG = new THREE.Group(); grp.add(lvG);
+  const GOLD = new THREE.Color(0xf5c542), GOLD2 = new THREE.Color(0xb07a14), CY = new THREE.Color(0x36e2ff), MG = new THREE.Color(0xff3d9a), WH = new THREE.Color(0xfff2cc);
+  S = {n: N, spd: .12,
+    recolor() {
+      const up = D ? num(D.ai_up_pct) : null, upF = up != null ? up / 100 : .5, c = new THREE.Color();
+      for (let i = 0, k = 0; i < N; i++) {
+        const r = seeds[i]; let base;
+        if (r < .24) base = (r / .24) < upF ? CY : MG; else if (r < .3) base = WH; else base = r < .65 ? GOLD : GOLD2;
+        for (let s = 0; s < SEG; s++, k++) { const f = .35 + .65 * Math.sin(Math.PI * (s + .5) / SEG); c.copy(base).multiplyScalar(f * (base === WH ? .5 : .85)); col.set([c.r, c.g, c.b, c.r, c.g, c.b], k * 6); }
+      }
+      geo.attributes.color.needsUpdate = true;
+      S.spd = up == null ? .12 : (.06 + .3 * Math.abs(up - 50) / 50) * (up >= 50 ? 1 : -1);
+    },
+    levels() {
+      while (lvG.children.length) { const o = lvG.children.pop(); o.geometry && o.geometry.dispose(); }
+      S.tags = []; $("ovs").innerHTML = "";
+      if (!D) return;
+      const p = live.price != null ? live.price : num(D.price_num), L = [];
+      (D.res_nums || []).forEach((x, i) => num(x) != null && L.push(["R" + (i + 1), x, MG, "R"])); (D.sup_nums || []).forEach((x, i) => num(x) != null && L.push(["S" + (i + 1), x, CY, "S"]));
+      if (p != null) L.push(["P", p, GOLD, "P"]);
+      if (!L.length) return;
+      const vs = L.map(l => l[1]), mn = Math.min(...vs), mx = Math.max(...vs), rg = (mx - mn) || 1;
+      L.forEach(([k, val, c, t], i) => {
+        const lat = (-.95 + 1.9 * (val - mn) / rg) * .9, y = Math.sin(lat), rad = Math.cos(lat) * 1.012, pts = [];
+        for (let a = 0; a <= 128; a++) { const q = a / 128 * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(q) * rad, y, Math.sin(q) * rad)); }
+        const ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({color: c, transparent: true, opacity: t === "P" ? .95 : .55, blending: THREE.AdditiveBlending, depthWrite: false}));
+        lvG.add(ring);
+        const lon = i * 0.9, node = new THREE.Vector3(Math.cos(lon) * rad, y, Math.sin(lon) * rad);
+        const sp = new THREE.Points(new THREE.BufferGeometry().setFromPoints([node]), new THREE.PointsMaterial({color: c, size: t === "P" ? .09 : .06, transparent: true, opacity: 1, blending: THREE.AdditiveBlending, depthWrite: false}));
+        lvG.add(sp);
+        const el = document.createElement("div"); el.className = "ov " + t;
+        el.textContent = t === "P" ? `PRICE ${fmt(val)} | AI ${D.ai_up_pct != null ? T("ขึ้น ", "UP ") + D.ai_up_pct + "%" : "-"}` : `${k} ${fmt(val, 0)}`;
+        $("ovs").appendChild(el); S.tags.push([node, el]);
+      });
+    }, tags: []};
+  S.recolor(); S.levels(); hud(); chips();
+  function size() { const w = box.clientWidth, h = box.clientHeight; ren.setSize(w, h, false); ren.domElement.style.width = w + "px"; ren.domElement.style.height = h + "px"; cam.aspect = w / h; cam.position.z = w < 500 ? 4.1 : 3.6; cam.updateProjectionMatrix(); }
+  new ResizeObserver(size).observe(box); size();
+  let drag = null, last = performance.now(), vis = true;
+  box.addEventListener("pointerdown", e => drag = [e.clientX, e.clientY]); addEventListener("pointerup", () => drag = null);
+  box.addEventListener("pointermove", e => { if (!drag) return; grp.rotation.y += (e.clientX - drag[0]) * .006; grp.rotation.x += (e.clientY - drag[1]) * .004; drag = [e.clientX, e.clientY]; });
+  document.addEventListener("visibilitychange", () => vis = !document.hidden);
+  const w3 = new THREE.Vector3();
+  (function loop(now) {
+    requestAnimationFrame(loop); const dt = Math.min(.05, (now - last) / 1000); last = now; if (!vis) return;
+    grp.rotation.y += S.spd * dt; mat.opacity = (mob ? .32 : .19) + Math.sin(now / 1400) * .03;
+    ren.render(scn, cam);
+    const W = box.clientWidth, H = box.clientHeight;
+    for (const [n, el] of S.tags) { w3.copy(n).applyMatrix4(grp.matrixWorld); const z = w3.z; w3.project(cam);
+      el.style.left = ((w3.x + 1) / 2 * W).toFixed(0) + "px"; el.style.top = ((1 - w3.y) / 2 * H).toFixed(0) + "px"; el.style.opacity = z > -.2 ? 1 : .25; }
+  })(last);
+}
+
+chips(); renderPrice(); pollData(); pollPrice(); initSphere();
+setInterval(pollData, 10000); setInterval(pollPrice, 10000);
+</script>
+</body>
+</html>
