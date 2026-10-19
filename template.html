@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07080d">
+<meta name="referrer" content="no-referrer">
+<title>GOLD AI · วิเคราะห์ทองคำ XAUUSD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&family=Noto+Sans+Thai:wght@300;400;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07080d;--glass:rgba(255,255,255,.045);--bd:rgba(255,215,120,.16);--gold:#f5c542;--gold2:#ffdf80;--up:#22e39a;--dn:#ff4d6d;--mut:#9aa3b5;--tx:#eef1f7;--r:18px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:'Noto Sans Thai',system-ui,sans-serif;color:var(--tx);background:var(--bg);min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+body:before{content:"";position:fixed;inset:-20%;z-index:-2;background:radial-gradient(40% 35% at 15% 10%,rgba(245,197,66,.18),transparent 70%),radial-gradient(35% 30% at 90% 30%,rgba(120,80,255,.16),transparent 70%),radial-gradient(40% 40% at 50% 100%,rgba(0,200,255,.10),transparent 70%);animation:drift 22s ease-in-out infinite alternate}
+body:after{content:"";position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:40px 40px;mask:linear-gradient(#000,transparent 85%)}
+@keyframes drift{to{transform:translate(4%,-3%) rotate(6deg)}}
+h1,h2,h3,.pr{font-family:'Prompt',sans-serif}
+.mono{font-family:'JetBrains Mono',monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:14px}
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(7,8,13,.6);border-bottom:1px solid var(--bd)}
+header .wrap{display:flex;align-items:center;gap:12px;padding:10px 14px}
+.logo{font:700 18px Prompt;letter-spacing:.5px;background:linear-gradient(90deg,var(--gold),#fff3c4,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200%;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:200% 0}}
+.live{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mut)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--up);box-shadow:0 0 10px var(--up);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.grid{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}.grid>*{min-width:0}
+@media(min-width:900px){.grid{grid-template-columns:repeat(12,1fr)}.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}}
+.card{position:relative;background:var(--glass);border:1px solid var(--bd);border-radius:var(--r);padding:16px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 10px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.8,.2,1) forwards}
+.card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.12s}.card:nth-child(4){animation-delay:.18s}.card:nth-child(5){animation-delay:.24s}.card:nth-child(n+6){animation-delay:.3s}
+@keyframes rise{to{opacity:1;transform:none}}
+.card h2{flex-wrap:wrap;margin:0 0 12px;font-size:15px;font-weight:600;color:var(--gold2);display:flex;align-items:center;gap:8px;letter-spacing:.3px}
+.card h2 small{margin-left:auto;font:400 11px 'Noto Sans Thai';color:var(--mut)}
+.hero{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 22px}
+.price{font:700 clamp(40px,11vw,68px)/1 'JetBrains Mono';letter-spacing:-1px;background:linear-gradient(180deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;transition:filter .3s}
+.flash-up{filter:drop-shadow(0 0 14px var(--up))}.flash-dn{filter:drop-shadow(0 0 14px var(--dn))}
+.chg{font:600 15px 'JetBrains Mono'}.up{color:var(--up)}.dn{color:var(--dn)}.mut{color:var(--mut)}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font:600 13px Prompt;border:1px solid}
+.b-up{color:var(--up);border-color:rgba(34,227,154,.4);background:rgba(34,227,154,.08)}
+.b-dn{color:var(--dn);border-color:rgba(255,77,109,.4);background:rgba(255,77,109,.08)}
+.b-neu{color:var(--gold);border-color:rgba(245,197,66,.4);background:rgba(245,197,66,.08)}
+.bias{margin-top:12px;line-height:1.7;font-size:14px}
+.ind{margin-top:8px;font-size:12px;color:var(--mut);line-height:1.6}
+/* thai gold */
+.tg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tgi{padding:12px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.06)}
+.tgi b{display:block;font:600 13px Prompt;color:var(--gold2);margin-bottom:6px}
+.tgi .row{display:flex;justify-content:space-between;font-size:12px;color:var(--mut)}
+.tgi .v{font:700 17px 'JetBrains Mono';color:var(--tx)}
+/* ladder */
+.ladder{position:relative;height:340px;margin:6px 0 0 4px;border-left:2px solid rgba(255,255,255,.08)}
+.lv{position:absolute;left:0;right:0;display:flex;align-items:center;gap:8px;font-size:12px;transform:translateY(-50%)}
+.lv:before{content:"";width:24px;height:2px;margin-left:-2px}
+.lv.r:before{background:var(--dn);box-shadow:0 0 8px var(--dn)}.lv.s:before{background:var(--up);box-shadow:0 0 8px var(--up)}
+.lv .n{font:700 13px 'JetBrains Mono';min-width:58px}.lv.r .n{color:var(--dn)}.lv.s .n{color:var(--up)}
+.lv .t{color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.now{position:absolute;left:-7px;right:0;transform:translateY(-50%);transition:top 1s cubic-bezier(.2,.8,.2,1);display:flex;align-items:center;gap:8px;z-index:2}
+.now i{width:12px;height:12px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(245,197,66,.2),0 0 18px var(--gold)}
+.now span{font:700 12px 'JetBrains Mono';color:#000;background:var(--gold);padding:2px 8px;border-radius:6px}
+.now:after{content:"";flex:1;border-top:1px dashed rgba(245,197,66,.5)}
+/* gauge */
+.gauge{height:16px;border-radius:999px;overflow:hidden;display:flex;background:#222;margin:10px 0 6px}
+.gauge div{height:100%;transition:width 1.2s cubic-bezier(.2,.8,.2,1);width:0}
+.g-up{background:linear-gradient(90deg,#0f8a5f,var(--up));box-shadow:0 0 14px rgba(34,227,154,.6)}
+.g-dn{background:linear-gradient(90deg,var(--dn),#8a1030)}
+.gl{display:flex;justify-content:space-between;font:700 22px 'JetBrains Mono'}
+.reasons{list-style:none;padding:0;margin:12px 0 0;font-size:13px;line-height:1.6}
+.reasons li{padding:7px 0 7px 26px;position:relative;border-top:1px solid rgba(255,255,255,.05)}
+.reasons li:before{position:absolute;left:2px;top:7px;font-size:13px}
+.reasons .up:before{content:"▲";color:var(--up)}.reasons .down:before{content:"▼";color:var(--dn)}.reasons .neutral:before{content:"●";color:var(--gold)}
+.reasons li{color:var(--tx)}
+.meth{font-size:11px;color:var(--mut);margin-top:10px;line-height:1.6}
+/* plans + EV */
+.plans{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))}
+.plan{padding:14px;border-radius:14px;background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.08)}
+.plan b{font:600 14px Prompt;display:block;margin-bottom:8px}
+.plan .kv{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:500 12px 'JetBrains Mono';padding:4px 9px;border-radius:8px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08)}
+.ev{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.ev div{text-align:center;padding:8px 4px;border-radius:10px;background:rgba(0,0,0,.3)}
+.ev small{display:block;font-size:10px;color:var(--mut)}.ev span{font:700 16px 'JetBrains Mono'}
+.dec{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px}
+.go{color:#03140c;background:var(--up);box-shadow:0 0 16px rgba(34,227,154,.6);border-color:var(--up)}
+.wait{color:#1a1200;background:var(--gold);border-color:var(--gold)}
+.formula{font:500 12px 'JetBrains Mono';color:var(--gold2);background:rgba(245,197,66,.06);border:1px dashed rgba(245,197,66,.3);padding:8px 10px;border-radius:10px;margin-bottom:12px;overflow-x:auto;white-space:nowrap}
+/* news */
+.news{list-style:none;margin:0;padding:0}
+.news li{padding:10px 0;border-top:1px solid rgba(255,255,255,.06);font-size:14px;line-height:1.6;display:flex;gap:10px}
+.news li:first-child{border:0}.news a{color:var(--gold);text-decoration:none;white-space:nowrap;font-size:12px}
+.news a:hover{text-decoration:underline}
+/* chart */
+.tfs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.tfs button,.btn{font:600 12px Prompt;color:var(--tx);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:7px 12px;cursor:pointer;transition:.2s}
+.tfs button.on,.btn.pri{background:linear-gradient(135deg,var(--gold),#c8901a);color:#140e00;border-color:transparent;box-shadow:0 0 16px rgba(245,197,66,.35)}
+.btn:hover{transform:translateY(-1px)}
+#tv{height:min(70vh,520px);border-radius:12px;overflow:hidden}
+/* chat */
+.chat{display:flex;flex-direction:column;height:min(78vh,620px)}
+.msgs{flex:1;overflow-y:auto;padding:4px 2px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin}
+.m{max-width:88%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.65;white-space:pre-wrap;word-wrap:break-word;animation:rise .35s forwards;opacity:0}
+.m.u{align-self:flex-end;background:linear-gradient(135deg,rgba(245,197,66,.25),rgba(245,197,66,.1));border:1px solid rgba(245,197,66,.3)}
+.m.a{align-self:flex-start;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.m.e{align-self:center;color:var(--dn);font-size:12px;background:rgba(255,77,109,.08)}
+.typing:after{content:"▍";animation:pulse 1s infinite;color:var(--gold)}
+.inrow{display:flex;gap:8px;margin-top:10px}
+.inrow textarea{flex:1;resize:none;height:46px;font:400 15px 'Noto Sans Thai';color:var(--tx);background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:11px 12px;outline:none}
+.inrow textarea:focus,.set input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,197,66,.15)}
+.sugg{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}
+.sugg button{flex:none;font:400 12px 'Noto Sans Thai';color:var(--gold2);background:rgba(245,197,66,.07);border:1px solid rgba(245,197,66,.25);border-radius:999px;padding:5px 11px;cursor:pointer}
+.set{display:none;margin-bottom:10px;padding:12px;border-radius:12px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);font-size:13px}
+.set.show{display:block}
+.set input,.set select{width:100%;margin:6px 0;font:400 14px 'JetBrains Mono';color:var(--tx);background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px;outline:none}
+.warn{font-size:12px;line-height:1.6;color:#ffd58a;background:rgba(245,197,66,.07);border-left:3px solid var(--gold);padding:8px 10px;border-radius:6px;margin:6px 0}
+footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;line-height:1.7}
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:30;width:56px;height:56px;border-radius:50%;border:0;font-size:24px;background:linear-gradient(135deg,var(--gold),#c8901a);box-shadow:0 8px 30px rgba(245,197,66,.45);cursor:pointer}
+@media(min-width:900px){.fab{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.card,.m{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="logo">◆ GOLD AI · XAUUSD</div><div class="live"><span class="dot"></span><span id="liveTxt">กำลังเชื่อมต่อ…</span></div></div></header>
+<main class="wrap grid">
+
+<section class="card c8">
+ <h2>⚡ ราคาทองโลกแบบเรียลไทม์ <small id="pxSrc">—</small></h2>
+ <div class="hero"><div class="price" id="px">—</div><div><div class="chg" id="pxChg">&nbsp;</div><div class="mut" style="font-size:12px" id="pxTime"></div></div><div id="biasBadge"></div></div>
+ <div class="bias" id="bias"></div>
+ <div class="ind mono" id="ind"></div>
+</section>
+
+<section class="card c4">
+ <h2>🧠 ความมั่นใจ AI (ระยะสั้น)</h2>
+ <div class="gl"><span class="up" id="upPct">–</span><span class="dn" id="dnPct">–</span></div>
+ <div class="gauge"><div class="g-up" id="gUp"></div><div class="g-dn" id="gDn"></div></div>
+ <div class="mut" style="display:flex;justify-content:space-between;font-size:12px"><span>▲ โอกาสขึ้น</span><span>โอกาสลง ▼</span></div>
+ <ul class="reasons" id="reasons"></ul>
+ <div class="meth" id="aiMeth"></div>
+</section>
+
+<section class="card c12">
+ <h2>🇹🇭 ราคาทองไทยวันนี้ (บาทละ) <small id="tgSrc">ฮั่วเซ่งเฮง · อัปเดตทุก 30 วินาที</small></h2>
+ <div class="tg" id="tg"><div class="mut">กำลังโหลด…</div></div>
+</section>
+
+<section class="card c4">
+ <h2>🎯 แนวรับ · แนวต้าน</h2>
+ <div class="ladder" id="ladder"></div>
+</section>
+
+<section class="card c8">
+ <h2>📐 จุดเข้า · จุดออก + โมเดลตัดสินใจ EV</h2>
+ <div class="formula">EV(R) = p × RR − (1 − p) &nbsp;·&nbsp; RR = ระยะ TP ÷ ระยะ SL &nbsp;·&nbsp; เข้าเมื่อ EV &gt; 0</div>
+ <div class="plans" id="evPlans"></div>
+ <div class="meth" id="evMeth"></div>
+ <h2 style="margin-top:16px">📋 แผนจากระบบ</h2>
+ <div class="plans" id="plans"></div>
+</section>
+
+<section class="card c7">
+ <h2>📈 กราฟ XAUUSD <small>TradingView · OANDA</small></h2>
+ <div class="tfs" id="tfs"></div>
+ <div id="tv"></div>
+</section>
+
+<section class="card c5" id="chatCard">
+ <h2>💬 คุยกับกราฟ <small id="modelLbl"></small><button class="btn" id="setBtn" style="margin-left:8px;padding:5px 10px">⚙️ ตั้งค่า</button></h2>
+ <div class="set" id="set">
+  <b>Gemini API key</b>
+  <input type="password" id="keyIn" placeholder="วาง API key ของคุณที่นี่" autocomplete="off" spellcheck="false">
+  <select id="modelIn">
+   <option value="gemini-3.8-flash">gemini-3.8-flash (แนะนำ)</option>
+   <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite (เร็ว/ประหยัด)</option>
+   <option value="gemini-flash-latest">gemini-flash-latest</option>
+   <option value="gemini-2.5-flash">gemini-2.5-flash</option>
+  </select>
+  <div style="display:flex;gap:8px"><button class="btn pri" id="saveKey">บันทึก</button><button class="btn" id="delKey">🗑️ ลบ key</button></div>
+  <div class="warn">🔒 key จะถูกเก็บไว้ <b>เฉพาะในเบราว์เซอร์ของเครื่องนี้</b> (localStorage) เท่านั้น ไม่ถูกส่งขึ้น GitHub หรือเซิร์ฟเวอร์อื่น ส่งตรงไปที่ Google เท่านั้น · อย่าใช้บนเครื่องสาธารณะ · กด “ลบ key” เมื่อเลิกใช้ · หากเคยแปะ key ในแชทหรือที่สาธารณะ ให้ลบแล้วสร้างใหม่ที่ Google AI Studio</div>
+ </div>
+ <div class="chat">
+  <div class="msgs" id="msgs"></div>
+  <div class="sugg" id="sugg"></div>
+  <div class="inrow"><textarea id="q" placeholder="ถามเรื่องกราฟทอง เช่น ตอนนี้ควร Buy หรือ Sell?"></textarea><button class="btn pri" id="send">ส่ง</button></div>
+ </div>
+</section>
+
+<section class="card c12">
+ <h2>📰 ข่าววิเคราะห์ทองคำ</h2>
+ <ul class="news" id="news"></ul>
+</section>
+</main>
+<footer><div id="upd"></div><div id="note"></div><div>ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน · การเทรดมีความเสี่ยงสูง อาจขาดทุนเกินที่คาด</div></footer>
+<button class="fab" onclick="document.getElementById('chatCard').scrollIntoView()" aria-label="แชท">💬</button>
+
+<script>
+"use strict";
+let D = /*__DATA__*/null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = (n, d = 2) => n == null || isNaN(n) ? "—" : Number(n).toLocaleString("en-US", {minimumFractionDigits: d, maximumFractionDigits: d});
+const safeUrl = u => /^https?:\/\//i.test(u) ? u : "#";
+let live = {price: null, prev: null, open: null, time: null, src: null};
+let thaiGold = null;
+
+function render() {
+  if (!D) return;
+  const b = String(D.bias || "");
+  const cls = /ขาขึ้น|บวก/.test(b.split("·")[0]) ? "b-up" : /ขาลง|ลบ/.test(b.split("·")[0]) ? "b-dn" : "b-neu";
+  const lbl = cls === "b-up" ? "▲ ขาขึ้น" : cls === "b-dn" ? "▼ ขาลง" : "◆ " + esc(b.split("·")[0].trim().slice(0, 24));
+  $("biasBadge").innerHTML = `<span class="badge ${cls}">${lbl}</span>`;
+  $("bias").textContent = b;
+  $("ind").textContent = D.indicators || "";
+  // AI confidence
+  const up = Number(D.ai_up_pct ?? 50), dn = Number(D.ai_down_pct ?? 100 - up);
+  $("upPct").textContent = up + "%"; $("dnPct").textContent = dn + "%";
+  requestAnimationFrame(() => { $("gUp").style.width = up + "%"; $("gDn").style.width = dn + "%"; });
+  $("reasons").innerHTML = (D.ai_reasons || []).map(([d, t]) => `<li class="${esc(d)}">${esc(t)}</li>`).join("");
+  $("aiMeth").textContent = D.ai_method ? "วิธีคำนวณ: " + D.ai_method : "";
+  // EV
+  $("evPlans").innerHTML = (D.ev_plans || []).map(p => `<div class="plan">
+    <b>${p.side === "buy" ? '<span class="up">▲</span>' : '<span class="dn">▼</span>'} ${esc(p.name)}</b>
+    <div class="kv"><span class="chip">เข้า ${fmt(p.entry, 0)}</span><span class="chip dn">SL ${fmt(p.sl, 0)}</span><span class="chip up">TP ${fmt(p.tp, 0)}</span></div>
+    <div class="ev"><div><small>โอกาสชนะ p</small><span>${Math.round(p.p_win * 100)}%</span></div><div><small>RR</small><span>${fmt(p.rr)}</span></div><div><small>EV (R)</small><span class="${p.ev > 0 ? "up" : "dn"}">${p.ev > 0 ? "+" : ""}${fmt(p.ev)}</span></div></div>
+    <div class="dec"><span class="mut">ต้องชนะ ≥ ${Math.round(p.breakeven * 100)}% ถึงคุ้ม · ${esc(p.status || "")}</span><span class="badge ${p.ev > 0 ? "go" : "wait"}">${p.ev > 0 ? "✅ เข้า" : "⏸ รอ"}</span></div></div>`).join("") || '<div class="mut">ยังไม่มีแผน</div>';
+  $("evMeth").textContent = D.ev_method ? "ที่มาของ p: " + D.ev_method : "";
+  $("plans").innerHTML = (D.plans || []).map(p => `<div class="plan"><b>${esc(p[0])}</b><div class="kv">${p.slice(1).map(x => `<span class="chip">${esc(x)}</span>`).join("")}</div></div>`).join("");
+  $("news").innerHTML = (D.news || []).map(([t, u]) => `<li><span style="flex:1">${esc(t)}</span><a href="${esc(safeUrl(u))}" target="_blank" rel="noopener noreferrer">แหล่งข่าว ↗</a></li>`).join("");
+  $("upd").textContent = "อัปเดตบทวิเคราะห์: " + (D.updated || "—");
+  $("note").textContent = D.note || "";
+  if (live.price == null) showPrice(D.price_num, "ราคาจากบทวิเคราะห์ล่าสุด");
+  renderLadder();
+}
+
+function renderLadder() {
+  const lv = [...(D.res_nums || []).map((n, i) => ({n, t: D.resistance[i], c: "r"})), ...(D.sup_nums || []).map((n, i) => ({n, t: D.support[i], c: "s"}))].filter(x => x.n);
+  const p = live.price ?? D.price_num;
+  if (!lv.length) return;
+  const all = lv.map(x => x.n).concat(p ? [p] : []);
+  let hi = Math.max(...all), lo = Math.min(...all); const pad = (hi - lo) * .07 || 5; hi += pad; lo -= pad;
+  const y = n => ((hi - n) / (hi - lo) * 100).toFixed(2) + "%";
+  $("ladder").innerHTML = lv.map(x => `<div class="lv ${x.c}" style="top:${y(x.n)}"><span class="n">${fmt(x.n, 0)}</span><span class="t">${esc(String(x.t).replace(/^[\d,./\s]+/, ""))}</span></div>`).join("")
+    + (p ? `<div class="now" style="top:${y(p)}"><i></i><span>${fmt(p)}</span></div>` : "");
+}
+
+function showPrice(p, src, t) {
+  if (p == null) return;
+  const el = $("px");
+  if (live.prev != null && p !== live.prev) { el.classList.remove("flash-up", "flash-dn"); void el.offsetWidth; el.classList.add(p > live.prev ? "flash-up" : "flash-dn"); }
+  el.textContent = fmt(p);
+  $("pxSrc").textContent = src;
+  if (live.open != null) { const c = p - live.open, pc = c / live.open * 100; $("pxChg").innerHTML = `<span class="${c >= 0 ? "up" : "dn"}">${c >= 0 ? "▲ +" : "▼ "}${fmt(c)} (${pc.toFixed(2)}%)</span> <span class="mut" style="font-size:11px">ตั้งแต่เปิดหน้า</span>`; }
+  if (t) $("pxTime").textContent = "อัปเดต " + t;
+}
+
+async function pollPrice() {
+  try {
+    const r = await fetch("https://api.gold-api.com/price/XAU", {cache: "no-store"});
+    const j = await r.json(); const p = Number(j.price);
+    if (!p) throw 0;
+    if (live.open == null) live.open = p;
+    live.prev = live.price; live.price = p;
+    live.time = new Date(j.updatedAt || Date.now()).toLocaleTimeString("th-TH", {timeZone: "Asia/Bangkok"});
+    showPrice(p, "สปอต · gold-api.com", live.time + " น. (เวลาไทย)");
+    $("liveTxt").textContent = "LIVE · " + live.time; renderLadder();
+  } catch (e) { $("liveTxt").textContent = "ราคาสดไม่พร้อม · ใช้ราคาจากบทวิเคราะห์"; }
+}
+
+const TG_NAME = {HSH: "ทองคำแท่ง ฮั่วเซ่งเฮง", REF: "ทองคำแท่ง สมาคมฯ (อ้างอิง)", JEWEL: "ทองรูปพรรณ"};
+async function pollThai() {
+  try {
+    const r = await fetch("https://apicheckprice.huasengheng.com/api/values/getprice/", {cache: "no-store"});
+    const a = await r.json(); thaiGold = a;
+    const has9999 = a.some(x => String(x.GoldCode).startsWith("99"));
+    $("tg").innerHTML = a.map(x => {
+      const ch = Number(x.BuyChange || 0); const cc = ch > 0 ? "up" : ch < 0 ? "dn" : "mut";
+      const t = String(x.TimeUpdate || "").slice(11, 16);
+      return `<div class="tgi"><b>${esc(TG_NAME[x.GoldType] || x.GoldType)} ${esc(x.GoldCode)}%</b>
+      <div class="row"><span>รับซื้อ</span><span class="v">${esc(x.Buy)}</span></div>
+      <div class="row"><span>ขายออก</span><span class="v">${esc(x.Sell)}</span></div>
+      <div class="row" style="margin-top:6px"><span class="${cc}">${ch > 0 ? "▲ +" : ch < 0 ? "▼ " : "• "}${fmt(ch, 0)}</span><span>${esc(t)} น.</span></div></div>`;
+    }).join("") + (has9999 ? "" : `<div class="tgi mut" style="font-size:12px;display:flex;align-items:center">ทอง 99.99% : แหล่งข้อมูลสาธารณะยังไม่เปิดให้ดึง</div>`);
+    $("tgSrc").textContent = "ที่มา: ฮั่วเซ่งเฮง (huasengheng.com) · " + esc((a[0] && a[0].StrTimeUpdate) || "") + " · รีเฟรช 30 วินาที";
+  } catch (e) { $("tgSrc").textContent = "โหลดราคาทองไทยไม่สำเร็จ จะลองใหม่"; }
+}
+
+async function pollData() {
+  try { const r = await fetch("view.json?t=" + Date.now(), {cache: "no-store"}); if (r.ok) { D = await r.json(); render(); } } catch (e) {}
+}
+
+// TradingView
+const TF = [["1", "1น."], ["5", "5น."], ["15", "15น."], ["60", "1ชม."], ["240", "4ชม."], ["D", "วัน"], ["W", "สัปดาห์"]];
+function tv(iv) {
+  localStorage.setItem("gd_tf", iv);
+  $("tfs").innerHTML = TF.map(([v, l]) => `<button data-v="${v}" class="${v === iv ? "on" : ""}">${l}</button>`).join("");
+  const box = $("tv"); box.innerHTML = '<div class="tradingview-widget-container" style="height:100%"><div class="tradingview-widget-container__widget" style="height:100%"></div></div>';
+  const s = document.createElement("script"); s.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"; s.async = true;
+  s.text = JSON.stringify({autosize: true, symbol: "OANDA:XAUUSD", interval: iv, timezone: "Asia/Bangkok", theme: "dark", style: "1", locale: "th_TH", backgroundColor: "rgba(7,8,13,1)", gridColor: "rgba(255,255,255,0.04)", allow_symbol_change: true, studies: ["STD;RSI", "STD;EMA"], support_host: "https://www.tradingview.com"});
+  box.firstChild.appendChild(s);
+}
+$("tfs").addEventListener("click", e => { const v = e.target.dataset && e.target.dataset.v; if (v) tv(v); });
+
+// Gemini chat
+const KEY = "gd_gemini_key", MODEL = "gd_gemini_model";
+let hist = JSON.parse(sessionStorage.getItem("gd_hist") || "[]");
+const getKey = () => localStorage.getItem(KEY) || "";
+const getModel = () => localStorage.getItem(MODEL) || "gemini-3.8-flash";
+function bubble(role, text) { const d = document.createElement("div"); d.className = "m " + role; d.textContent = text; $("msgs").appendChild(d); $("msgs").scrollTop = 1e9; return d; }
+function context() {
+  const ctx = {analysis: D && {updated: D.updated, bias: D.bias, indicators: D.indicators, resistance: D.resistance, support: D.support, plans: D.plans, ai_up_pct: D.ai_up_pct, ai_down_pct: D.ai_down_pct, ai_reasons: D.ai_reasons, ai_method: D.ai_method,
+    ev_plans: (D.ev_plans || []).map(({name, side, entry, sl, tp, p_win, rr, ev, decision, status}) => ({name, side, entry, sl, tp, p_win, rr, ev, decision, status})), ev_formula: "EV(R)=p*RR-(1-p); เข้าเมื่อ EV>0", news: D.news, note: D.note},
+    live_xauusd_spot: live.price ?? D?.price_num, live_time: live.time, thai_gold_thb: thaiGold && thaiGold.map(x => ({type: x.GoldType, purity: x.GoldCode, buy: x.Buy, sell: x.Sell, change: x.BuyChange, time: x.TimeUpdate})),
+    now_bangkok: new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"})};
+  return "คุณคือนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
+}
+async function ask(q) {
+  q = q.trim(); if (!q) return;
+  const key = getKey();
+  if (!key) { $("set").classList.add("show"); bubble("e", "กรุณาใส่ Gemini API key ในตั้งค่าก่อน"); return; }
+  bubble("u", q); hist.push({role: "user", parts: [{text: q}]});
+  const out = bubble("a", ""); out.classList.add("typing"); $("send").disabled = true;
+  let text = "";
+  try {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(getModel())}:streamGenerateContent?alt=sse`, {
+      method: "POST", headers: {"Content-Type": "application/json", "x-goog-api-key": key},
+      body: JSON.stringify({systemInstruction: {parts: [{text: context()}]}, contents: hist.slice(-20), generationConfig: {temperature: 0.6, maxOutputTokens: 1200}})});
+    if (!r.ok) { let m = r.status + ""; try { m += " " + (await r.json()).error.message; } catch (e) {} throw new Error(m); }
+    const rd = r.body.getReader(), dec = new TextDecoder(); let buf = "";
+    for (;;) {
+      const {done, value} = await rd.read(); if (done) break;
+      buf += dec.decode(value, {stream: true});
+      let i; while ((i = buf.indexOf("\n")) >= 0) {
+        const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+        if (!line.startsWith("data:")) continue;
+        try { const j = JSON.parse(line.slice(5)); const parts = j.candidates?.[0]?.content?.parts || []; for (const p of parts) if (p.text && !p.thought) text += p.text; } catch (e) {}
+        out.textContent = text.replace(/\*\*/g, ""); $("msgs").scrollTop = 1e9;
+      }
+    }
+    if (!text) text = "(ไม่มีคำตอบ ลองถามใหม่)";
+    out.textContent = text.replace(/\*\*/g, "");
+    hist.push({role: "model", parts: [{text}]}); sessionStorage.setItem("gd_hist", JSON.stringify(hist));
+  } catch (e) {
+    out.remove(); hist.pop(); bubble("e", "เรียก Gemini ไม่สำเร็จ: " + e.message + " (ตรวจสอบ key / ชื่อโมเดลในตั้งค่า)");
+  } finally { out.classList.remove("typing"); $("send").disabled = false; }
+}
+$("send").onclick = () => { const v = $("q").value; $("q").value = ""; ask(v); };
+$("q").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("send").click(); } });
+$("setBtn").onclick = () => $("set").classList.toggle("show");
+$("saveKey").onclick = () => { const k = $("keyIn").value.trim(); if (k) localStorage.setItem(KEY, k); localStorage.setItem(MODEL, $("modelIn").value); $("keyIn").value = ""; syncSet(); bubble("a", "บันทึกการตั้งค่าแล้ว ✅ (key อยู่ในเครื่องนี้เท่านั้น)"); };
+$("delKey").onclick = () => { localStorage.removeItem(KEY); syncSet(); bubble("a", "ลบ key ออกจากเครื่องนี้แล้ว 🗑️"); };
+function syncSet() { const k = getKey(); $("keyIn").placeholder = k ? "มี key บันทึกอยู่ (…" + k.slice(-4) + ") · วางใหม่เพื่อเปลี่ยน" : "วาง API key ของคุณที่นี่"; $("modelIn").value = getModel(); $("modelLbl").textContent = (k ? "🟢 " : "⚪ ยังไม่ใส่ key · ") + getModel(); }
+const SUG = ["สรุปภาพรวมทองตอนนี้", "ควร Buy หรือ Sell ระยะสั้น?", "แผนไหน EV ดีที่สุด?", "ข่าวไหนกระทบทองมากสุด?", "ถ้าหลุดแนวรับจะไปถึงไหน?", "ราคาทองไทยวันนี้เป็นไง?"];
+$("sugg").innerHTML = SUG.map(s => `<button>${esc(s)}</button>`).join("");
+$("sugg").addEventListener("click", e => { if (e.target.tagName === "BUTTON") ask(e.target.textContent); });
+
+// init
+hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text.replace(/\*\*/g, "")));
+if (!hist.length) bubble("a", "สวัสดีครับ 👋 ผมคือผู้ช่วยวิเคราะห์ทอง ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลย (ต้องใส่ Gemini API key ใน ⚙️ ตั้งค่า ก่อนใช้ครั้งแรก)");
+syncSet(); render(); tv(localStorage.getItem("gd_tf") || "15");
+pollPrice(); pollThai(); setInterval(pollPrice, 15000); setInterval(pollThai, 30000); setInterval(pollData, 300000);
+</script>
+</body>
+</html>

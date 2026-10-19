@@ -1,14 +1,64 @@
-import json,html
-d=json.load(open('data.json'));e=html.escape
-li=lambda xs:''.join(f'<li>{e(x)}</li>' for x in xs)
-plans=''.join('<div class=card><b>'+e(p[0])+'</b><br>'+'<br>'.join(e(x) for x in p[1:])+'</div>' for p in d['plans'])
-news=''.join(f'<li>{e(t)} <a href="{e(u)}" target=_blank>แหล่งข่าว</a></li>' for t,u in d['news'])
-open('index.html','w').write(f'''<!doctype html><html lang=th><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=refresh content=300><title>ทองคำ XAUUSD</title>
-<style>body{{font-family:sans-serif;background:#111;color:#eee;margin:0;padding:12px}}.card{{background:#1e1e1e;border-radius:10px;padding:12px;margin:10px 0}}h1{{color:#f5c542;font-size:22px}}a{{color:#6cf}}.r{{color:#f66}}.s{{color:#6f6}}</style>
-<h1>📊 ทองคำ XAUUSD</h1><div class=card>อัปเดต: {e(d['updated'])}<br>ราคา: <b>{e(d['price'])}</b><br>มุมมอง: <b>{e(d['bias'])}</b><br><small>{e(d['indicators'])}</small></div>
-<div class=card><b class=r>แนวต้าน</b><ul>{li(d['resistance'])}</ul><b class=s>แนวรับ</b><ul>{li(d['support'])}</ul></div>
-<h3>จุดเข้า / จุดออก</h3>{plans}
-<div class=card><b>ข่าววิเคราะห์</b><ul>{news}</ul></div>
-<div class=card style="height:420px;padding:0"><div class="tradingview-widget-container" style="height:100%"><div class="tradingview-widget-container__widget" style="height:100%"></div>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>{{"autosize":true,"symbol":"OANDA:XAUUSD","interval":"60","timezone":"Asia/Bangkok","theme":"dark","locale":"th_TH"}}</script></div></div>
-<p><small>{e(d['note'])}</small></p></html>''')
+#!/usr/bin/env python3
+"""Build index.html + view.json from data.json (used by the 30-min routine).
+
+data.json fields (Thai text unless noted):
+  updated, price, bias, indicators, note       : strings
+  resistance, support                          : list of strings; the first number in each string is
+                                                 used for the visual ladder (e.g. "4,203 (ยอด 16 ต.ค.)")
+  plans                                        : list of string lists (card title first)
+  news                                         : list of [thai_summary, url]
+  ai_up_pct, ai_down_pct                       : ints, should sum to 100 (probability up/down, short term)
+  ai_method                                    : string, short description of how the % was derived
+  ai_reasons                                   : list of [direction("up"|"down"|"neutral"), thai_reason]
+  ev_plans                                     : list of {name, side("buy"|"sell"), entry, sl, tp,
+                                                 p_win (0..1), status (optional text)}
+
+EV decision model (computed here, do not hand-edit rr/ev):
+  risk   = |entry - sl|            reward = |tp - entry|
+  RR     = reward / risk
+  EV (R) = p_win * RR - (1 - p_win)        # expected result per trade in units of risk (R)
+  decision = "เข้า" if EV > 0 else "รอ"
+  Breakeven win rate = 1 / (1 + RR)
+
+Safety: build fails if data.json contains anything that looks like an API key, email, or account/
+ticket/balance fields. Never put credentials or account info into data.json.
+"""
+import json, re, sys, datetime
+
+d = json.load(open('data.json', encoding='utf-8'))
+raw = json.dumps(d, ensure_ascii=False)
+
+# ---- safety guard ----
+bad = [r'AIza[0-9A-Za-z_\-]{20,}', r'AQ\.[A-Za-z0-9_\-]{20,}', r'[\w.+-]+@[\w-]+\.[\w.]+',
+       r'(?i)"(account|ticket|balance|equity|password|login|api_?key)"']
+for pat in bad:
+    if re.search(pat, raw):
+        sys.exit(f'build.py: refusing to build, data.json matches forbidden pattern {pat!r}')
+
+def first_num(s):
+    m = re.search(r'\d[\d,]*\.?\d*', str(s))
+    return float(m.group().replace(',', '')) if m else None
+
+v = dict(d)
+v['price_num'] = first_num(d.get('price', ''))
+v['res_nums'] = [first_num(x) for x in d.get('resistance', [])]
+v['sup_nums'] = [first_num(x) for x in d.get('support', [])]
+
+evs = []
+for p in d.get('ev_plans', []):
+    risk = abs(p['entry'] - p['sl']); reward = abs(p['tp'] - p['entry'])
+    rr = reward / risk if risk else 0
+    pw = float(p['p_win'])
+    ev = pw * rr - (1 - pw)
+    evs.append(dict(p, rr=round(rr, 2), ev=round(ev, 2), breakeven=round(1 / (1 + rr), 3) if rr else 1,
+                    decision='เข้า' if ev > 0 else 'รอ'))
+v['ev_plans'] = evs
+up, dn = d.get('ai_up_pct'), d.get('ai_down_pct')
+if up is not None and dn is None: v['ai_down_pct'] = 100 - up
+v['built'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+
+js = json.dumps(v, ensure_ascii=False).replace('</', '<\\/')
+open('view.json', 'w', encoding='utf-8').write(json.dumps(v, ensure_ascii=False, indent=1))
+tpl = open('template.html', encoding='utf-8').read()
+open('index.html', 'w', encoding='utf-8').write(tpl.replace('/*__DATA__*/null', js))
+print('built index.html + view.json', v['built'])
