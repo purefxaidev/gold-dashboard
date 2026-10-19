@@ -10,6 +10,9 @@ data.json fields (Thai text unless noted):
   ai_up_pct, ai_down_pct                       : ints, should sum to 100 (probability up/down, short term)
   ai_method                                    : string, short description of how the % was derived
   ai_reasons                                   : list of [direction("up"|"down"|"neutral"), thai_reason]
+  pnl                                          : {today_usc, today_points, win_rate, mark_price, note,
+                                                 trades:[{time, side, lot, entry, exit|null, pl_usc, pl_points,
+                                                 status open|closed, by 'AI'|'ผู้ใช้'}]}  (allowlisted; P/L only)
   ev_plans                                     : list of {name, side("buy"|"sell"), entry, sl, tp,
                                                  p_win (0..1), status (optional text)}
 
@@ -34,6 +37,15 @@ bad = [r'AIza[0-9A-Za-z_\-]{20,}', r'AQ\.[A-Za-z0-9_\-]{20,}', r'[\w.+-]+@[\w-]+
 for pat in bad:
     if re.search(pat, raw):
         sys.exit(f'build.py: refusing to build, data.json matches forbidden pattern {pat!r}')
+
+# ---- pnl allowlist (no balance/equity/account/ticket) ----
+PNL_KEYS = {'today_usc', 'today_points', 'win_rate', 'mark_price', 'note', 'trades'}
+TRADE_KEYS = {'time', 'side', 'lot', 'entry', 'exit', 'pl_usc', 'pl_points', 'status', 'by'}
+pnl = d.get('pnl')
+if pnl is not None:
+    extra = set(pnl) - PNL_KEYS
+    for t in pnl.get('trades', []): extra |= set(t) - TRADE_KEYS
+    if extra: sys.exit(f'build.py: pnl has non-allowlisted fields {sorted(extra)}')
 
 def first_num(s):
     m = re.search(r'\d[\d,]*\.?\d*', str(s))

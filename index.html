@@ -188,6 +188,13 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
  </div>
 </section>
 
+<section class="card c12" id="pnlCard">
+ <h2>💼 พอร์ต กำไร/ขาดทุน <small id="pnlNote"></small></h2>
+ <div id="pnlSum" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px"></div>
+ <svg id="pnlChart" viewBox="0 0 600 140" preserveAspectRatio="none" style="width:100%;height:140px;margin:10px 0;background:#0b0d12;border-radius:12px"></svg>
+ <div id="pnlTr" style="overflow:auto"></div>
+</section>
+
 <section class="card c12">
  <h2>📰 ข่าววิเคราะห์ทองคำ</h2>
  <ul class="news" id="news"></ul>
@@ -205,7 +212,7 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
 
 <script>
 "use strict";
-let D = {"updated": "19 ต.ค. 2026 11:17 น. (เวลาไทย)", "price": "~4,178.5 (สปอต)", "bias": "กลางๆ ระยะสั้น · รายวันยังอยู่ใต้ MA หลัก (ขาลง) แต่ข่าว Fed ผ่อนคลายหนุนเด้งสั้น · ราคาเคลื่อนในกรอบ 4,151–4,203", "indicators": "รายวัน (ฟิวเจอร์ส): MA20 4,205 · MA50 4,370 · RSI14 ~52 · ATR14 ~70 | 1 ชม.: RSI ~54 · ATR ~17", "resistance": ["4,191 (ยอดเช้านี้)", "4,203 (ยอด 16 ต.ค.)", "4,225 (ยอด 12 ต.ค.)"], "support": ["4,162 (โลว์เช้านี้)", "4,151 (โลว์ 16 ต.ค.)", "4,104 / 4,075 (โลว์ 14 และ 7 ต.ค.)"], "plans": [["✅ เปิดอยู่: BUY 0.3 ล็อต", "เฉลี่ย ~4,181", "SL 4,145", "TP 4,200"], ["⏳ รอ: SELL LIMIT 0.1 ล็อต", "เข้า 4,203", "SL 4,228", "TP 4,163", "R:R ≈ 1.6"]], "news": [["ข้อมูลจีน Q3 ออกแล้ว · คืนนี้สหรัฐมีแค่ NAHB (ผลกระทบต่ำ) · Fed ประชุมสัปดาห์หน้า", "https://www.fxbus.com/en/economic-calendar/20261019.html"], ["Warsh ไม่ส่งสัญญาณขึ้นดอกเบี้ย ต.ค. โอกาสขึ้นดอกเบี้ยเดือนนี้ลดเหลือ <20% ทองเด้ง", "https://www.investing.com/news/commodities-news/gold-rises-as-warsh-remarks-curb-fed-hike-bets-4956185"], ["ตลาดยังให้โอกาส ~92% ขึ้นดอกเบี้ย ธ.ค. ราคายังอยู่ใต้ MA หลัก ภาพรายวันยังเป็นขาลง", "https://www.fxstreet.com/news/gold-gains-ground-above-4-150-as-fed-avoids-policy-signals-geopolitical-risks-stay-in-focus-202610190129"], ["Bond yield ลดลง + ความเสี่ยงช่องแคบฮอร์มุซ/หุ้นเทคร่วง หนุนทองระยะสั้น", "https://www.cnbctv18.com/market/commodities/gold-silver-prices-edge-high-what-could-drive-rates-this-week-20014589.htm"]], "note": "ระดับราคาเป็นราคาสปอต · เทรดสั้นไม้ละ 0.1 ล็อต มี SL/TP ทุกไม้ · ไม่ใช่คำแนะนำการลงทุน รับประกันกำไรไม่ได้", "ai_up_pct": 45, "ai_down_pct": 55, "ai_method": "ให้คะแนนจากปัจจัย: เริ่ม 50/50 แล้วบวก/ลบตามน้ำหนักของอินดิเคเตอร์และข่าว (ราคาใต้ MA50 −8, ใต้ MA20 −5, โอกาสขึ้นดอกเบี้ย ธ.ค. −5, Warsh ผ่อนคลาย +6, Yield ลง/ความเสี่ยงภูมิรัฐศาสตร์ +5, RSI 1 ชม. 54 +2) = ขึ้น 45% / ลง 55% · เป็นการประเมิน ไม่ใช่ความแน่นอน", "ai_reasons": [["down", "กราฟรายวันยังอยู่ใต้ MA20 (4,205) และ MA50 (4,370) แนวโน้มหลักยังเป็นขาลง"], ["down", "ตลาดให้โอกาส ~92% ที่ Fed จะขึ้นดอกเบี้ยเดือน ธ.ค. กดดันทอง"], ["up", "Warsh ไม่ส่งสัญญาณขึ้นดอกเบี้ยเดือน ต.ค. หนุนการเด้งระยะสั้น"], ["up", "Bond yield ลดลง + ความเสี่ยงช่องแคบฮอร์มุซ/หุ้นเทคร่วง หนุนทองเป็นสินทรัพย์ปลอดภัย"], ["neutral", "RSI รายวัน ~52 / 1 ชม. ~54 ยังกลางๆ ราคาอยู่กลางกรอบ 4,151–4,203"]], "ev_plans": [{"name": "BUY ที่เปิดอยู่ (เฉลี่ย ~4,181)", "side": "buy", "entry": 4181, "sl": 4145, "tp": 4200, "p_win": 0.6, "status": "เปิดอยู่ · ไม่ควรเพิ่มไม้", "rr": 0.53, "ev": -0.08, "breakeven": 0.655, "decision": "รอ"}, {"name": "SELL LIMIT 4,203", "side": "sell", "entry": 4203, "sl": 4228, "tp": 4163, "p_win": 0.45, "status": "ตั้งรอไว้", "rr": 1.6, "ev": 0.17, "breakeven": 0.385, "decision": "เข้า"}], "ev_method": "p_win ประเมินจากระยะ SL/TP (random walk: p≈ระยะSL÷(ระยะSL+ระยะTP)) แล้วปรับตามความน่าจะเป็นขึ้น/ลงของ AI และตำแหน่งแนวรับแนวต้าน", "price_num": 4178.5, "res_nums": [4191.0, 4203.0, 4225.0], "sup_nums": [4162.0, 4151.0, 4104.0], "built": "2026-10-19 11:51"};
+let D = {"updated": "19 ต.ค. 2026 11:17 น. (เวลาไทย)", "price": "~4,178.5 (สปอต)", "bias": "กลางๆ ระยะสั้น · รายวันยังอยู่ใต้ MA หลัก (ขาลง) แต่ข่าว Fed ผ่อนคลายหนุนเด้งสั้น · ราคาเคลื่อนในกรอบ 4,151–4,203", "indicators": "รายวัน (ฟิวเจอร์ส): MA20 4,205 · MA50 4,370 · RSI14 ~52 · ATR14 ~70 | 1 ชม.: RSI ~54 · ATR ~17", "resistance": ["4,191 (ยอดเช้านี้)", "4,203 (ยอด 16 ต.ค.)", "4,225 (ยอด 12 ต.ค.)"], "support": ["4,162 (โลว์เช้านี้)", "4,151 (โลว์ 16 ต.ค.)", "4,104 / 4,075 (โลว์ 14 และ 7 ต.ค.)"], "plans": [["✅ เปิดอยู่: BUY 0.3 ล็อต", "เฉลี่ย ~4,181", "SL 4,145", "TP 4,200"], ["⏳ รอ: SELL LIMIT 0.1 ล็อต", "เข้า 4,203", "SL 4,228", "TP 4,163", "R:R ≈ 1.6"]], "news": [["ข้อมูลจีน Q3 ออกแล้ว · คืนนี้สหรัฐมีแค่ NAHB (ผลกระทบต่ำ) · Fed ประชุมสัปดาห์หน้า", "https://www.fxbus.com/en/economic-calendar/20261019.html"], ["Warsh ไม่ส่งสัญญาณขึ้นดอกเบี้ย ต.ค. โอกาสขึ้นดอกเบี้ยเดือนนี้ลดเหลือ <20% ทองเด้ง", "https://www.investing.com/news/commodities-news/gold-rises-as-warsh-remarks-curb-fed-hike-bets-4956185"], ["ตลาดยังให้โอกาส ~92% ขึ้นดอกเบี้ย ธ.ค. ราคายังอยู่ใต้ MA หลัก ภาพรายวันยังเป็นขาลง", "https://www.fxstreet.com/news/gold-gains-ground-above-4-150-as-fed-avoids-policy-signals-geopolitical-risks-stay-in-focus-202610190129"], ["Bond yield ลดลง + ความเสี่ยงช่องแคบฮอร์มุซ/หุ้นเทคร่วง หนุนทองระยะสั้น", "https://www.cnbctv18.com/market/commodities/gold-silver-prices-edge-high-what-could-drive-rates-this-week-20014589.htm"]], "note": "ระดับราคาเป็นราคาสปอต · เทรดสั้นไม้ละ 0.1 ล็อต มี SL/TP ทุกไม้ · ไม่ใช่คำแนะนำการลงทุน รับประกันกำไรไม่ได้", "ai_up_pct": 45, "ai_down_pct": 55, "ai_method": "ให้คะแนนจากปัจจัย: เริ่ม 50/50 แล้วบวก/ลบตามน้ำหนักของอินดิเคเตอร์และข่าว (ราคาใต้ MA50 −8, ใต้ MA20 −5, โอกาสขึ้นดอกเบี้ย ธ.ค. −5, Warsh ผ่อนคลาย +6, Yield ลง/ความเสี่ยงภูมิรัฐศาสตร์ +5, RSI 1 ชม. 54 +2) = ขึ้น 45% / ลง 55% · เป็นการประเมิน ไม่ใช่ความแน่นอน", "ai_reasons": [["down", "กราฟรายวันยังอยู่ใต้ MA20 (4,205) และ MA50 (4,370) แนวโน้มหลักยังเป็นขาลง"], ["down", "ตลาดให้โอกาส ~92% ที่ Fed จะขึ้นดอกเบี้ยเดือน ธ.ค. กดดันทอง"], ["up", "Warsh ไม่ส่งสัญญาณขึ้นดอกเบี้ยเดือน ต.ค. หนุนการเด้งระยะสั้น"], ["up", "Bond yield ลดลง + ความเสี่ยงช่องแคบฮอร์มุซ/หุ้นเทคร่วง หนุนทองเป็นสินทรัพย์ปลอดภัย"], ["neutral", "RSI รายวัน ~52 / 1 ชม. ~54 ยังกลางๆ ราคาอยู่กลางกรอบ 4,151–4,203"]], "ev_plans": [{"name": "BUY ที่เปิดอยู่ (เฉลี่ย ~4,181)", "side": "buy", "entry": 4181, "sl": 4145, "tp": 4200, "p_win": 0.6, "status": "เปิดอยู่ · ไม่ควรเพิ่มไม้", "rr": 0.53, "ev": -0.08, "breakeven": 0.655, "decision": "รอ"}, {"name": "SELL LIMIT 4,203", "side": "sell", "entry": 4203, "sl": 4228, "tp": 4163, "p_win": 0.45, "status": "ตั้งรอไว้", "rr": 1.6, "ev": 0.17, "breakeven": 0.385, "decision": "เข้า"}], "ev_method": "p_win ประเมินจากระยะ SL/TP (random walk: p≈ระยะSL÷(ระยะSL+ระยะTP)) แล้วปรับตามความน่าจะเป็นขึ้น/ลงของ AI และตำแหน่งแนวรับแนวต้าน", "pnl": {"today_usc": 79.4, "today_points": 7.94, "win_rate": null, "mark_price": 4183.9, "note": "กำไร/ขาดทุนลอยคำนวณจากราคาสปอต (USC: 0.1 ล็อต = 10 USC ต่อ 1 ดอลลาร์) อาจต่างจากแพลตฟอร์มเล็กน้อย", "trades": [{"time": "2026-10-19 10:22", "side": "buy", "lot": 0.1, "entry": 4182.273, "exit": null, "pl_usc": 16.3, "pl_points": 1.63, "status": "open", "by": "ผู้ใช้"}, {"time": "2026-10-19 10:22", "side": "buy", "lot": 0.1, "entry": 4180.741, "exit": null, "pl_usc": 31.6, "pl_points": 3.16, "status": "open", "by": "ผู้ใช้"}, {"time": "2026-10-19 10:23", "side": "buy", "lot": 0.1, "entry": 4180.75, "exit": null, "pl_usc": 31.5, "pl_points": 3.15, "status": "open", "by": "ผู้ใช้"}]}, "price_num": 4178.5, "res_nums": [4191.0, 4203.0, 4225.0], "sup_nums": [4162.0, 4151.0, 4104.0], "built": "2026-10-19 11:52"};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt = (n, d = 2) => n == null || isNaN(n) ? "—" : Number(n).toLocaleString("en-US", {minimumFractionDigits: d, maximumFractionDigits: d});
@@ -387,6 +394,39 @@ const SUG = ["สรุปภาพรวมทองตอนนี้", "ค�
 $("sugg").innerHTML = SUG.map(s => `<button>${esc(s)}</button>`).join("");
 $("sugg").addEventListener("click", e => { if (e.target.tagName === "BUTTON") ask(e.target.textContent); });
 
+
+// P/L portfolio (P/L only — no balance/account data)
+function renderPnl() {
+  const P = D && D.pnl; if (!P) { $("pnlCard").style.display = "none"; return; }
+  const px = live.price || P.mark_price;
+  const tr = (P.trades || []).map(t => { if (t.status === "open" && px) { const pts = +(((t.side === "buy" ? 1 : -1) * (px - t.entry))).toFixed(2); return {...t, pl_points: pts, pl_usc: +(pts * 100 * t.lot).toFixed(2)}; } return t; });
+  const tot = tr.reduce((a, t) => a + (t.pl_usc || 0), 0), pts = tr.reduce((a, t) => a + (t.pl_points || 0), 0);
+  const closed = tr.filter(t => t.status === "closed"), wr = closed.length ? Math.round(100 * closed.filter(t => t.pl_usc > 0).length / closed.length) + "%" : (P.win_rate != null ? P.win_rate + "%" : "–");
+  const col = v => v >= 0 ? "#1db954" : "#ff5c5c", sg = v => (v >= 0 ? "+" : "") + v.toFixed(2);
+  const card = (k, v, c) => `<div style="background:#0b0d12;border:1px solid #f5c54222;border-radius:12px;padding:10px"><small>${k}</small><div style="font-size:22px;font-weight:700;color:${c || "#eee"}">${v}</div></div>`;
+  $("pnlSum").innerHTML = card("กำไร/ขาดทุนวันนี้", sg(tot) + " USC", col(tot)) + card("จุด (ดอลลาร์)", sg(pts), col(pts)) + card("อัตราชนะ (ไม้ที่ปิด)", wr) + card("ไม้เปิด / ปิด", tr.filter(t => t.status === "open").length + " / " + closed.length);
+  $("pnlNote").textContent = P.note || "";
+  $("pnlTr").innerHTML = `<table style="width:100%;font-size:13px;border-collapse:collapse"><tr style="color:#999;text-align:left"><th>เวลา</th><th>ฝั่ง</th><th>ล็อต</th><th>เข้า</th><th>ออก</th><th>จุด</th><th>USC</th><th>สถานะ</th><th>โดย</th></tr>` +
+    tr.map(t => `<tr style="border-top:1px solid #222"><td>${esc((t.time || "").slice(11) || t.time)}</td><td style="color:${t.side === "buy" ? "#1db954" : "#ff5c5c"}">${esc(t.side.toUpperCase())}</td><td>${esc(t.lot)}</td><td>${esc(t.entry)}</td><td>${t.exit == null ? "–" : esc(t.exit)}</td><td style="color:${col(t.pl_points)}">${sg(t.pl_points)}</td><td style="color:${col(t.pl_usc)}">${sg(t.pl_usc)}</td><td>${t.status === "open" ? "🟢 เปิด" : "⚪ ปิด"}</td><td>${esc(t.by)}</td></tr>`).join("") + "</table>";
+  // cumulative P/L curve
+  let c = 0; const pts2 = [0].concat(tr.slice().sort((a, b) => String(a.time).localeCompare(b.time)).map(t => c += t.pl_usc || 0));
+  const mn = Math.min(0, ...pts2), mx = Math.max(0, ...pts2), rg = (mx - mn) || 1, W = 600, H = 140, y = v => H - 10 - (v - mn) / rg * (H - 20);
+  const xy = pts2.map((v, i) => `${(i / Math.max(1, pts2.length - 1)) * W},${y(v)}`).join(" ");
+  $("pnlChart").innerHTML = `<line x1="0" x2="${W}" y1="${y(0)}" y2="${y(0)}" stroke="#444" stroke-dasharray="4"/><polyline points="${xy}" fill="none" stroke="${col(c)}" stroke-width="3"/>` + pts2.map((v, i) => `<circle cx="${(i / Math.max(1, pts2.length - 1)) * W}" cy="${y(v)}" r="4" fill="${col(v)}"/>`).join("");
+}
+// first-run Gemini key prompt (stored only in this browser)
+function keyPrompt() {
+  if (getKey() || sessionStorage.getItem("gd_kp_skip")) return;
+  const o = document.createElement("div"); o.id = "kp";
+  o.style.cssText = "position:fixed;inset:0;z-index:1000;background:#000c;display:flex;align-items:center;justify-content:center;padding:16px";
+  o.innerHTML = `<div style="max-width:440px;width:100%;background:#11131a;border:1px solid #f5c542;border-radius:18px;padding:20px;box-shadow:0 0 40px #f5c54255">
+   <h2 style="margin:0 0 8px;color:#f5c542">🔑 ตั้งค่าครั้งแรก</h2><div style="font-size:14px;color:#ccc">วาง Gemini API key ครั้งเดียว ใช้ได้ทั้งแชท แปลภาษา และคุยสด<br>key ถูกเก็บ<b>เฉพาะในเบราว์เซอร์เครื่องนี้</b> ไม่ขึ้นเว็บ/GitHub · สร้างฟรีที่ <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:#f5c542">Google AI Studio</a></div>
+   <input id="kpIn" type="password" autocomplete="off" spellcheck="false" placeholder="วาง API key ที่นี่" style="width:100%;box-sizing:border-box;margin:12px 0;padding:10px;border-radius:10px;border:1px solid #333;background:#0b0d12;color:#eee">
+   <div style="display:flex;gap:8px"><button class="btn pri" id="kpSave" style="flex:1">บันทึก</button><button class="btn" id="kpSkip">ไว้ทีหลัง</button></div></div>`;
+  document.body.appendChild(o);
+  $("kpSave").onclick = () => { const k = $("kpIn").value.trim(); if (!k) return; localStorage.setItem(KEY, k); o.remove(); syncSet(); bubble("a", "บันทึก key แล้วค่ะ ✅ ใช้ได้ทั้งแชท แปล และคุยสด"); };
+  $("kpSkip").onclick = () => { sessionStorage.setItem("gd_kp_skip", "1"); o.remove(); };
+}
 // realtime call overlay (same page)
 function openCall() { if (!$("callFr").src) $("callFr").src = "call.html?embed=1"; $("callOv").style.display = "block"; if (location.hash !== "#call") history.replaceState(null, "", "#call"); }
 function closeCall() { try { $("callFr").contentWindow.stopCall && $("callFr").contentWindow.stopCall(); } catch (e) {} $("callOv").style.display = "none"; history.replaceState(null, "", location.pathname + location.search); }
@@ -396,7 +436,7 @@ window.addEventListener("hashchange", () => { if (location.hash === "#call") ope
 // init
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text.replace(/\*\*/g, "")));
 if (!hist.length) bubble("a", "สวัสดีค่ะ 👋 ดิฉันคือ เลขา ผู้ช่วยวิเคราะห์ทองค่ะ ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ต้องใส่ Gemini API key ใน ⚙️ ตั้งค่า ก่อนใช้ครั้งแรก)");
-syncSet(); setMode(mode); render(); tv(localStorage.getItem("gd_tf") || "15");
+syncSet(); setMode(mode); render(); renderPnl(); keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
 pollPrice(); pollThai(); setInterval(pollPrice, 15000); setInterval(pollThai, 30000); setInterval(pollData, 300000);
 </script>
 </body>
