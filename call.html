@@ -18,7 +18,7 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
  <div class="row"><div><small>โมเดล Live</small><select id="model">
   <option>models/gemini-3.8-live</option><option>models/gemini-3.8-live-extended-thinking</option>
   <option>models/gemini-3.1-flash-live-preview</option><option>models/gemini-2.5-flash-native-audio-preview-12-2025</option>
-  <option>models/gemini-3.5-live-translate-preview</option></select></div>
+  <option value="models/gemini-3.5-live-translate-preview">models/gemini-3.5-live-translate-preview (ล่ามแปล)</option></select></div>
  <div><small>เสียง</small><input id="voice" value="Sulafat"></div></div>
  <small id="keyst"></small>
 </div>
@@ -28,11 +28,12 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
 </div>
 <script>
 const $ = id => document.getElementById(id);
+const LC = {English:"en",Thai:"th",Chinese:"zh",Japanese:"ja",Korean:"ko",Vietnamese:"vi",Lao:"lo",Burmese:"my",French:"fr",German:"de"};
 const KEY = localStorage.getItem("gd_gemini_key") || "";
 $("keyst").textContent = KEY ? "🟢 พบ Gemini key ในเครื่องนี้ (…" + KEY.slice(-4) + ")" : "⚪ ยังไม่มี key — ไปตั้งค่าที่แชทในหน้าแดชบอร์ดก่อน";
 const P = new URLSearchParams(location.search);
 for (const k of ["mode", "lang", "model", "voice"]) { const v = P.get(k) || localStorage.getItem("gc_" + k); if (v) $(k).value = v; $(k).onchange = () => { localStorage.setItem("gc_" + k, $(k).value); ui(); }; }
-function ui() { $("lw").style.visibility = $("mode").value === "tr" ? "visible" : "hidden"; } ui();
+function ui() { const t = $("mode").value === "tr" || /translate/.test($("model").value); $("lw").style.visibility = t ? "visible" : "hidden"; if (/translate/.test($("model").value) && !localStorage.getItem("gc_lang")) $("lang").value = "Thai"; } ui();
 function log(c, t) { const d = document.createElement("div"); d.className = c; d.textContent = t; $("log").appendChild(d); $("log").scrollTop = 1e9; return d; }
 
 async function sysPrompt() {
@@ -71,7 +72,8 @@ async function start() {
   ws = new WebSocket("wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=" + encodeURIComponent(KEY));
   ws.onopen = () => ws.send(JSON.stringify({setup: {model: $("model").value,
     generationConfig: {responseModalities: ["AUDIO"], speechConfig: {voiceConfig: {prebuiltVoiceConfig: {voiceName: $("voice").value || "Sulafat"}}}},
-    systemInstruction: {parts: [{text: sys}]}, inputAudioTranscription: {}, outputAudioTranscription: {}}}));
+    systemInstruction: {parts: [{text: sys}]}, inputAudioTranscription: {}, outputAudioTranscription: {},
+    ...(/translate/.test($("model").value) ? {translationConfig: {targetLanguageCode: LC[$("lang").value] || "th", echoTargetLanguage: true}} : {})}}));
   ws.onmessage = async ev => {
     const m = JSON.parse(typeof ev.data === "string" ? ev.data : await ev.data.text());
     if (m.setupComplete) {
