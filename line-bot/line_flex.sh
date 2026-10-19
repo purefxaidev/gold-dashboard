@@ -1,5 +1,5 @@
 #!/bin/bash
-# usage: line_flex.sh <trade|close|hourly|news|status> <json-file | json-string>
+# usage: line_flex.sh <trade|close|hourly|news|status|portfolio> <json-file | json-string>
 # Broadcast LINE Flex card (altText fallback). ล้ม -> line_notify.sh ข้อความธรรมดา. ไม่พิมพ์ token
 # DRY_RUN=1 -> พิมพ์ payload JSON แทนการส่ง
 TYPE="$1"; IN="$2"
@@ -55,6 +55,19 @@ elif T=="news":
           tx(d["headline"],weight="bold",size="md",margin="md")]+([tx(d["summary"],size="sm",color=GR)] if d.get("summary") else [])
     btn={"type":"button","style":"secondary","height":"sm","action":{"type":"uri","label":"อ่านข่าว","uri":d["url"]}} if str(d.get("url","")).startswith("https://") else None
     b=bubble("📰 ข่าวทองคำ",ic,body,d.get("time"),btn); alt="ข่าวทอง: "+d["headline"]
+elif T=="portfolio":
+    net=d.get("today_usc",0); c=G if net>=0 else R
+    body=[tx("กำไร/ขาดทุนวันนี้",size="xs",color=GR),tx(sg(net)+" USC",size="xxl",weight="bold",color=c),
+          row("จำนวนไม้วันนี้",d.get("trades",0)),row("อัตราชนะ",(str(d["win_rate"])+"%") if d.get("win_rate") is not None else "-")]
+    if "balance" in d or "equity" in d:
+        body+=[sep()]+([row("Balance",f(d["balance"])+" USC")] if "balance" in d else [])+([row("Equity",f(d["equity"])+" USC")] if "equity" in d else [])
+    op=d.get("open",[])
+    body+=[sep(),tx(f"📂 ไม้ที่เปิดอยู่ ({len(op)})",size="sm",weight="bold")]
+    body+=[row(f'{"🟢" if str(o["side"]).lower()=="buy" else "🔴"} {str(o["side"]).upper()} {o.get("lot",0.1)} @{f(o["entry"])}',sg(o.get("pl_usc",0))+" USC",G if o.get("pl_usc",0)>=0 else R) for o in op[:8]] or [tx("ไม่มี",size="xs",color=GR)]
+    pe=d.get("pending",[])
+    body+=[sep(),tx(f"⏳ ออเดอร์รอ ({len(pe)})",size="sm",weight="bold")]
+    body+=[row(f'{o.get("type","")} {o.get("lot",0.1)} @{f(o["entry"])}',f'SL {f(o.get("sl","-"))} · TP {f(o.get("tp","-"))}') for o in pe[:6]] or [tx("ไม่มี",size="xs",color=GR)]
+    b=bubble("💼 สรุปพอร์ต",c,body,d.get("time")+" · ส่วนตัว" if d.get("time") else "ข้อมูลส่วนตัว"); alt=f"พอร์ตวันนี้ {sg(net)} USC · เปิด {len(op)} ไม้"
 elif T=="status":
     lv=str(d.get("level","info")).lower(); c={"warning":"#FB8C00","error":R}.get(lv,B); t={"warning":"⚠️ แจ้งเตือน","error":"❌ ปัญหา"}.get(lv,"ℹ️ สถานะระบบ")
     body=[tx(d["text"],size="md")]+[row(k,v) for k,v in (d.get("rows") or {}).items()]
