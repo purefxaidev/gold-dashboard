@@ -1,7 +1,7 @@
 #!/bin/bash
 # PUREGOLD LINE Flex card sender. Never prints the LINE token.
 #
-# usage: line_flex.sh <trade|close|hourly|news|status|portfolio> <json-file | json-string>
+# usage: line_flex.sh <trade|close|hourly|news|news_article|status|portfolio> <json-file | json-string>
 #   DRY_RUN=1   print the payload JSON (flex + text fallback) and exit, nothing is sent
 #   VALIDATE=1  only check the payload with LINE's validate/broadcast endpoint (nothing is sent)
 # Every real send is validated first; if Flex is rejected the LINE error body is appended to
@@ -21,6 +21,9 @@
 #   hourly:    price*, trend (up|down|side), confidence, resistance [..], support [..],
 #              plan {side, entry, sl, tp, ev}, events [..]
 #   news:      headline*, summary, impact (high|medium|low), effect (up|down), url (https only)
+#   news_article: headline* (TH), summary (2-3 sentences TH), impact (bullish|bearish|neutral), level (high|medium|low),
+#              source, url (original, https), article_url (https://purefxaidev.github.io/gold-dashboard/news.html#<id>), time
+#              build input with: python3 /workspace/gold-dashboard/news.py card <id>
 #   status:    text*, level (info|warning|error), rows {label: value}
 # Win rate: when wins/total are not given, it is computed from today's closed trades
 # (history/trade_journal.jsonl + data.json pnl.trades).
@@ -231,6 +234,24 @@ def b_news():
             tx(hl, weight="bold", size="md", margin="md")] + ([tx(d["summary"], size="sm", color=GR)] if d.get("summary") else [])
     url = s(d.get("url"), ""); btn = {"type": "button", "style": "secondary", "height": "sm", "action": {"type": "uri", "label": "อ่านข่าว", "uri": url}} if url.startswith("https://") and len(url) < 1000 else None
     return bubble("ข่าวทองคำ", ic, body, d.get("time"), btn), "ข่าวทอง: " + hl, ["ข่าวทองคำ (" + il + ", " + el + ")", hl] + ([s(d["summary"])] if d.get("summary") else []) + ([url] if btn else [])
+def b_news_article():
+    imp = s(d.get("impact"), "neutral").lower(); imp = {"up": "bullish", "down": "bearish", "bull": "bullish", "bear": "bearish"}.get(imp, imp)
+    c = {"bullish": G, "bearish": R}.get(imp, GR); il = {"bullish": "▲ หนุนทองขึ้น", "bearish": "▼ กดดันทองลง"}.get(imp, "◆ เป็นกลาง")
+    lv = {"high": "ผลกระทบสูง", "medium": "ผลกระทบกลาง", "low": "ผลกระทบต่ำ"}.get(s(d.get("level"), "").lower(), "")
+    hl = s(d.get("headline") or d.get("title")); sm = s(d.get("summary"), "")
+    src = s(d.get("source"), "")
+    body = [{"type": "box", "layout": "horizontal", "contents": [{"type": "box", "layout": "vertical", "backgroundColor": c, "cornerRadius": "8px", "paddingAll": "4px", "contents": [tx(il, color="#FFFFFF", size="xs", align="center")], "flex": 0}] + ([tx(lv, size="xs", align="end", gravity="center", color=GR)] if lv else [])},
+            tx(hl, weight="bold", size="md", margin="md")] + ([tx(sm, size="sm", color="#555555")] if sm else []) + ([sep(), tx("แหล่งข่าว: " + src, size="xxs", color=GR, margin="md")] if src else [])
+    ok = lambda u: u.startswith("https://") and len(u) < 1000
+    au, ou = s(d.get("article_url"), ""), s(d.get("url"), "")
+    btns = ([{"type": "button", "style": "primary", "color": "#C9A227", "height": "sm", "action": {"type": "uri", "label": "อ่านบทความ", "uri": au}}] if ok(au) else []) + \
+           ([{"type": "button", "style": "secondary", "height": "sm", "action": {"type": "uri", "label": "ข่าวต้นฉบับ", "uri": ou}}] if ok(ou) else [])
+    if not btns: btns = [{"type": "button", "style": "primary", "color": "#C9A227", "height": "sm", "action": {"type": "uri", "label": "ดูแดชบอร์ด", "uri": DASH}}]
+    hdr = [tx("PUREGOLD AI", color="#FFFFFFB3", size="xxs", weight="bold"), tx("บทความข่าวทองคำ", color="#FFFFFF", weight="bold", size="lg")] + ([tx(s(d.get("time")), color="#FFFFFFCC", size="xs")] if d.get("time") else [])
+    b = {"type": "bubble", "header": {"type": "box", "layout": "vertical", "backgroundColor": c, "contents": hdr, "paddingAll": "14px"},
+         "body": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": body}, "footer": {"type": "box", "layout": "vertical", "spacing": "sm", "contents": btns}}
+    lines = ["บทความข่าวทองคำ (" + il + (", " + lv if lv else "") + ")", hl] + ([sm] if sm else []) + (["อ่านบทความ: " + au] if ok(au) else []) + (["ข่าวต้นฉบับ: " + ou] if ok(ou) else [])
+    return b, "ข่าวทอง: " + hl, lines
 def b_portfolio():
     net = num(d.get("today_usc")) or 0.0; c = col(net); WR = winrate(d)
     trades = num(d.get("trades")); trades = int(trades) if trades is not None else (WR[2] or 0)
@@ -258,7 +279,7 @@ def b_status():
 LABEL = {"side": "ฝั่ง", "entry": "จุดเข้า", "exit": "ออก", "sl": "SL", "tp": "TP", "lot": "ล็อต", "rr": "RR", "ev": "EV", "confidence": "ความมั่นใจ", "reason": "เหตุผล",
          "pl_usc": "กำไร/ขาดทุน (USC)", "today_usc": "รวมวันนี้ (USC)", "trades": "จำนวนไม้", "wins": "ชนะ", "total": "ทั้งหมด", "win_rate": "อัตราชนะ %",
          "balance": "Balance", "equity": "Equity", "open": "ไม้ที่เปิดอยู่", "pending": "ออเดอร์รอ", "symbol": "สินค้า", "price": "ราคา", "headline": "ข่าว", "text": "ข้อความ"}
-TITLE = {"trade": "เปิดออเดอร์", "close": "ปิดออเดอร์", "portfolio": "สรุปพอร์ต", "hourly": "สรุปรายชั่วโมง", "news": "ข่าวทองคำ", "status": "สถานะระบบ"}
+TITLE = {"trade": "เปิดออเดอร์", "close": "ปิดออเดอร์", "portfolio": "สรุปพอร์ต", "hourly": "สรุปรายชั่วโมง", "news": "ข่าวทองคำ", "news_article": "บทความข่าวทองคำ", "status": "สถานะระบบ"}
 def generic_lines():
     """last-resort readable text: label: value lines, never raw JSON"""
     def v2s(v):
@@ -269,7 +290,7 @@ def generic_lines():
 
 res = {"type": T}
 try:
-    fn = {"trade": b_trade, "close": b_close, "hourly": b_hourly, "news": b_news, "portfolio": b_portfolio, "status": b_status}[T]
+    fn = {"trade": b_trade, "close": b_close, "hourly": b_hourly, "news": b_news, "news_article": b_news_article, "portfolio": b_portfolio, "status": b_status}[T]
     b, alt, lines = fn()
     res["flex"] = {"messages": [{"type": "flex", "altText": (alt or "PUREGOLD AI")[:390], "contents": b}]}
 except Exception:

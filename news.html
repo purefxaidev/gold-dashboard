@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07080d">
+<meta name="referrer" content="no-referrer">
+<title>PUREGOLD AI · บทความข่าวทองคำ</title>
+<meta name="description" content="PUREGOLD gold news articles: the latest gold-moving headlines explained in plain Thai and English, with impact on gold and a link to the original source. Education only, not investment advice.">
+<meta property="og:title" content="PUREGOLD AI · Gold news articles"><meta property="og:image" content="https://purefxaidev.github.io/gold-dashboard/icon-512.png">
+<link rel="alternate" hreflang="th" href="https://purefxaidev.github.io/gold-dashboard/news.html?lang=th"><link rel="alternate" hreflang="en" href="https://purefxaidev.github.io/gold-dashboard/news.html?lang=en">
+<link rel="icon" type="image/svg+xml" href="logo.svg"><link rel="apple-touch-icon" href="icon-192.png">
+<script src="i18n.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&family=Noto+Sans+Thai:wght@300;400;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07080d;--glass:rgba(255,255,255,.045);--bd:rgba(255,215,120,.16);--gold:#f5c542;--gold2:#ffdf80;--up:#22e39a;--dn:#ff4d6d;--neu:#9aa3b5;--mut:#9aa3b5;--tx:#eef1f7;--r:18px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:'Noto Sans Thai',system-ui,sans-serif;color:var(--tx);background:var(--bg);min-height:100vh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+body:before{content:"";position:fixed;inset:-20%;z-index:-2;background:radial-gradient(40% 35% at 15% 10%,rgba(245,197,66,.18),transparent 70%),radial-gradient(35% 30% at 90% 30%,rgba(120,80,255,.14),transparent 70%),radial-gradient(40% 40% at 50% 100%,rgba(0,200,255,.08),transparent 70%);animation:drift 22s ease-in-out infinite alternate}
+body:after{content:"";position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:40px 40px;mask:linear-gradient(#000,transparent 85%)}
+@keyframes drift{to{transform:translate(4%,-3%) rotate(6deg)}}
+@keyframes shine{to{background-position:200% center}}
+@keyframes rise{to{opacity:1;transform:none}}
+@keyframes pulse{50%{opacity:.35}}
+h1,h2,h3{font-family:'Prompt',sans-serif}
+a{color:var(--gold2)}
+.wrap{max-width:980px;margin:0 auto;padding:14px}
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(7,8,13,.65);border-bottom:1px solid var(--bd)}
+header .wrap{display:flex;align-items:center;gap:10px;padding:10px 14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}.brand img{width:36px;height:36px;filter:drop-shadow(0 0 8px #f5c54266)}
+.pgword{font-weight:900;font-size:20px;letter-spacing:3px;background:linear-gradient(90deg,#a8740a,#fff4c2,#f5c542,#a8740a);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite;line-height:1}
+.brand small{display:block;font-size:10.5px;letter-spacing:2px;color:#c9a227;margin-top:3px}
+.nav{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px;text-decoration:none;white-space:nowrap;border:1px solid var(--bd);color:var(--tx)}
+.pill:hover{background:rgba(245,197,66,.1)}
+.pill.gold{background:linear-gradient(90deg,#c9a227,#f5c542);color:#111;border:0}
+.pill.cy{border-color:#36e2ff88;color:#36e2ff;font-family:'JetBrains Mono',monospace}
+.hero{padding:22px 4px 6px}
+.hero h1{margin:0;font-size:26px;background:linear-gradient(90deg,var(--gold),#fff3c4,var(--gold));background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+.hero p{margin:6px 0 0;color:var(--mut);font-size:13.5px;line-height:1.6}
+.meta{display:flex;gap:10px;align-items:center;color:var(--mut);font-size:12px;margin-top:10px;flex-wrap:wrap}
+.meta .dot{width:8px;height:8px;border-radius:50%;background:var(--up);box-shadow:0 0 10px var(--up);animation:pulse 1.6s infinite;display:inline-block}
+.filters{display:flex;gap:8px;margin:14px 0 6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.filters::-webkit-scrollbar{display:none}
+.fbtn{flex:none;font:600 12.5px 'Noto Sans Thai';padding:7px 14px;border-radius:999px;border:1px solid var(--bd);background:var(--glass);color:var(--mut);cursor:pointer;transition:.2s}
+.fbtn.on{color:#111;background:var(--gold);border-color:var(--gold)}
+.fbtn i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.list{display:flex;flex-direction:column;gap:14px;margin-top:10px}
+.art{position:relative;background:var(--glass);border:1px solid var(--bd);border-radius:var(--r);padding:16px 16px 14px 20px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 10px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);opacity:0;transform:translateY(14px);animation:rise .55s ease forwards;overflow:hidden;scroll-margin-top:90px;transition:border-color .3s}
+.art:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c)}
+.art.bullish{--c:var(--up)}.art.bearish{--c:var(--dn)}.art.neutral{--c:var(--neu)}
+.art.hl{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 10px 40px rgba(245,197,66,.18)}
+.top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:11.5px;color:var(--mut)}
+.tag{font-weight:700;font-size:11px;padding:3px 9px;border-radius:999px;color:#08090c;background:var(--c)}
+.lv{padding:2px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.14)}
+.lv.high{color:#ffb4c0;border-color:#ff4d6d66}
+.top .t{margin-left:auto;font-family:'JetBrains Mono',monospace}
+.art h2{margin:10px 0 6px;font-size:17.5px;line-height:1.45;color:var(--tx);font-weight:600}
+.sum{margin:0;color:#c7cedb;font-size:14px;line-height:1.7}
+.body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s ease}
+.art.open .body{grid-template-rows:1fr}
+.body>div{overflow:hidden}
+.body p{margin:12px 0 0;font-size:14.5px;line-height:1.8;color:#dfe4ee}
+.src{margin-top:12px;font-size:12px;color:var(--mut)}.src i{font-style:normal;color:#c7cedb}
+.acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.b{font:600 12.5px 'Noto Sans Thai';padding:7px 14px;border-radius:999px;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--tx);cursor:pointer;text-decoration:none}
+.b.pri{background:linear-gradient(90deg,#c9a227,#f5c542);color:#111;border:0}
+.b:hover{filter:brightness(1.12)}
+.empty{color:var(--mut);text-align:center;padding:40px 10px}
+.disc{color:var(--mut);font-size:11.5px;text-align:center;margin:26px 0 10px;line-height:1.6}
+.sk{height:120px;border-radius:var(--r);background:linear-gradient(90deg,rgba(255,255,255,.03),rgba(255,255,255,.08),rgba(255,255,255,.03));background-size:200% 100%;animation:shine 1.4s linear infinite}
+@media(max-width:600px){.hero h1{font-size:21px}.art h2{font-size:16px}.pill{font-size:11px;padding:5px 9px}.nav{margin-left:0;width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;gap:6px}.nav::-webkit-scrollbar{display:none}.nav .langtog{margin-right:0}header{position:relative}header .wrap{row-gap:8px}.top .t{margin-left:0;width:100%}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.art{opacity:1;transform:none}}
+</style>
+</head>
+<body class="notr">
+<header><div class="wrap" data-langtog>
+ <a class="brand" href="./" data-l="home"><img src="logo.svg" alt="PUREGOLD"><div><div class="pgword">PUREGOLD</div><small>AI · GOLD NEWS</small></div></a>
+ <nav class="nav">
+  <a class="pill" href="./" data-langref data-k="dash">แดชบอร์ด</a>
+  <a class="pill cy" href="control.html" data-k="ctl">ศูนย์ควบคุม</a>
+  <a class="pill gold" href="signup.html" data-k="su">สมัคร Exness</a>
+ </nav>
+</div></header>
+<main class="wrap">
+ <section class="hero">
+  <h1 data-k="h1">บทความข่าวทองคำ</h1>
+  <p data-k="lead">ระบบสแกนข่าวที่มีผลกับราคาทอง แล้วเขียนสรุปเป็นภาษาง่ายๆ ว่าเกิดอะไรขึ้น ทำไมสำคัญ และน่าจะส่งผลกับทองทางไหน ทุกบทความมีลิงก์ข่าวต้นฉบับให้ตรวจสอบเอง</p>
+  <div class="meta"><span class="dot"></span><span id="upd">-</span><span id="cnt"></span></div>
+ </section>
+ <div class="filters" id="filters"></div>
+ <div class="list" id="list"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+ <p class="disc" data-k="disc">ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน · ทิศทางในบทความเป็นการประเมิน อาจผิดได้ · การเทรดมีความเสี่ยงสูง</p>
+</main>
+<script>
+(function () {
+  const L = window.LANG === "en" ? "en" : "th";
+  const T = {
+    th: {dash: "แดชบอร์ด", ctl: "ศูนย์ควบคุม", su: "สมัคร Exness", h1: "บทความข่าวทองคำ",
+      lead: "ระบบสแกนข่าวที่มีผลกับราคาทอง แล้วเขียนสรุปเป็นภาษาง่ายๆ ว่าเกิดอะไรขึ้น ทำไมสำคัญ และน่าจะส่งผลกับทองทางไหน ทุกบทความมีลิงก์ข่าวต้นฉบับให้ตรวจสอบเอง",
+      disc: "ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน · ทิศทางในบทความเป็นการประเมิน อาจผิดได้ · การเทรดมีความเสี่ยงสูง",
+      all: "ทั้งหมด", bullish: "หนุนทองขึ้น", bearish: "กดดันทองลง", neutral: "เป็นกลาง", high: "ผลกระทบสูง", medium: "ผลกระทบกลาง", low: "ผลกระทบต่ำ",
+      more: "อ่านบทความ", less: "ย่อ", orig: "ข่าวต้นฉบับ", copy: "คัดลอกลิงก์", copied: "คัดลอกแล้ว", src: "แหล่งข่าว", srcHl: "พาดหัวต้นฉบับ",
+      upd: "อัปเดตล่าสุด", items: "บทความ", tz: "น. เวลาไทย", none: "ยังไม่มีบทความในหมวดนี้", err: "โหลดข่าวไม่สำเร็จ ลองรีเฟรชอีกครั้ง"},
+    en: {dash: "Dashboard", ctl: "Control Center", su: "Open Exness account", h1: "Gold news articles",
+      lead: "The system scans news that moves gold and explains it in plain language: what happened, why it matters and which way it may push gold. Every article links to the original source so you can check it yourself.",
+      disc: "For education only, not investment advice · Directions are estimates and can be wrong · Trading is high risk",
+      all: "All", bullish: "Bullish gold", bearish: "Bearish gold", neutral: "Neutral", high: "High impact", medium: "Medium impact", low: "Low impact",
+      more: "Read article", less: "Collapse", orig: "Original source", copy: "Copy link", copied: "Copied", src: "Source", srcHl: "Original headline",
+      upd: "Last updated", items: "articles", tz: "Bangkok time", none: "No articles in this category yet", err: "Could not load news, please refresh"}
+  }[L];
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+  const safeUrl = u => /^https:\/\//.test(u || "") ? u : "#";
+  document.querySelectorAll("[data-k]").forEach(e => { if (T[e.dataset.k]) e.textContent = T[e.dataset.k]; });
+  document.querySelectorAll("a[href]").forEach(a => { const h = a.getAttribute("href"); if (!/^https?:/.test(h) && !h.startsWith("#")) { const u = new URL(h, location.href); u.searchParams.set("lang", L); a.href = u.pathname + u.search; } });
+  document.title = L === "en" ? "PUREGOLD AI · Gold news articles" : "PUREGOLD AI · บทความข่าวทองคำ";
+  const COL = {bullish: "var(--up)", bearish: "var(--dn)", neutral: "var(--neu)"};
+  let items = [], filt = "all";
+  function filters() {
+    $("filters").innerHTML = ["all", "bullish", "bearish", "neutral"].map(k => {
+      const n = k === "all" ? items.length : items.filter(i => i.impact === k).length;
+      return `<button class="fbtn${filt === k ? " on" : ""}" data-f="${k}">${k === "all" ? "" : `<i style="background:${COL[k]}"></i>`}${T[k]} (${n})</button>`;
+    }).join("");
+    $("filters").querySelectorAll("button").forEach(b => b.onclick = () => { filt = b.dataset.f; filters(); render(); });
+  }
+  function card(it, idx) {
+    const title = L === "en" ? it.title_en : it.title_th, sum = L === "en" ? it.summary_en : it.summary_th, paras = (L === "en" ? it.article_en : it.article_th) || [];
+    return `<article class="art ${esc(it.impact)}" id="${esc(it.id)}" style="animation-delay:${Math.min(idx, 10) * 70}ms">
+      <div class="top"><span class="tag">${it.impact === "bullish" ? "▲ " : it.impact === "bearish" ? "▼ " : "◆ "}${esc(T[it.impact] || it.impact)}</span>${it.level ? `<span class="lv ${esc(it.level)}">${esc(T[it.level] || it.level)}</span>` : ""}<span>${esc(it.source)}</span><span class="t">${esc(it.published)} ${esc(T.tz)}</span></div>
+      <h2>${esc(title)}</h2><p class="sum">${esc(sum)}</p>
+      <div class="body"><div>${paras.map(p => `<p>${esc(p)}</p>`).join("")}
+        <div class="src">${esc(T.src)}: <i>${esc(it.source)}</i>${it.headline_src ? ` · ${esc(T.srcHl)}: <i>${esc(it.headline_src)}</i>` : ""}</div></div></div>
+      <div class="acts"><button class="b pri" data-tg="${esc(it.id)}">${esc(T.more)}</button><a class="b" href="${esc(safeUrl(it.url))}" target="_blank" rel="noopener noreferrer">${esc(T.orig)}</a><button class="b" data-cp="${esc(it.id)}">${esc(T.copy)}</button></div>
+    </article>`;
+  }
+  function toggle(id, force) {
+    const a = document.getElementById(id); if (!a) return;
+    const on = force != null ? force : !a.classList.contains("open"); a.classList.toggle("open", on);
+    const b = a.querySelector("[data-tg]"); if (b) b.textContent = on ? T.less : T.more;
+    if (on && location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+  }
+  function render() {
+    const v = filt === "all" ? items : items.filter(i => i.impact === filt);
+    $("list").innerHTML = v.length ? v.map(card).join("") : `<div class="empty">${esc(T.none)}</div>`;
+    $("list").querySelectorAll("[data-tg]").forEach(b => b.onclick = () => toggle(b.dataset.tg));
+    $("list").querySelectorAll("[data-cp]").forEach(b => b.onclick = () => {
+      const u = location.origin + location.pathname + "#" + b.dataset.cp;
+      (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => { b.textContent = T.copied; setTimeout(() => b.textContent = T.copy, 1500); }).catch(() => prompt("", u));
+    });
+  }
+  function openHash() {
+    const id = decodeURIComponent(location.hash.slice(1)); if (!id) return;
+    if (!document.getElementById(id) && items.some(i => i.id === id)) { filt = "all"; filters(); render(); }
+    const a = document.getElementById(id); if (!a) return;
+    toggle(id, true); a.classList.add("hl"); setTimeout(() => a.scrollIntoView({behavior: "smooth", block: "start"}), 120); setTimeout(() => a.classList.remove("hl"), 4000);
+  }
+  fetch("news.json?t=" + Date.now(), {cache: "no-store"}).then(r => r.json()).then(d => {
+    items = (d.items || []).filter(i => i && i.id).sort((a, b) => (b.published_ts || 0) - (a.published_ts || 0));
+    $("upd").textContent = `${T.upd} ${d.updated || "-"} ${T.tz}`; $("cnt").textContent = `· ${items.length} ${T.items}`;
+    filters(); render(); openHash();
+  }).catch(() => { $("list").innerHTML = `<div class="empty">${esc(T.err)}</div>`; });
+  window.addEventListener("hashchange", openHash);
+})();
+</script>
+</body>
+</html>

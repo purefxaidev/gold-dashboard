@@ -64,6 +64,7 @@ svg text{font-family:var(--mono)}
  <div class="sp"></div>
  <div class="meta" id="meta">-</div>
  <button class="back" id="suBtn" type="button" style="cursor:pointer;font:inherit;font-size:11px;background:transparent;color:#ffd36b">OPEN ACCOUNT</button>
+ <a class="back" id="newsLink" href="news.html" style="color:#ffd36b;border-color:#f5c54266">NEWS</a>
  <a class="back" id="back" href="./" data-langref>&lt; DASHBOARD</a>
 </div>
 <div class="chips" id="chips"></div>
@@ -109,7 +110,7 @@ const fmt = (v, d = 2) => num(v) == null ? "-" : Number(v).toLocaleString("en-US
 const sg = (v, d = 2) => num(v) == null ? "-" : (v >= 0 ? "+" : "") + fmt(v, d);
 const pick = (k) => (EN && D && D[k + "_en"] != null && D[k + "_en"] !== "" && (!Array.isArray(D[k + "_en"]) || D[k + "_en"].length)) ? D[k + "_en"] : (D ? D[k] : null);
 document.title = T("PUREGOLD ศูนย์ควบคุม · XAUUSD", "PUREGOLD Control Center · XAUUSD");
-$("back").href = "./" + (EN ? "?lang=en" : "?lang=th"); $("back").textContent = T("< กลับแดชบอร์ด", "< DASHBOARD");
+$("back").href = "./" + (EN ? "?lang=en" : "?lang=th"); $("newsLink").href = "news.html" + (EN ? "?lang=en" : "?lang=th"); $("newsLink").textContent = T("ข่าวทอง", "NEWS"); $("back").textContent = T("< กลับแดชบอร์ด", "< DASHBOARD");
 $("tSub").textContent = T("ศูนย์ควบคุม · XAUUSD", "CONTROL CENTER · XAUUSD");
 [["hPrice", "ราคาสด", "LIVE PRICE"], ["hAi", "ความมั่นใจ AI", "AI CONFIDENCE"], ["hSr", "แนวรับ / แนวต้าน", "SUPPORT / RESISTANCE"], ["hEv", "แผน EV", "EV PLANS"], ["hCum", "กำไรสะสมวันนี้ (USC)", "CUMULATIVE P&L TODAY (USC)"],
  ["hToday", "กำไร/ขาดทุนวันนี้", "TODAY P&L"], ["lPts", "จุด (points)", "Points"], ["lOpen", "ไม้เปิดอยู่", "Open trades"], ["lPend", "ออเดอร์รอ", "Pending orders"], ["hWin", "อัตราชนะ", "WIN RATE"],

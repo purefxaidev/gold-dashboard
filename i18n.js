@@ -6,7 +6,7 @@
   window.LANG = L; document.documentElement.lang = L;
   const D = {
   // header / common
-  "สมัคร Exness": "Open Exness account", "ศูนย์ควบคุม": "Control Center", "EURUSD กับ USDJPY ตอนนี้เป็นไง?": "How are EURUSD and USDJPY now?", "BTC แนวโน้มเป็นยังไง?": "What is the BTC trend?", "กำลังเชื่อมต่อ…": "Connecting…", "กำลังโหลดข้อมูล…": "Loading data…", "กำลังโหลด…": "Loading…",
+  "สมัคร Exness": "Open Exness account", "ข่าวทอง": "Gold news", "อ่านบทความข่าวทั้งหมด ›": "All news articles ›", "ศูนย์ควบคุม": "Control Center", "EURUSD กับ USDJPY ตอนนี้เป็นไง?": "How are EURUSD and USDJPY now?", "BTC แนวโน้มเป็นยังไง?": "What is the BTC trend?", "กำลังเชื่อมต่อ…": "Connecting…", "กำลังโหลดข้อมูล…": "Loading data…", "กำลังโหลด…": "Loading…",
   "ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน · การเทรดมีความเสี่ยงสูง อาจขาดทุนเกินที่คาด": "For education only, not investment advice · Trading is high risk; losses can exceed expectations",
   // sections
   "กราฟ XAUUSD": "XAUUSD chart", "ราคาทองโลกแบบเรียลไทม์": "Live world gold price", "ความมั่นใจ AI (ระยะสั้น)": "AI confidence (short term)", "แผนที่ราคา 3 มิติ": "3D price map",
