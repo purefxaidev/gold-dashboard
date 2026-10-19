@@ -1,0 +1,14 @@
+name = "line-gold-bot"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+# ความลับตั้งด้วยคำสั่ง (ห้ามใส่ในไฟล์นี้):
+#   npx wrangler secret put LINE_CHANNEL_ACCESS_TOKEN
+#   npx wrangler secret put LINE_CHANNEL_SECRET
+#   npx wrangler secret put GEMINI_API_KEY
+#   npx wrangler secret put ALERT_SECRET
+
+# (ตัวเลือก) จำโหมดแปลต่อผู้ใช้: npx wrangler kv namespace create MODES แล้วใส่ id
+# [[kv_namespaces]]
+# binding = "MODES"
+# id = "<KV_NAMESPACE_ID>"
