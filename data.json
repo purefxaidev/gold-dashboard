@@ -1,5 +1,5 @@
 {
- "updated": "20 ต.ค. 2026 00:01 น. (เวลาไทย)",
+ "updated": "20 ต.ค. 2026 00:13 น. (เวลาไทย)",
  "price": "4,142.4",
  "bias": "เอียงลง · ขึ้น 38% ลง 62% · ราคา ~4,146 · M5/M15 ลง H1 CHoCH ลง · อยู่โซนถูกใกล้โลว์ 4,143.5 · ไม้ผู้ใช้ BUY 0.2 @ 4,146.919 ตั้ง SL/TP แล้ว · AI ไม่เปิดไม้ใหม่",
  "indicators": "M5 ลง · M15 ลง · H1 ไซด์เวย์เอียงลง · H4 ไซด์เวย์ · D1 ลง · RSI M15 อ่อน",
@@ -107,2057 +107,193 @@
  ],
  "ev_method": "EV = p*RR - (1-p) · เข้าทองเมื่อ EV>0 และจุดเข้าสะอาด · คู่เงิน/BTC เฉพาะ EV>=+0.3R",
  "pnl": {
-  "today_usc": -1852.61,
-  "today_points": -57.4,
-  "win_rate": 49.9,
-  "trade_count": 389,
-  "open_count": 1,
-  "mark_price": 4139.6,
-  "note": "00:01 น. ผู้ใช้สกัลป์ทองไม้ละ 1 ล็อต ปิดเพิ่ม 21 ไม้ รวม -169.1 USC · ระบบตั้ง SL 4,137.90 TP 4,145.50 ให้ไม้ BUY 1 ล็อตที่เปิดค้าง · ทุนต่ำกว่าเพดานป้องกัน ~3,945 USC ระบบหยุดเปิดไม้ใหม่ · รวมวันที่ 19 ต.ค. ปิดสุทธิ -1,852.61 USC · ชนะ 49.9%",
-  "note_en": "00:01 owner scalping gold at 1 lot per trade: 21 more closed, -169.1 USC · system set SL 4,137.90 TP 4,145.50 on the open 1-lot BUY · equity is below the ~3,945 USC protection floor, so no new AI trades · Oct 19 closed net -1,852.61 USC · win rate 49.9%",
+  "today_usc": -548.1,
+  "today_points": -10.785,
+  "win_rate": 43.8,
+  "trade_count": 16,
+  "open_count": 0,
+  "mark_price": 4138.16,
+  "note": "00:12 น. (20 ต.ค.) ผู้ใช้สกัลป์ทองไม้ละ 1 ล็อต ปิดเพิ่ม 15 ไม้ รวม -527.30 USC · ระบบตั้ง SL 4,137.40/TP 4,143.80 (BUY) และ SL 4,142.40/TP 4,133.40 (SELL) ให้ไม้ที่ไม่มี SL · ไม่มีไม้เปิดค้าง · ทุนต่ำกว่าเพดานป้องกัน ~3,945 USC และขาดทุนวันนี้เกิน 3% ระบบหยุดเปิดไม้ใหม่ · วันนี้ปิดสุทธิ -548.10 USC · ชนะ 43.8%",
+  "note_en": "00:12 (Oct 20) owner scalping gold at 1 lot per trade: 15 more closed, -527.30 USC · system set SL 4,137.40/TP 4,143.80 (BUY) and SL 4,142.40/TP 4,133.40 (SELL) on trades without SL · no open positions · equity is below the ~3,945 USC protection floor and today's loss is over 3%, so no new AI trades · today closed net -548.10 USC · win rate 43.8%",
   "pending": [],
   "trades": [
    {
-    "time": "21:10",
+    "time": "00:12",
     "symbol": "XAUUSD",
     "side": "buy",
     "lot": 1.0,
-    "entry": 4149.898,
-    "exit": 4147.315,
-    "pl_usc": -258.3,
-    "pl_points": -2.583,
+    "entry": 4138.265,
+    "exit": 4138.491,
+    "pl_usc": 22.6,
+    "pl_points": 0.226,
     "status": "closed",
     "by": "ผู้ใช้"
    },
    {
-    "time": "21:10",
+    "time": "00:12",
     "symbol": "XAUUSD",
     "side": "sell",
     "lot": 1.0,
-    "entry": 4147.315,
-    "exit": 4149.898,
+    "entry": 4137.118,
+    "exit": 4139.45,
     "pl_usc": 0.0,
-    "pl_points": -2.583,
+    "pl_points": -2.332,
     "status": "closed",
     "by": "ผู้ใช้"
    },
    {
-    "time": "21:10",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 1.0,
-    "entry": 4147.284,
-    "exit": 4147.239,
-    "pl_usc": 4.5,
-    "pl_points": 0.045,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "21:10",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 1.0,
-    "entry": 4148.384,
-    "exit": 4148.391,
-    "pl_usc": -0.7,
-    "pl_points": -0.007,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "21:10",
+    "time": "00:12",
     "symbol": "XAUUSD",
     "side": "buy",
     "lot": 1.0,
-    "entry": 4146.8,
-    "exit": 4147.444,
-    "pl_usc": 64.4,
-    "pl_points": 0.644,
+    "entry": 4139.45,
+    "exit": 4137.118,
+    "pl_usc": -233.2,
+    "pl_points": -2.332,
     "status": "closed",
     "by": "ผู้ใช้"
    },
    {
-    "time": "21:18",
-    "symbol": "XAUUSD",
-    "side": "mixed",
-    "lot": 0.0,
-    "entry": 4145.0,
-    "exit": 4145.0,
-    "pl_usc": -43.8,
-    "pl_points": 0.0,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "21:53",
+    "time": "00:12",
     "symbol": "XAUUSD",
     "side": "sell",
-    "lot": 0.2,
-    "entry": 4146.549,
-    "exit": 4145.815,
-    "pl_usc": 14.7,
-    "pl_points": 0.734,
+    "lot": 1.0,
+    "entry": 4136.823,
+    "exit": 4139.795,
+    "pl_usc": 0.0,
+    "pl_points": -2.972,
     "status": "closed",
     "by": "ผู้ใช้"
    },
    {
-    "time": "21:53",
+    "time": "00:12",
+    "symbol": "XAUUSD",
+    "side": "buy",
+    "lot": 1.0,
+    "entry": 4139.795,
+    "exit": 4136.823,
+    "pl_usc": -297.2,
+    "pl_points": -2.972,
+    "status": "closed",
+    "by": "ผู้ใช้"
+   },
+   {
+    "time": "00:12",
+    "symbol": "XAUUSD",
+    "side": "buy",
+    "lot": 1.0,
+    "entry": 4138.211,
+    "exit": 4138.491,
+    "pl_usc": 28.0,
+    "pl_points": 0.28,
+    "status": "closed",
+    "by": "ผู้ใช้"
+   },
+   {
+    "time": "00:12",
+    "symbol": "XAUUSD",
+    "side": "buy",
+    "lot": 1.0,
+    "entry": 4138.281,
+    "exit": 4138.491,
+    "pl_usc": 21.0,
+    "pl_points": 0.21,
+    "status": "closed",
+    "by": "ผู้ใช้"
+   },
+   {
+    "time": "00:10",
     "symbol": "XAUUSD",
     "side": "sell",
-    "lot": 0.2,
-    "entry": 4146.0,
-    "exit": 4145.815,
-    "pl_usc": 3.7,
-    "pl_points": 0.185,
+    "lot": 1.0,
+    "entry": 4138.078,
+    "exit": 4138.282,
+    "pl_usc": -20.4,
+    "pl_points": -0.204,
     "status": "closed",
     "by": "ผู้ใช้"
    },
    {
-    "time": "21:53",
+    "time": "00:09",
     "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4146.059,
-    "exit": 4145.815,
-    "pl_usc": 4.9,
-    "pl_points": 0.244,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "21:53",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4146.059,
-    "exit": 4145.815,
-    "pl_usc": 4.9,
-    "pl_points": 0.244,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "21:54",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4145.643,
-    "exit": 4144.566,
-    "pl_usc": 21.6,
-    "pl_points": 1.077,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "21:54",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4144.744,
-    "exit": 4144.582,
-    "pl_usc": 3.3,
-    "pl_points": 0.162,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "21:57",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4144.254,
-    "exit": 4146.587,
-    "pl_usc": -46.6,
-    "pl_points": -2.333,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "21:57",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4145.136,
-    "exit": 4146.587,
-    "pl_usc": -29.0,
-    "pl_points": -1.451,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "21:59",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4145.404,
-    "exit": 4146.313,
-    "sl": 4141.5,
-    "tp": 4151.4,
-    "pl_usc": 18.2,
-    "pl_points": 0.909,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:05",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4145.038,
-    "exit": 4146.193,
-    "pl_usc": 23.1,
-    "pl_points": 1.155,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:06",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4144.974,
-    "exit": 4145.271,
-    "pl_usc": 5.9,
-    "pl_points": 0.297,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:07",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4145.317,
-    "exit": 4145.93,
-    "pl_usc": 12.3,
-    "pl_points": 0.613,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:07",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4145.317,
-    "exit": 4145.93,
-    "pl_usc": 12.3,
-    "pl_points": 0.613,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:07",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4145.869,
-    "exit": 4146.227,
-    "pl_usc": 7.1,
-    "pl_points": 0.358,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4146.919,
-    "exit": 4145.045,
-    "pl_usc": -37.5,
-    "pl_points": -1.874,
-    "status": "closed",
-    "by": "ผู้ใช้",
-    "sl": 4141.5,
-    "tp": 4155.0
-   },
-   {
-    "time": "22:35",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4145.126,
-    "exit": 4144.449,
-    "pl_usc": -13.5,
-    "pl_points": -0.677,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:35",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4145.126,
-    "exit": 4144.449,
-    "pl_usc": -13.5,
-    "pl_points": -0.677,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:35",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4144.706,
-    "exit": 4144.449,
-    "pl_usc": -5.1,
-    "pl_points": -0.257,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:35",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4144.706,
-    "exit": 4144.449,
-    "pl_usc": -5.1,
-    "pl_points": -0.257,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:35",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4145.151,
-    "exit": 4144.449,
-    "pl_usc": -14.0,
-    "pl_points": -0.702,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:35",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4144.706,
-    "exit": 4144.449,
-    "pl_usc": -5.1,
-    "pl_points": -0.257,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:35",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4144.706,
-    "exit": 4144.515,
-    "pl_usc": -3.8,
-    "pl_points": -0.191,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:46",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4143.686,
-    "exit": 4143.83,
-    "pl_usc": 2.9,
-    "pl_points": 0.144,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:46",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4143.651,
-    "exit": 4143.83,
-    "pl_usc": 3.6,
-    "pl_points": 0.179,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:46",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4143.651,
-    "exit": 4143.83,
-    "pl_usc": 3.6,
-    "pl_points": 0.179,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:46",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4143.651,
-    "exit": 4143.83,
-    "pl_usc": 3.6,
-    "pl_points": 0.179,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:46",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4143.651,
-    "exit": 4143.83,
-    "pl_usc": 3.6,
-    "pl_points": 0.179,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:46",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4143.651,
-    "exit": 4143.83,
-    "pl_usc": 3.6,
-    "pl_points": 0.179,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:46",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4143.651,
-    "exit": 4143.83,
-    "pl_usc": 3.6,
-    "pl_points": 0.179,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:47",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4143.535,
-    "exit": 4143.322,
-    "pl_usc": 4.3,
-    "pl_points": 0.213,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:47",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4143.429,
-    "exit": 4143.322,
-    "pl_usc": 2.2,
-    "pl_points": 0.107,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:47",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4143.275,
-    "exit": 4143.322,
-    "pl_usc": -0.9,
-    "pl_points": -0.047,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:48",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4143.165,
-    "exit": 4143.024,
-    "pl_usc": 2.8,
-    "pl_points": 0.141,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:48",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4143.165,
-    "exit": 4143.024,
-    "pl_usc": 2.8,
-    "pl_points": 0.141,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:48",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4143.561,
-    "exit": 4142.972,
-    "pl_usc": 11.8,
-    "pl_points": 0.589,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:48",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4143.454,
-    "exit": 4142.972,
-    "pl_usc": 9.7,
-    "pl_points": 0.482,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:48",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4143.348,
-    "exit": 4142.972,
-    "pl_usc": 7.6,
-    "pl_points": 0.376,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:49",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4143.815,
-    "exit": 4143.19,
-    "pl_usc": 12.5,
-    "pl_points": 0.625,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:50",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4142.98,
-    "exit": 4142.599,
-    "pl_usc": 7.6,
-    "pl_points": 0.381,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:50",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4142.98,
-    "exit": 4142.599,
-    "pl_usc": 7.6,
-    "pl_points": 0.381,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:50",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4143.308,
-    "exit": 4142.599,
-    "pl_usc": 14.2,
-    "pl_points": 0.709,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:50",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4142.98,
-    "exit": 4142.548,
-    "pl_usc": 8.6,
-    "pl_points": 0.432,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:50",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4144.883,
-    "exit": 4142.323,
-    "pl_usc": -51.2,
-    "pl_points": -2.56,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:50",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4144.883,
-    "exit": 4142.323,
-    "pl_usc": -51.2,
-    "pl_points": -2.56,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:50",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4144.883,
-    "exit": 4142.323,
-    "pl_usc": -51.2,
-    "pl_points": -2.56,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:50",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4144.392,
-    "exit": 4142.323,
-    "pl_usc": -41.3,
-    "pl_points": -2.069,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:50",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4144.392,
-    "exit": 4142.323,
-    "pl_usc": -41.3,
-    "pl_points": -2.069,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:52",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4141.269,
-    "exit": 4141.51,
-    "pl_usc": 4.8,
-    "pl_points": 0.241,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:53",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4141.367,
-    "exit": 4141.479,
-    "pl_usc": 2.3,
-    "pl_points": 0.112,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:53",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4141.576,
-    "exit": 4141.479,
-    "pl_usc": -1.9,
-    "pl_points": -0.097,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "22:57",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.2,
-    "entry": 4141.551,
-    "exit": 4141.654,
-    "pl_usc": -2.1,
-    "pl_points": -0.103,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:02",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4142.086,
-    "exit": 4140.09,
-    "pl_usc": -39.9,
-    "pl_points": -1.996,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:02",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4142.41,
-    "exit": 4140.09,
-    "pl_usc": -46.4,
-    "pl_points": -2.32,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:02",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4142.41,
-    "exit": 4139.723,
-    "pl_usc": -53.7,
-    "pl_points": -2.687,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:03",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4140.115,
-    "exit": 4140.539,
-    "pl_usc": 8.5,
-    "pl_points": 0.424,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:03",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4140.07,
-    "exit": 4140.539,
-    "pl_usc": 9.4,
-    "pl_points": 0.469,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:03",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4140.339,
-    "exit": 4140.539,
-    "pl_usc": 4.0,
-    "pl_points": 0.2,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:03",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4140.115,
-    "exit": 4140.539,
-    "pl_usc": 8.5,
-    "pl_points": 0.424,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:03",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4140.115,
-    "exit": 4140.539,
-    "pl_usc": 8.5,
-    "pl_points": 0.424,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:03",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.2,
-    "entry": 4140.027,
-    "exit": 4140.405,
-    "pl_usc": 7.6,
-    "pl_points": 0.378,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:04",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.759,
-    "exit": 4141.917,
-    "pl_usc": 1.6,
-    "pl_points": 0.158,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:04",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.933,
-    "exit": 4141.917,
-    "pl_usc": -0.1,
-    "pl_points": -0.016,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:04",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.74,
-    "exit": 4141.917,
-    "pl_usc": 1.8,
-    "pl_points": 0.177,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:04",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.622,
-    "exit": 4141.917,
-    "pl_usc": 3.0,
-    "pl_points": 0.295,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:04",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.708,
-    "exit": 4141.917,
-    "pl_usc": 2.1,
-    "pl_points": 0.209,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:04",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.869,
-    "exit": 4141.917,
-    "pl_usc": 0.5,
-    "pl_points": 0.048,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:04",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.408,
-    "exit": 4141.917,
-    "pl_usc": 5.1,
-    "pl_points": 0.509,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:05",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.23,
-    "exit": 4143.502,
-    "pl_usc": 12.7,
-    "pl_points": 1.272,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:05",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.843,
-    "exit": 4143.502,
-    "pl_usc": 16.6,
-    "pl_points": 1.659,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:05",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.412,
-    "exit": 4143.502,
-    "pl_usc": 10.9,
-    "pl_points": 1.09,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:09",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.242,
-    "exit": 4141.358,
-    "pl_usc": 1.2,
-    "pl_points": 0.116,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:09",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4140.478,
-    "exit": 4141.358,
-    "pl_usc": 8.8,
-    "pl_points": 0.88,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:09",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.167,
-    "exit": 4141.668,
-    "pl_usc": 5.0,
-    "pl_points": 0.501,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:13",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.412,
-    "exit": 4144.151,
-    "pl_usc": 7.4,
-    "pl_points": 0.739,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:13",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.702,
-    "exit": 4144.272,
-    "pl_usc": 15.7,
-    "pl_points": 1.57,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:16",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.919,
-    "exit": 4143.911,
-    "pl_usc": -0.1,
-    "pl_points": -0.008,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:17",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4144.097,
-    "exit": 4143.912,
-    "pl_usc": -1.9,
-    "pl_points": -0.185,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:17",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4144.089,
-    "exit": 4143.912,
-    "pl_usc": -1.8,
-    "pl_points": -0.177,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:17",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4144.097,
-    "exit": 4143.912,
-    "pl_usc": -1.9,
-    "pl_points": -0.185,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:17",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4144.097,
-    "exit": 4143.912,
-    "pl_usc": -1.9,
-    "pl_points": -0.185,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:21",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4144.814,
-    "exit": 4141.928,
-    "pl_usc": -28.8,
-    "pl_points": -2.886,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:21",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.1,
-    "entry": 4141.928,
-    "exit": 4142.593,
-    "pl_usc": -6.6,
-    "pl_points": -0.665,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:21",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4144.269,
-    "exit": 4142.178,
-    "pl_usc": -20.9,
-    "pl_points": -2.091,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:22",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.575,
-    "exit": 4143.179,
-    "pl_usc": 6.0,
-    "pl_points": 0.604,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:22",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.218,
-    "exit": 4143.179,
-    "pl_usc": 9.6,
-    "pl_points": 0.961,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:22",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.476,
-    "exit": 4143.179,
-    "pl_usc": 7.0,
-    "pl_points": 0.703,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:23",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.77,
-    "exit": 4143.038,
-    "pl_usc": 2.7,
-    "pl_points": 0.268,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:23",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.545,
-    "exit": 4143.038,
-    "pl_usc": -5.1,
-    "pl_points": -0.507,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:23",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.154,
-    "exit": 4143.038,
-    "pl_usc": -1.1,
-    "pl_points": -0.116,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:24",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.195,
-    "exit": 4142.383,
-    "pl_usc": 1.8,
-    "pl_points": 0.188,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:24",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.329,
-    "exit": 4142.383,
-    "pl_usc": 0.5,
-    "pl_points": 0.054,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:24",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.329,
-    "exit": 4142.383,
-    "pl_usc": 0.5,
-    "pl_points": 0.054,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:24",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.483,
-    "exit": 4142.46,
-    "pl_usc": -0.2,
-    "pl_points": -0.023,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:24",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.483,
-    "exit": 4142.46,
-    "pl_usc": -0.2,
-    "pl_points": -0.023,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:24",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.483,
-    "exit": 4142.46,
-    "pl_usc": -0.2,
-    "pl_points": -0.023,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:24",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.471,
-    "exit": 4142.46,
-    "pl_usc": -0.1,
-    "pl_points": -0.011,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:25",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.36,
-    "exit": 4142.411,
-    "pl_usc": 0.5,
-    "pl_points": 0.051,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:25",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.407,
-    "exit": 4142.547,
-    "pl_usc": 1.4,
-    "pl_points": 0.14,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:26",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.961,
-    "exit": 4142.842,
-    "pl_usc": -1.2,
-    "pl_points": -0.119,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:26",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.656,
-    "exit": 4142.684,
-    "pl_usc": 0.2,
-    "pl_points": 0.028,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:26",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.605,
-    "exit": 4142.684,
-    "pl_usc": 0.7,
-    "pl_points": 0.079,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:26",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.839,
-    "exit": 4142.604,
-    "pl_usc": -2.4,
-    "pl_points": -0.235,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:26",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.824,
-    "exit": 4142.604,
-    "pl_usc": -2.2,
-    "pl_points": -0.22,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:26",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.139,
-    "exit": 4143.241,
-    "pl_usc": 1.0,
-    "pl_points": 0.102,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:26",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.069,
-    "exit": 4143.241,
-    "pl_usc": 1.7,
-    "pl_points": 0.172,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:28",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.15,
-    "exit": 4143.899,
-    "pl_usc": 7.5,
-    "pl_points": 0.749,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:28",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.18,
-    "exit": 4143.899,
-    "pl_usc": 7.2,
-    "pl_points": 0.719,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:28",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.454,
-    "exit": 4143.899,
-    "pl_usc": 4.5,
-    "pl_points": 0.445,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:29",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.107,
-    "exit": 4143.006,
-    "pl_usc": -1.0,
-    "pl_points": -0.101,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:29",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.217,
-    "exit": 4143.006,
-    "pl_usc": -2.1,
-    "pl_points": -0.211,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:29",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.217,
-    "exit": 4143.006,
-    "pl_usc": -2.1,
-    "pl_points": -0.211,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:29",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.217,
-    "exit": 4143.006,
-    "pl_usc": -2.1,
-    "pl_points": -0.211,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:29",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.217,
-    "exit": 4143.006,
-    "pl_usc": -2.1,
-    "pl_points": -0.211,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:31",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.1,
-    "entry": 4141.739,
-    "exit": 4141.369,
-    "pl_usc": 3.7,
-    "pl_points": 0.37,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:31",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.1,
-    "entry": 4142.06,
-    "exit": 4141.369,
-    "pl_usc": 6.9,
-    "pl_points": 0.691,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:31",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.1,
-    "entry": 4142.06,
-    "exit": 4141.369,
-    "pl_usc": 6.9,
-    "pl_points": 0.691,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:31",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.1,
-    "entry": 4142.025,
-    "exit": 4141.369,
-    "pl_usc": 6.6,
-    "pl_points": 0.656,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:31",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.1,
-    "entry": 4141.766,
-    "exit": 4141.369,
-    "pl_usc": 4.0,
-    "pl_points": 0.397,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:31",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.1,
-    "entry": 4142.206,
-    "exit": 4141.369,
-    "pl_usc": 8.4,
-    "pl_points": 0.837,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:31",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.1,
-    "entry": 4141.777,
-    "exit": 4141.369,
-    "pl_usc": 4.1,
-    "pl_points": 0.408,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.34,
-    "exit": 4141.939,
-    "pl_usc": -14.0,
-    "pl_points": -1.401,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.23,
-    "exit": 4141.863,
-    "pl_usc": -13.7,
-    "pl_points": -1.367,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.23,
-    "exit": 4142.881,
-    "pl_usc": -3.5,
-    "pl_points": -0.349,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.23,
-    "exit": 4142.848,
-    "pl_usc": -3.8,
-    "pl_points": -0.382,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.23,
-    "exit": 4142.848,
-    "pl_usc": -3.8,
-    "pl_points": -0.382,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.23,
-    "exit": 4142.848,
-    "pl_usc": -3.8,
-    "pl_points": -0.382,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.23,
-    "exit": 4142.848,
-    "pl_usc": -3.8,
-    "pl_points": -0.382,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4142.725,
-    "exit": 4142.848,
-    "pl_usc": 1.2,
-    "pl_points": 0.123,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.34,
-    "exit": 4142.095,
-    "pl_usc": -12.4,
-    "pl_points": -1.245,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.34,
-    "exit": 4141.894,
-    "pl_usc": -14.5,
-    "pl_points": -1.446,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.34,
-    "exit": 4142.149,
-    "pl_usc": -11.9,
-    "pl_points": -1.191,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.853,
-    "exit": 4141.206,
-    "pl_usc": -26.4,
-    "pl_points": -2.647,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.932,
-    "exit": 4141.329,
-    "pl_usc": -26.0,
-    "pl_points": -2.603,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.501,
-    "exit": 4141.307,
-    "pl_usc": -21.9,
-    "pl_points": -2.194,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.501,
-    "exit": 4141.652,
-    "pl_usc": -18.5,
-    "pl_points": -1.849,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.501,
-    "exit": 4141.901,
-    "pl_usc": -16.0,
-    "pl_points": -1.6,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.34,
-    "exit": 4142.253,
-    "pl_usc": -10.9,
-    "pl_points": -1.087,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:32",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4143.501,
-    "exit": 4141.668,
-    "pl_usc": -18.3,
-    "pl_points": -1.833,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:34",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.314,
-    "exit": 4141.873,
-    "pl_usc": 5.6,
-    "pl_points": 0.559,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:34",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.371,
-    "exit": 4141.873,
-    "pl_usc": 5.0,
-    "pl_points": 0.502,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:34",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4141.337,
-    "exit": 4141.873,
-    "pl_usc": 5.3,
-    "pl_points": 0.536,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:35",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.1,
-    "entry": 4142.519,
-    "exit": 4142.347,
-    "pl_usc": 1.7,
-    "pl_points": 0.172,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:36",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.1,
-    "entry": 4142.046,
-    "exit": 4141.878,
-    "pl_usc": 1.7,
-    "pl_points": 0.168,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:36",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 0.1,
-    "entry": 4141.962,
-    "exit": 4141.878,
-    "pl_usc": 0.8,
-    "pl_points": 0.084,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:48",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4139.113,
-    "exit": 4139.016,
-    "pl_usc": -0.9,
-    "pl_points": -0.097,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:48",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4138.648,
-    "exit": 4138.448,
-    "pl_usc": -2.0,
-    "pl_points": -0.2,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:48",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4138.669,
-    "exit": 4138.448,
-    "pl_usc": -2.2,
-    "pl_points": -0.221,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:49",
-    "symbol": "XAUUSD",
     "side": "buy",
-    "lot": 0.1,
+    "lot": 1.0,
     "entry": 4138.914,
-    "exit": 4138.132,
-    "pl_usc": -7.8,
-    "pl_points": -0.782,
+    "exit": 4137.4,
+    "pl_usc": -151.4,
+    "pl_points": -1.514,
     "status": "closed",
     "by": "ผู้ใช้"
    },
    {
-    "time": "23:49",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4138.725,
-    "exit": 4138.132,
-    "pl_usc": -6.0,
-    "pl_points": -0.593,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:49",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.1,
-    "entry": 4138.644,
-    "exit": 4138.132,
-    "pl_usc": -5.1,
-    "pl_points": -0.512,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:50",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.5,
-    "entry": 4138.613,
-    "exit": 4138.374,
-    "pl_usc": -12.0,
-    "pl_points": -0.239,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:55",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 0.5,
-    "entry": 4138.613,
-    "exit": 4141.016,
-    "pl_usc": 120.1,
-    "pl_points": 2.403,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:55",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 1,
-    "entry": 4138.79,
-    "exit": 4138.337,
-    "pl_usc": -45.3,
-    "pl_points": -0.453,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:55",
+    "time": "00:09",
     "symbol": "XAUUSD",
     "side": "sell",
-    "lot": 1,
-    "entry": 4138.337,
-    "exit": 4138.79,
-    "pl_usc": 0.0,
-    "pl_points": -0.453,
+    "lot": 1.0,
+    "entry": 4138.798,
+    "exit": 4137.743,
+    "pl_usc": 105.5,
+    "pl_points": 1.055,
     "status": "closed",
     "by": "ผู้ใช้"
    },
    {
-    "time": "23:55",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 1,
-    "entry": 4139.164,
-    "exit": 4138.889,
-    "pl_usc": -27.5,
-    "pl_points": -0.275,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:55",
+    "time": "00:09",
     "symbol": "XAUUSD",
     "side": "sell",
-    "lot": 1,
-    "entry": 4138.889,
-    "exit": 4139.164,
-    "pl_usc": 0.0,
-    "pl_points": -0.275,
+    "lot": 1.0,
+    "entry": 4138.81,
+    "exit": 4137.688,
+    "pl_usc": 112.2,
+    "pl_points": 1.122,
     "status": "closed",
     "by": "ผู้ใช้"
    },
    {
-    "time": "23:55",
+    "time": "00:09",
     "symbol": "XAUUSD",
     "side": "buy",
-    "lot": 1,
-    "entry": 4140.096,
-    "exit": 4139.302,
-    "pl_usc": -79.4,
-    "pl_points": -0.794,
+    "lot": 1.0,
+    "entry": 4138.278,
+    "exit": 4137.345,
+    "pl_usc": -93.3,
+    "pl_points": -0.933,
     "status": "closed",
     "by": "ผู้ใช้"
    },
    {
-    "time": "23:55",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 1,
-    "entry": 4139.302,
-    "exit": 4140.096,
-    "pl_usc": 0.0,
-    "pl_points": -0.794,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:55",
+    "time": "00:06",
     "symbol": "XAUUSD",
     "side": "buy",
-    "lot": 1,
-    "entry": 4140.202,
-    "exit": 4140.286,
-    "pl_usc": 8.4,
-    "pl_points": 0.084,
+    "lot": 1.0,
+    "entry": 4139.247,
+    "exit": 4139.71,
+    "pl_usc": 46.3,
+    "pl_points": 0.463,
     "status": "closed",
     "by": "ผู้ใช้"
    },
    {
-    "time": "23:55",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 1,
-    "entry": 4140.286,
-    "exit": 4140.202,
-    "pl_usc": 0.0,
-    "pl_points": 0.084,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:55",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 1,
-    "entry": 4140.709,
-    "exit": 4141.256,
-    "pl_usc": -54.7,
-    "pl_points": -0.547,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:55",
+    "time": "00:06",
     "symbol": "XAUUSD",
     "side": "buy",
-    "lot": 1,
-    "entry": 4139.098,
-    "exit": 4138.606,
-    "pl_usc": -49.2,
-    "pl_points": -0.492,
+    "lot": 1.0,
+    "entry": 4139.247,
+    "exit": 4139.71,
+    "pl_usc": 46.3,
+    "pl_points": 0.463,
     "status": "closed",
     "by": "ผู้ใช้"
    },
    {
-    "time": "23:55",
-    "symbol": "XAUUSD",
-    "side": "sell",
-    "lot": 1,
-    "entry": 4138.606,
-    "exit": 4139.098,
-    "pl_usc": 0.0,
-    "pl_points": -0.492,
-    "status": "closed",
-    "by": "ผู้ใช้"
-   },
-   {
-    "time": "23:59",
+    "time": "00:01",
     "symbol": "XAUUSD",
     "side": "buy",
-    "lot": 1,
-    "entry": 4140.961,
-    "exit": 4141.114,
-    "pl_usc": 15.3,
-    "pl_points": 0.153,
+    "lot": 1.0,
+    "entry": 4139.932,
+    "exit": 4138.795,
+    "pl_usc": -113.7,
+    "pl_points": -1.137,
     "status": "closed",
     "by": "ผู้ใช้"
    },
@@ -2172,28 +308,16 @@
     "pl_points": -0.208,
     "status": "closed",
     "by": "ผู้ใช้"
-   },
-   {
-    "time": "00:00",
-    "symbol": "XAUUSD",
-    "side": "buy",
-    "lot": 1.0,
-    "entry": 4139.932,
-    "exit": null,
-    "pl_usc": -39.9,
-    "pl_points": -0.332,
-    "status": "open",
-    "by": "ผู้ใช้"
    }
   ]
  },
  "auto_trade": {
   "enabled": true,
   "lot": 0.1,
-  "interval": "10 นาที · สั้น เน้นทองคำ · หยุดเปิดไม้ใหม่ (ทุนต่ำกว่าเพดานป้องกัน ~3,945 USC) · ดูแล SL/TP ทุกไม้",
-  "interval_en": "10 min · short-term, gold focus · new AI trades stopped (equity below the ~3,945 USC protection floor) · managing SL/TP on every trade"
+  "interval": "10 นาที · สั้น เน้นทองคำ · หยุดเปิดไม้ใหม่ (ทุนต่ำกว่าเพดานป้องกัน ~3,945 USC และขาดทุนวันนี้เกิน 3%) · ดูแล SL/TP ทุกไม้",
+  "interval_en": "10 min · short-term, gold focus · new AI trades stopped (equity below the ~3,945 USC protection floor and today's loss over 3%) · managing SL/TP on every trade"
  },
- "updated_en": "Oct 20, 2026 00:01 (Bangkok time)",
+ "updated_en": "Oct 20, 2026 00:13 (Thailand time)",
  "price_en": "4,142.4",
  "bias_en": "Lean down · up 38% down 62% · price ~4,146 · M5/M15 down, H1 CHoCH down · discount near swept low 4,143.5 · owner BUY 0.2 @ 4,146.919 now has SL/TP · AI opens nothing new",
  "indicators_en": "M5 down · M15 down · H1 sideways-down · H4 sideways · D1 down · M15 RSI soft",
@@ -2256,41 +380,41 @@
    "tf": "M5",
    "trend": "down",
    "label": "ขาลง",
-   "rsi": 36.4,
-   "ema20": 4143.52,
-   "ema50": 4148.56
+   "rsi": 35.8,
+   "ema20": 4142.66,
+   "ema50": 4147.73
   },
   {
    "tf": "M15",
    "trend": "down",
    "label": "ขาลง",
-   "rsi": 29.6,
-   "ema20": 4149.51,
-   "ema50": 4157.6
+   "rsi": 29.4,
+   "ema20": 4149.35,
+   "ema50": 4157.45
   },
   {
    "tf": "H1",
    "trend": "down",
    "label": "ขาลง",
-   "rsi": 29.8,
-   "ema20": 4157.57,
-   "ema50": 4159.82
+   "rsi": 29.7,
+   "ema20": 4157.4,
+   "ema50": 4159.67
   },
   {
    "tf": "H4",
    "trend": "down",
    "label": "ขาลง",
-   "rsi": 40.5,
-   "ema20": 4159.15,
-   "ema50": 4162.2
+   "rsi": 40.4,
+   "ema20": 4158.99,
+   "ema50": 4162.05
   },
   {
    "tf": "D1",
    "trend": "down",
    "label": "ขาลง",
-   "rsi": 41.3,
-   "ema20": 4178.97,
-   "ema50": 4234.79
+   "rsi": 41.2,
+   "ema20": 4178.81,
+   "ema50": 4234.64
   }
  ],
  "mtf_en": [
@@ -2298,41 +422,41 @@
    "tf": "M5",
    "trend": "down",
    "label": "Downtrend",
-   "rsi": 36.4,
-   "ema20": 4143.52,
-   "ema50": 4148.56
+   "rsi": 35.8,
+   "ema20": 4142.66,
+   "ema50": 4147.73
   },
   {
    "tf": "M15",
    "trend": "down",
    "label": "Downtrend",
-   "rsi": 29.6,
-   "ema20": 4149.51,
-   "ema50": 4157.6
+   "rsi": 29.4,
+   "ema20": 4149.35,
+   "ema50": 4157.45
   },
   {
    "tf": "H1",
    "trend": "down",
    "label": "Downtrend",
-   "rsi": 29.8,
-   "ema20": 4157.57,
-   "ema50": 4159.82
+   "rsi": 29.7,
+   "ema20": 4157.4,
+   "ema50": 4159.67
   },
   {
    "tf": "H4",
    "trend": "down",
    "label": "Downtrend",
-   "rsi": 40.5,
-   "ema20": 4159.15,
-   "ema50": 4162.2
+   "rsi": 40.4,
+   "ema20": 4158.99,
+   "ema50": 4162.05
   },
   {
    "tf": "D1",
    "trend": "down",
    "label": "Downtrend",
-   "rsi": 41.3,
-   "ema20": 4178.97,
-   "ema50": 4234.79
+   "rsi": 41.2,
+   "ema20": 4178.81,
+   "ema50": 4234.64
   }
  ],
  "mtf_align": "ขาขึ้น 0/5 · ขาลง 5/5 · ไซด์เวย์ 0/5 · ภาพรวมเอียงลง",
@@ -2340,9 +464,9 @@
  "markets": [
   {
    "symbol": "EURUSD",
-   "price": 1.1212,
+   "price": 1.1211,
    "dp": 5,
-   "chg_pct": -0.01,
+   "chg_pct": -0.02,
    "spark": [
     1.121453,
     1.121705,
@@ -2390,42 +514,42 @@
     1.122083,
     1.121202,
     1.121579,
-    1.121328,
-    1.121202
+    1.121076,
+    1.121076
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 44.1
+     "rsi": 43.2
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 43.9
+     "rsi": 43.4
     },
     {
      "tf": "H4",
      "trend": "down",
-     "rsi": 48.8
+     "rsi": 48.5
     },
     {
      "tf": "D1",
      "trend": "down",
-     "rsi": 32.2
+     "rsi": 32.1
     }
    ],
    "bias": "down",
    "support": 1.12045,
    "resistance": 1.12145,
    "bias_label": "เอียงลง",
-   "setup": "รอขายโซน 1.12083–1.12145 (แนวต้านใกล้สุด)"
+   "setup": "รอขายโซน 1.12082–1.12145 (แนวต้านใกล้สุด)"
   },
   {
    "symbol": "GBPUSD",
-   "price": 1.3303,
+   "price": 1.33,
    "dp": 5,
-   "chg_pct": 0.22,
+   "chg_pct": 0.2,
    "spark": [
     1.327457,
     1.327757,
@@ -2473,29 +597,29 @@
     1.331788,
     1.330583,
     1.33046,
-    1.3303,
-    1.330283
+    1.330088,
+    1.330017
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 35.7
+     "rsi": 33.9
     },
     {
      "tf": "H1",
      "trend": "sideways",
-     "rsi": 41.0
+     "rsi": 39.9
     },
     {
      "tf": "H4",
      "trend": "up",
-     "rsi": 53.8
+     "rsi": 53.1
     },
     {
      "tf": "D1",
      "trend": "sideways",
-     "rsi": 49.8
+     "rsi": 49.5
     }
    ],
    "bias": "neutral",
@@ -2506,7 +630,7 @@
   },
   {
    "symbol": "USDJPY",
-   "price": 158.534,
+   "price": 158.532,
    "dp": 3,
    "chg_pct": 0.25,
    "spark": [
@@ -2556,19 +680,19 @@
     158.427,
     158.497,
     158.52,
-    158.536,
-    158.534
+    158.533,
+    158.533
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "up",
-     "rsi": 66.6
+     "rsi": 66.5
     },
     {
      "tf": "H1",
      "trend": "up",
-     "rsi": 68.4
+     "rsi": 68.5
     },
     {
      "tf": "H4",
@@ -2639,24 +763,24 @@
     0.698665,
     0.698275,
     0.697885,
-    0.697837,
-    0.697788
+    0.697739,
+    0.697837
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "sideways",
-     "rsi": 40.1
+     "rsi": 41.6
     },
     {
      "tf": "H1",
      "trend": "up",
-     "rsi": 53.8
+     "rsi": 54.1
     },
     {
      "tf": "H4",
      "trend": "sideways",
-     "rsi": 54.9
+     "rsi": 55.1
     },
     {
      "tf": "D1",
@@ -2722,14 +846,14 @@
     0.82572,
     0.82672,
     0.82609,
-    0.82627,
-    0.82629
+    0.82636,
+    0.82631
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "up",
-     "rsi": 58.8
+     "rsi": 58.7
     },
     {
      "tf": "H1",
@@ -2744,7 +868,7 @@
     {
      "tf": "D1",
      "trend": "sideways",
-     "rsi": 49.9
+     "rsi": 50.0
     }
    ],
    "bias": "neutral",
@@ -2755,9 +879,9 @@
   },
   {
    "symbol": "USDCAD",
-   "price": 1.4092,
+   "price": 1.4095,
    "dp": 5,
-   "chg_pct": -0.71,
+   "chg_pct": -0.69,
    "spark": [
     1.41898,
     1.41866,
@@ -2805,42 +929,42 @@
     1.4087,
     1.40935,
     1.4092,
-    1.4093,
-    1.40922
+    1.40953,
+    1.4092
    ],
    "tfs": [
     {
      "tf": "M15",
-     "trend": "down",
-     "rsi": 49.2
+     "trend": "sideways",
+     "rsi": 51.2
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 39.0
+     "rsi": 39.3
     },
     {
      "tf": "H4",
      "trend": "down",
-     "rsi": 28.5
+     "rsi": 29.2
     },
     {
      "tf": "D1",
      "trend": "sideways",
-     "rsi": 45.6
+     "rsi": 45.8
     }
    ],
    "bias": "down",
    "support": 1.4067,
    "resistance": 1.41128,
    "bias_label": "เอียงลง",
-   "setup": "รอขายโซน 1.41033–1.41128 (แนวต้านใกล้สุด)"
+   "setup": "รอขายโซน 1.41032–1.41128 (แนวต้านใกล้สุด)"
   },
   {
    "symbol": "BTCUSD",
-   "price": 81913.0,
+   "price": 81845.0,
    "dp": 0,
-   "chg_pct": -0.13,
+   "chg_pct": -0.21,
    "spark": [
     81485.0,
     81535.0,
@@ -2888,44 +1012,44 @@
     82207.0,
     81837.0,
     81880.0,
-    81939.0,
-    81913.0
+    81835.0,
+    81845.0
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 41.3
+     "rsi": 38.9
     },
     {
      "tf": "H1",
      "trend": "sideways",
-     "rsi": 46.9
+     "rsi": 45.6
     },
     {
      "tf": "H4",
      "trend": "sideways",
-     "rsi": 50.0
+     "rsi": 49.3
     },
     {
      "tf": "D1",
      "trend": "sideways",
-     "rsi": 48.3
+     "rsi": 48.0
     }
    ],
    "bias": "neutral",
-   "support": 81854.0,
+   "support": 81656.0,
    "resistance": 81970.0,
    "bias_label": "กลางๆ",
-   "setup": "รอ ยังไม่มีทิศชัด กรอบ 81,854–81,970"
+   "setup": "รอ ยังไม่มีทิศชัด กรอบ 81,656–81,970"
   }
  ],
  "markets_en": [
   {
    "symbol": "EURUSD",
-   "price": 1.1212,
+   "price": 1.1211,
    "dp": 5,
-   "chg_pct": -0.01,
+   "chg_pct": -0.02,
    "spark": [
     1.121453,
     1.121705,
@@ -2973,42 +1097,42 @@
     1.122083,
     1.121202,
     1.121579,
-    1.121328,
-    1.121202
+    1.121076,
+    1.121076
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 44.1
+     "rsi": 43.2
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 43.9
+     "rsi": 43.4
     },
     {
      "tf": "H4",
      "trend": "down",
-     "rsi": 48.8
+     "rsi": 48.5
     },
     {
      "tf": "D1",
      "trend": "down",
-     "rsi": 32.2
+     "rsi": 32.1
     }
    ],
    "bias": "down",
    "support": 1.12045,
    "resistance": 1.12145,
    "bias_label": "Bearish",
-   "setup": "Sell zone 1.12083–1.12145 (nearest resistance)"
+   "setup": "Sell zone 1.12082–1.12145 (nearest resistance)"
   },
   {
    "symbol": "GBPUSD",
-   "price": 1.3303,
+   "price": 1.33,
    "dp": 5,
-   "chg_pct": 0.22,
+   "chg_pct": 0.2,
    "spark": [
     1.327457,
     1.327757,
@@ -3056,29 +1180,29 @@
     1.331788,
     1.330583,
     1.33046,
-    1.3303,
-    1.330283
+    1.330088,
+    1.330017
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 35.7
+     "rsi": 33.9
     },
     {
      "tf": "H1",
      "trend": "sideways",
-     "rsi": 41.0
+     "rsi": 39.9
     },
     {
      "tf": "H4",
      "trend": "up",
-     "rsi": 53.8
+     "rsi": 53.1
     },
     {
      "tf": "D1",
      "trend": "sideways",
-     "rsi": 49.8
+     "rsi": 49.5
     }
    ],
    "bias": "neutral",
@@ -3089,7 +1213,7 @@
   },
   {
    "symbol": "USDJPY",
-   "price": 158.534,
+   "price": 158.532,
    "dp": 3,
    "chg_pct": 0.25,
    "spark": [
@@ -3139,19 +1263,19 @@
     158.427,
     158.497,
     158.52,
-    158.536,
-    158.534
+    158.533,
+    158.533
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "up",
-     "rsi": 66.6
+     "rsi": 66.5
     },
     {
      "tf": "H1",
      "trend": "up",
-     "rsi": 68.4
+     "rsi": 68.5
     },
     {
      "tf": "H4",
@@ -3222,24 +1346,24 @@
     0.698665,
     0.698275,
     0.697885,
-    0.697837,
-    0.697788
+    0.697739,
+    0.697837
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "sideways",
-     "rsi": 40.1
+     "rsi": 41.6
     },
     {
      "tf": "H1",
      "trend": "up",
-     "rsi": 53.8
+     "rsi": 54.1
     },
     {
      "tf": "H4",
      "trend": "sideways",
-     "rsi": 54.9
+     "rsi": 55.1
     },
     {
      "tf": "D1",
@@ -3305,14 +1429,14 @@
     0.82572,
     0.82672,
     0.82609,
-    0.82627,
-    0.82629
+    0.82636,
+    0.82631
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "up",
-     "rsi": 58.8
+     "rsi": 58.7
     },
     {
      "tf": "H1",
@@ -3327,7 +1451,7 @@
     {
      "tf": "D1",
      "trend": "sideways",
-     "rsi": 49.9
+     "rsi": 50.0
     }
    ],
    "bias": "neutral",
@@ -3338,9 +1462,9 @@
   },
   {
    "symbol": "USDCAD",
-   "price": 1.4092,
+   "price": 1.4095,
    "dp": 5,
-   "chg_pct": -0.71,
+   "chg_pct": -0.69,
    "spark": [
     1.41898,
     1.41866,
@@ -3388,42 +1512,42 @@
     1.4087,
     1.40935,
     1.4092,
-    1.4093,
-    1.40922
+    1.40953,
+    1.4092
    ],
    "tfs": [
     {
      "tf": "M15",
-     "trend": "down",
-     "rsi": 49.2
+     "trend": "sideways",
+     "rsi": 51.2
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 39.0
+     "rsi": 39.3
     },
     {
      "tf": "H4",
      "trend": "down",
-     "rsi": 28.5
+     "rsi": 29.2
     },
     {
      "tf": "D1",
      "trend": "sideways",
-     "rsi": 45.6
+     "rsi": 45.8
     }
    ],
    "bias": "down",
    "support": 1.4067,
    "resistance": 1.41128,
    "bias_label": "Bearish",
-   "setup": "Sell zone 1.41033–1.41128 (nearest resistance)"
+   "setup": "Sell zone 1.41032–1.41128 (nearest resistance)"
   },
   {
    "symbol": "BTCUSD",
-   "price": 81913.0,
+   "price": 81845.0,
    "dp": 0,
-   "chg_pct": -0.13,
+   "chg_pct": -0.21,
    "spark": [
     81485.0,
     81535.0,
@@ -3471,61 +1595,61 @@
     82207.0,
     81837.0,
     81880.0,
-    81939.0,
-    81913.0
+    81835.0,
+    81845.0
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 41.3
+     "rsi": 38.9
     },
     {
      "tf": "H1",
      "trend": "sideways",
-     "rsi": 46.9
+     "rsi": 45.6
     },
     {
      "tf": "H4",
      "trend": "sideways",
-     "rsi": 50.0
+     "rsi": 49.3
     },
     {
      "tf": "D1",
      "trend": "sideways",
-     "rsi": 48.3
+     "rsi": 48.0
     }
    ],
    "bias": "neutral",
-   "support": 81854.0,
+   "support": 81656.0,
    "resistance": 81970.0,
    "bias_label": "Neutral",
-   "setup": "Wait, no clear direction; range 81,854–81,970"
+   "setup": "Wait, no clear direction; range 81,656–81,970"
   }
  ],
- "mtf_updated": "2026-10-20 00:02",
+ "mtf_updated": "2026-10-20 00:14",
  "smc": {
   "XAUUSD": {
    "M15": {
     "order_blocks": [
      {
       "type": "bearish",
-      "top": 4163.71,
-      "bottom": 4160.27,
+      "top": 4163.57,
+      "bottom": 4160.13,
       "mitigated": false,
       "t": 1792414800
      },
      {
       "type": "bearish",
-      "top": 4145.49,
-      "bottom": 4140.94,
+      "top": 4145.35,
+      "bottom": 4140.8,
       "mitigated": false,
       "t": 1792425600
      },
      {
       "type": "bearish",
-      "top": 4150.5,
-      "bottom": 4145.29,
+      "top": 4150.36,
+      "bottom": 4145.15,
       "mitigated": true,
       "t": 1792422900
      }
@@ -3533,70 +1657,70 @@
     "fvg": [
      {
       "type": "bearish",
-      "top": 4168.46,
-      "bottom": 4167.77,
+      "top": 4168.32,
+      "bottom": 4167.63,
       "filled": false,
       "t": 1792409400
      },
      {
       "type": "bearish",
-      "top": 4158.36,
-      "bottom": 4154.29,
+      "top": 4158.22,
+      "bottom": 4154.15,
       "filled": false,
       "t": 1792416600
      },
      {
       "type": "bearish",
-      "top": 4142.6,
-      "bottom": 4141.99,
+      "top": 4142.46,
+      "bottom": 4141.85,
       "filled": false,
       "t": 1792428300
      }
     ],
     "bos": {
      "dir": "bear",
-     "level": 4140.94,
+     "level": 4140.8,
      "t": 1792429200
     },
     "choch": {
      "dir": "bear",
-     "level": 4168.58,
+     "level": 4168.44,
      "t": 1792399500
     },
     "liquidity": [
      {
       "type": "equal_lows",
-      "level": 4170.6
+      "level": 4170.46
      },
      {
       "type": "equal_lows",
-      "level": 4143.8
+      "level": 4143.66
      },
      {
       "type": "swing_high",
-      "level": 4150.5
+      "level": 4150.36
      },
      {
       "type": "swing_low",
-      "level": 4140.94
+      "level": 4140.8
      }
     ],
     "zone": {
      "name": "discount",
      "pos_pct": 1,
-     "eq": 4162.16,
-     "hi": 4184.97,
-     "lo": 4139.35
+     "eq": 4161.82,
+     "hi": 4184.83,
+     "lo": 4138.82
     },
     "last_event": "bos_bear",
-    "price": 4139.6
+    "price": 4139.2
    },
    "H1": {
     "order_blocks": [
      {
       "type": "bearish",
-      "top": 4169.19,
-      "bottom": 4160.58,
+      "top": 4169.05,
+      "bottom": 4160.44,
       "mitigated": true,
       "t": 1792404000
      }
@@ -3604,67 +1728,67 @@
     "fvg": [
      {
       "type": "bullish",
-      "top": 4144.7,
-      "bottom": 4124.48,
+      "top": 4144.56,
+      "bottom": 4124.34,
       "filled": false,
       "t": 1792022400
      },
      {
       "type": "bearish",
-      "top": 4158.22,
-      "bottom": 4153.72,
+      "top": 4158.08,
+      "bottom": 4153.58,
       "filled": false,
       "t": 1792414800
      }
     ],
     "bos": {
      "dir": "bear",
-     "level": 4148.77,
+     "level": 4148.63,
      "t": 1792350000
     },
     "choch": {
      "dir": "bear",
-     "level": 4163.54,
+     "level": 4163.4,
      "t": 1792407600
     },
     "liquidity": [
      {
       "type": "equal_lows",
-      "level": 4156.44
+      "level": 4156.3
      },
      {
       "type": "equal_lows",
-      "level": 4163.09
+      "level": 4162.94
      },
      {
       "type": "equal_lows",
-      "level": 4148.67
+      "level": 4148.53
      },
      {
       "type": "swing_high",
-      "level": 4172.97
+      "level": 4172.83
      },
      {
       "type": "swing_low",
-      "level": 4163.54
+      "level": 4163.4
      }
     ],
     "zone": {
      "name": "discount",
      "pos_pct": 1,
-     "eq": 4162.16,
-     "hi": 4184.97,
-     "lo": 4139.35
+     "eq": 4161.82,
+     "hi": 4184.83,
+     "lo": 4138.82
     },
     "last_event": "choch_bear",
-    "price": 4139.6
+    "price": 4139.2
    },
    "H4": {
     "order_blocks": [
      {
       "type": "bearish",
-      "top": 4180.08,
-      "bottom": 4144.57,
+      "top": 4179.94,
+      "bottom": 4144.43,
       "mitigated": true,
       "t": 1792353600
      }
@@ -3672,59 +1796,59 @@
     "fvg": [
      {
       "type": "bullish",
-      "top": 4122.87,
-      "bottom": 4118.57,
+      "top": 4122.73,
+      "bottom": 4118.43,
       "filled": false,
       "t": 1792008000
      },
      {
       "type": "bullish",
-      "top": 4136.64,
-      "bottom": 4124.48,
+      "top": 4136.5,
+      "bottom": 4124.34,
       "filled": false,
       "t": 1792022400
      },
      {
       "type": "bearish",
-      "top": 4160.57,
-      "bottom": 4145.49,
+      "top": 4160.43,
+      "bottom": 4145.35,
       "filled": false,
       "t": 1792411200
      }
     ],
     "bos": {
      "dir": "bear",
-     "level": 4153.52,
+     "level": 4153.38,
      "t": 1791964800
     },
     "choch": {
      "dir": "bear",
-     "level": 4144.57,
+     "level": 4144.43,
      "t": 1792411200
     },
     "liquidity": [
      {
       "type": "equal_lows",
-      "level": 4154.99
+      "level": 4154.84
      },
      {
       "type": "swing_high",
-      "level": 4184.97
+      "level": 4184.83
      },
      {
       "type": "swing_low",
-      "level": 4144.57
+      "level": 4144.43
      }
     ],
     "zone": {
      "name": "discount",
      "pos_pct": 42,
-     "eq": 4149.69,
-     "hi": 4211.72,
-     "lo": 4087.66
+     "eq": 4149.55,
+     "hi": 4211.58,
+     "lo": 4087.52
     },
     "last_event": "choch_bear",
-    "price": 4139.6
+    "price": 4139.2
    }
   },
   "EURUSD": {
@@ -3815,14 +1939,14 @@
      }
     ],
     "zone": {
-     "name": "equilibrium",
-     "pos_pct": 46,
+     "name": "discount",
+     "pos_pct": 43,
      "eq": 1.1214,
      "hi": 1.12372,
      "lo": 1.11907
     },
     "last_event": "bos_bear",
-    "price": 1.1212
+    "price": 1.12108
    },
    "H1": {
     "order_blocks": [
@@ -3869,8 +1993,8 @@
     },
     "liquidity": [
      {
-      "type": "equal_highs",
-      "level": 1.12372
+      "type": "equal_lows",
+      "level": 1.12076
      },
      {
       "type": "equal_lows",
@@ -3891,13 +2015,13 @@
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 26,
+     "pos_pct": 24,
      "eq": 1.12317,
      "hi": 1.12727,
      "lo": 1.11907
     },
     "last_event": "bos_bear",
-    "price": 1.1212
+    "price": 1.12108
    },
    "H4": {
     "order_blocks": [
@@ -3973,13 +2097,13 @@
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 59,
+     "pos_pct": 58,
      "eq": 1.11982,
      "hi": 1.1279,
      "lo": 1.11173
     },
     "last_event": "choch_bear",
-    "price": 1.1212
+    "price": 1.12108
    }
   },
   "GBPUSD": {
@@ -4017,13 +2141,6 @@
     "fvg": [
      {
       "type": "bearish",
-      "top": 1.3334,
-      "bottom": 1.33284,
-      "filled": false,
-      "t": 1792411200
-     },
-     {
-      "type": "bearish",
       "top": 1.33218,
       "bottom": 1.33198,
       "filled": false,
@@ -4035,6 +2152,13 @@
       "bottom": 1.33083,
       "filled": false,
       "t": 1792423800
+     },
+     {
+      "type": "bearish",
+      "top": 1.33012,
+      "bottom": 1.33002,
+      "filled": false,
+      "t": 1792429200
      }
     ],
     "bos": {
@@ -4066,18 +2190,18 @@
      },
      {
       "type": "swing_low",
-      "level": 1.33012
+      "level": 1.32998
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 7,
+     "pos_pct": 1,
      "eq": 1.33207,
      "hi": 1.33415,
      "lo": 1.32998
     },
     "last_event": "bos_bear",
-    "price": 1.33028
+    "price": 1.33002
    },
    "H1": {
     "order_blocks": [
@@ -4156,13 +2280,13 @@
     ],
     "zone": {
      "name": "equilibrium",
-     "pos_pct": 50,
+     "pos_pct": 48,
      "eq": 1.33025,
      "hi": 1.33709,
      "lo": 1.3234
     },
     "last_event": "bos_bear",
-    "price": 1.33028
+    "price": 1.33002
    },
    "H4": {
     "order_blocks": [
@@ -4238,13 +2362,13 @@
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 71,
+     "pos_pct": 70,
      "eq": 1.32549,
      "hi": 1.33709,
      "lo": 1.31389
     },
     "last_event": "choch_bull",
-    "price": 1.33028
+    "price": 1.33002
    }
   },
   "USDJPY": {
@@ -4318,13 +2442,13 @@
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 98,
+     "pos_pct": 97,
      "eq": 158.21,
      "hi": 158.549,
      "lo": 157.871
     },
     "last_event": "bos_bull",
-    "price": 158.534
+    "price": 158.532
    },
    "H1": {
     "order_blocks": [
@@ -4403,13 +2527,13 @@
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 99,
+     "pos_pct": 98,
      "eq": 158.047,
      "hi": 158.549,
      "lo": 157.544
     },
     "last_event": "bos_bull",
-    "price": 158.534
+    "price": 158.533
    },
    "H4": {
     "order_blocks": [
@@ -4484,19 +2608,12 @@
      "lo": 157.504
     },
     "last_event": "choch_bull",
-    "price": 158.534
+    "price": 158.532
    }
   },
   "AUDUSD": {
    "M15": {
     "order_blocks": [
-     {
-      "type": "bullish",
-      "top": 0.69483,
-      "bottom": 0.69469,
-      "mitigated": false,
-      "t": 1792183500
-     },
      {
       "type": "bullish",
       "top": 0.69686,
@@ -4510,6 +2627,13 @@
       "bottom": 0.69823,
       "mitigated": false,
       "t": 1792422900
+     },
+     {
+      "type": "bearish",
+      "top": 0.69803,
+      "bottom": 0.69793,
+      "mitigated": false,
+      "t": 1792427400
      },
      {
       "type": "bearish",
@@ -4544,8 +2668,8 @@
     ],
     "bos": {
      "dir": "bear",
-     "level": 0.69823,
-     "t": 1792425600
+     "level": 0.69779,
+     "t": 1792429200
     },
     "choch": {
      "dir": "bear",
@@ -4554,16 +2678,16 @@
     },
     "liquidity": [
      {
+      "type": "equal_highs",
+      "level": 0.69798
+     },
+     {
       "type": "equal_lows",
       "level": 0.69725
      },
      {
       "type": "equal_lows",
       "level": 0.69823
-     },
-     {
-      "type": "equal_lows",
-      "level": 0.69779
      },
      {
       "type": "swing_high",
@@ -4576,13 +2700,13 @@
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 24,
+     "pos_pct": 26,
      "eq": 0.69837,
      "hi": 0.6995,
      "lo": 0.69725
     },
     "last_event": "bos_bear",
-    "price": 0.69779
+    "price": 0.69784
    },
    "H1": {
     "order_blocks": [
@@ -4667,18 +2791,18 @@
      },
      {
       "type": "swing_low",
-      "level": 0.69779
+      "level": 0.69813
      }
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 82,
+     "pos_pct": 83,
      "eq": 0.69469,
      "hi": 0.6995,
      "lo": 0.68989
     },
     "last_event": "choch_bear",
-    "price": 0.69779
+    "price": 0.69784
    },
    "H4": {
     "order_blocks": [
@@ -4767,7 +2891,7 @@
      "lo": 0.68989
     },
     "last_event": "choch_bull",
-    "price": 0.69779
+    "price": 0.69784
    }
   },
   "USDCHF": {
@@ -4838,13 +2962,13 @@
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 80,
+     "pos_pct": 81,
      "eq": 0.82517,
      "hi": 0.82703,
      "lo": 0.82331
     },
     "last_event": "choch_bull",
-    "price": 0.82629
+    "price": 0.82631
    },
    "H1": {
     "order_blocks": [
@@ -4920,13 +3044,13 @@
     ],
     "zone": {
      "name": "equilibrium",
-     "pos_pct": 45,
+     "pos_pct": 46,
      "eq": 0.82675,
      "hi": 0.83174,
      "lo": 0.82175
     },
     "last_event": "bos_bull",
-    "price": 0.82629
+    "price": 0.82631
    },
    "H4": {
     "order_blocks": [
@@ -5015,7 +3139,7 @@
      "lo": 0.82175
     },
     "last_event": "choch_bull",
-    "price": 0.82632
+    "price": 0.82631
    }
   },
   "USDCAD": {
@@ -5099,14 +3223,14 @@
      }
     ],
     "zone": {
-     "name": "discount",
-     "pos_pct": 44,
+     "name": "equilibrium",
+     "pos_pct": 48,
      "eq": 1.40958,
      "hi": 1.41245,
      "lo": 1.4067
     },
     "last_event": "bos_bear",
-    "price": 1.40922
+    "price": 1.40947
    },
    "H1": {
     "order_blocks": [
@@ -5202,7 +3326,7 @@
      "lo": 1.4067
     },
     "last_event": "bos_bear",
-    "price": 1.40922
+    "price": 1.4092
    },
    "H4": {
     "order_blocks": [
@@ -5285,13 +3409,13 @@
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 11,
+     "pos_pct": 12,
      "eq": 1.41834,
      "hi": 1.42999,
      "lo": 1.4067
     },
     "last_event": "bos_bear",
-    "price": 1.40922
+    "price": 1.40947
    }
   },
   "BTCUSD": {
@@ -5354,8 +3478,8 @@
     },
     "liquidity": [
      {
-      "type": "equal_highs",
-      "level": 81119.0
+      "type": "equal_lows",
+      "level": 80986.0
      },
      {
       "type": "equal_lows",
@@ -5371,18 +3495,18 @@
      },
      {
       "type": "swing_low",
-      "level": 81843.0
+      "level": 81666.0
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 18,
+     "pos_pct": 13,
      "eq": 82362.0,
      "hi": 83069.0,
      "lo": 81656.0
     },
     "last_event": "bos_bear",
-    "price": 81913.0
+    "price": 81845.0
    },
    "H1": {
     "order_blocks": [
@@ -5447,13 +3571,13 @@
     ],
     "zone": {
      "name": "equilibrium",
-     "pos_pct": 53,
+     "pos_pct": 50,
      "eq": 81835.0,
      "hi": 83069.0,
      "lo": 80602.0
     },
     "last_event": "choch_bear",
-    "price": 81913.0
+    "price": 81845.0
    },
    "H4": {
     "order_blocks": [
@@ -5536,35 +3660,35 @@
     ],
     "zone": {
      "name": "equilibrium",
-     "pos_pct": 49,
+     "pos_pct": 47,
      "eq": 81976.0,
      "hi": 84262.0,
      "lo": 79689.0
     },
     "last_event": "choch_bull",
-    "price": 81913.0
+    "price": 81845.0
    }
   }
  },
  "smc_notes": {
   "XAUUSD": "H1: เปลี่ยนโครงสร้างเป็นลง (CHoCH) · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (1% ของกรอบ) · FVG ค้าง 2 จุด",
-  "EURUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (26% ของกรอบ) · FVG ค้าง 3 จุด",
-  "GBPUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่กลางกรอบ (50% ของกรอบ) · OB ฝั่งขาย 1.33216-1.33317 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
-  "USDJPY": "H1: ทะลุโครงสร้างขึ้น (BOS) แนวโน้มขึ้นต่อ · ราคาอยู่โซนแพง (premium) ระวังไล่ซื้อ (99% ของกรอบ) · OB ฝั่งซื้อ 157.895-158.140 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
-  "AUDUSD": "H1: เปลี่ยนโครงสร้างเป็นลง (CHoCH) · ราคาอยู่โซนแพง (premium) ระวังไล่ซื้อ (82% ของกรอบ) · OB ฝั่งขาย 0.69832-0.69910 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
-  "USDCHF": "H1: ทะลุโครงสร้างขึ้น (BOS) แนวโน้มขึ้นต่อ · ราคาอยู่กลางกรอบ (45% ของกรอบ) · OB ฝั่งขาย 0.83419-0.83534 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
+  "EURUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (24% ของกรอบ) · FVG ค้าง 3 จุด",
+  "GBPUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่กลางกรอบ (48% ของกรอบ) · OB ฝั่งขาย 1.33216-1.33317 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
+  "USDJPY": "H1: ทะลุโครงสร้างขึ้น (BOS) แนวโน้มขึ้นต่อ · ราคาอยู่โซนแพง (premium) ระวังไล่ซื้อ (98% ของกรอบ) · OB ฝั่งซื้อ 157.895-158.140 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
+  "AUDUSD": "H1: เปลี่ยนโครงสร้างเป็นลง (CHoCH) · ราคาอยู่โซนแพง (premium) ระวังไล่ซื้อ (83% ของกรอบ) · OB ฝั่งขาย 0.69832-0.69910 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
+  "USDCHF": "H1: ทะลุโครงสร้างขึ้น (BOS) แนวโน้มขึ้นต่อ · ราคาอยู่กลางกรอบ (46% ของกรอบ) · OB ฝั่งขาย 0.83419-0.83534 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
   "USDCAD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (16% ของกรอบ) · OB ฝั่งขาย 1.41150-1.41245 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
-  "BTCUSD": "H1: เปลี่ยนโครงสร้างเป็นลง (CHoCH) · ราคาอยู่กลางกรอบ (53% ของกรอบ) · OB ฝั่งซื้อ 80,693-81,099 ยังไม่ถูกทดสอบ · FVG ค้าง 2 จุด"
+  "BTCUSD": "H1: เปลี่ยนโครงสร้างเป็นลง (CHoCH) · ราคาอยู่กลางกรอบ (50% ของกรอบ) · OB ฝั่งซื้อ 80,693-81,099 ยังไม่ถูกทดสอบ · FVG ค้าง 2 จุด"
  },
  "smc_notes_en": {
   "XAUUSD": "H1: CHoCH to bearish · price in discount zone, avoid chasing sells (1% of range) · 2 open FVG",
-  "EURUSD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (26% of range) · 3 open FVG",
-  "GBPUSD": "H1: bearish BOS, downtrend continuing · price in mid-range (50% of range) · untested bearish OB 1.33216-1.33317 · 3 open FVG",
-  "USDJPY": "H1: bullish BOS, uptrend continuing · price in premium zone, avoid chasing buys (99% of range) · untested bullish OB 157.895-158.140 · 3 open FVG",
-  "AUDUSD": "H1: CHoCH to bearish · price in premium zone, avoid chasing buys (82% of range) · untested bearish OB 0.69832-0.69910 · 3 open FVG",
-  "USDCHF": "H1: bullish BOS, uptrend continuing · price in mid-range (45% of range) · untested bearish OB 0.83419-0.83534 · 3 open FVG",
+  "EURUSD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (24% of range) · 3 open FVG",
+  "GBPUSD": "H1: bearish BOS, downtrend continuing · price in mid-range (48% of range) · untested bearish OB 1.33216-1.33317 · 3 open FVG",
+  "USDJPY": "H1: bullish BOS, uptrend continuing · price in premium zone, avoid chasing buys (98% of range) · untested bullish OB 157.895-158.140 · 3 open FVG",
+  "AUDUSD": "H1: CHoCH to bearish · price in premium zone, avoid chasing buys (83% of range) · untested bearish OB 0.69832-0.69910 · 3 open FVG",
+  "USDCHF": "H1: bullish BOS, uptrend continuing · price in mid-range (46% of range) · untested bearish OB 0.83419-0.83534 · 3 open FVG",
   "USDCAD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (16% of range) · untested bearish OB 1.41150-1.41245 · 3 open FVG",
-  "BTCUSD": "H1: CHoCH to bearish · price in mid-range (53% of range) · untested bullish OB 80,693-81,099 · 2 open FVG"
+  "BTCUSD": "H1: CHoCH to bearish · price in mid-range (50% of range) · untested bullish OB 80,693-81,099 · 2 open FVG"
  },
  "correlations": {
   "H1": {
@@ -5586,97 +3710,97 @@
      0.32,
      0.49,
      -0.33,
-     0.58,
-     -0.4,
+     0.59,
+     -0.41,
      -0.43,
-     0.28
+     0.29
     ],
     [
      -0.41,
      1.0,
-     -0.96,
-     -0.92,
-     0.63,
-     -0.37,
-     0.79,
+     -0.97,
+     -0.91,
+     0.62,
+     -0.38,
+     0.8,
      0.67,
-     0.07
+     0.06
     ],
     [
      0.32,
-     -0.96,
+     -0.97,
      1.0,
      0.85,
-     -0.51,
-     0.3,
-     -0.73,
+     -0.5,
+     0.31,
+     -0.74,
      -0.54,
-     -0.05
+     -0.04
     ],
     [
      0.49,
-     -0.92,
+     -0.91,
      0.85,
      1.0,
      -0.6,
-     0.51,
-     -0.73,
+     0.53,
+     -0.74,
      -0.68,
-     0.01
+     0.03
     ],
     [
      -0.33,
-     0.63,
-     -0.51,
+     0.62,
+     -0.5,
      -0.6,
      1.0,
-     -0.14,
-     0.68,
-     0.49,
+     -0.16,
+     0.66,
+     0.48,
+     0.4
+    ],
+    [
+     0.59,
+     -0.38,
+     0.31,
+     0.53,
+     -0.16,
+     1.0,
+     -0.27,
+     -0.59,
      0.42
     ],
     [
-     0.58,
-     -0.37,
-     0.3,
-     0.51,
-     -0.14,
-     1.0,
-     -0.23,
-     -0.57,
-     0.43
-    ],
-    [
-     -0.4,
-     0.79,
-     -0.73,
-     -0.73,
-     0.68,
-     -0.23,
+     -0.41,
+     0.8,
+     -0.74,
+     -0.74,
+     0.66,
+     -0.27,
      1.0,
      0.62,
-     0.17
+     0.12
     ],
     [
      -0.43,
      0.67,
      -0.54,
      -0.68,
-     0.49,
-     -0.57,
+     0.48,
+     -0.59,
      0.62,
      1.0,
-     -0.16
+     -0.18
     ],
     [
-     0.28,
-     0.07,
-     -0.05,
-     0.01,
+     0.29,
+     0.06,
+     -0.04,
+     0.03,
+     0.4,
      0.42,
-     0.43,
-     0.17,
-     -0.16,
+     0.12,
+     -0.18,
      1.0
     ]
    ],
@@ -5747,7 +3871,7 @@
      1.0,
      -0.45,
      0.4,
-     0.36,
+     0.37,
      0.07
     ],
     [
@@ -5758,7 +3882,7 @@
      -0.45,
      1.0,
      -0.48,
-     -0.58,
+     -0.57,
      0.04
     ],
     [
@@ -5777,8 +3901,8 @@
      -0.05,
      -0.69,
      -0.61,
-     0.36,
-     -0.58,
+     0.37,
+     -0.57,
      0.63,
      1.0,
      -0.08
@@ -5800,29 +3924,29 @@
  },
  "correlations_notes": [
   "H1: ทองเคลื่อนสวนทางดอลลาร์ (DXY -0.41) ดอลลาร์อ่อน ทองมักขึ้น",
-  "H1: ทองไปทางเดียวกับ AUDUSD มากที่สุด (+0.58) และสวนทาง USDCAD มากที่สุด (-0.43) · 50 แท่ง",
+  "H1: ทองไปทางเดียวกับ AUDUSD มากที่สุด (+0.59) และสวนทาง USDCAD มากที่สุด (-0.43) · 50 แท่ง",
   "D1: ทองเคลื่อนสวนทางดอลลาร์ (DXY -0.49) ดอลลาร์อ่อน ทองมักขึ้น",
   "D1: ทองไปทางเดียวกับ BTCUSD มากที่สุด (+0.54) และสวนทาง DXY มากที่สุด (-0.49) · 50 แท่ง"
  ],
  "correlations_notes_en": [
   "H1: gold is moving opposite the US dollar (DXY -0.41); a weaker dollar tends to lift gold",
-  "H1: gold moves most with AUDUSD (+0.58) and most against USDCAD (-0.43) · 50 bars",
+  "H1: gold moves most with AUDUSD (+0.59) and most against USDCAD (-0.43) · 50 bars",
   "D1: gold is moving opposite the US dollar (DXY -0.49); a weaker dollar tends to lift gold",
   "D1: gold moves most with BTCUSD (+0.54) and most against DXY (-0.49) · 50 bars"
  ],
  "edge": {
   "total": {
-   "n": 437,
-   "wins": 214,
-   "win_rate": 49.0,
-   "expectancy_usc": -6.4,
-   "avg_points": -0.48,
+   "n": 351,
+   "wins": 180,
+   "win_rate": 51.3,
+   "expectancy_usc": -8.28,
+   "avg_points": -0.54,
    "profit_factor": 0.64,
    "avg_r": -0.53,
-   "r_samples": 62,
+   "r_samples": 72,
    "days": 2,
    "confidence": "low",
-   "net_usc": -2795.91
+   "net_usc": -2907.21
   },
   "by_symbol": {
    "EURUSD": {
@@ -5852,35 +3976,35 @@
     "net_usc": 5.99
    },
    "XAUUSD": {
-    "n": 433,
-    "wins": 212,
-    "win_rate": 49.0,
-    "expectancy_usc": -6.47,
-    "avg_points": -0.49,
+    "n": 347,
+    "wins": 178,
+    "win_rate": 51.3,
+    "expectancy_usc": -8.39,
+    "avg_points": -0.55,
     "profit_factor": 0.64,
     "avg_r": -0.52,
-    "r_samples": 60,
+    "r_samples": 70,
     "days": 2,
     "confidence": "low",
-    "net_usc": -2801.3
+    "net_usc": -2912.6
    }
   },
   "by_side": {
    "BUY": {
-    "n": 335,
-    "wins": 154,
-    "win_rate": 46.0,
-    "expectancy_usc": -14.76,
-    "avg_points": -0.67,
-    "profit_factor": 0.33,
-    "avg_r": -0.66,
-    "r_samples": 50,
+    "n": 265,
+    "wins": 132,
+    "win_rate": 49.8,
+    "expectancy_usc": -20.62,
+    "avg_points": -0.75,
+    "profit_factor": 0.31,
+    "avg_r": -0.64,
+    "r_samples": 58,
     "days": 2,
     "confidence": "low",
-    "net_usc": -4945.01
+    "net_usc": -5465.41
    },
    "MIXED": {
-    "n": 2,
+    "n": 1,
     "wins": 0,
     "win_rate": 0.0,
     "expectancy_usc": -43.8,
@@ -5888,22 +4012,22 @@
     "profit_factor": 0.0,
     "avg_r": null,
     "r_samples": 0,
-    "days": 2,
+    "days": 1,
     "confidence": "low",
-    "net_usc": -87.6
+    "net_usc": -43.8
    },
    "SELL": {
-    "n": 100,
-    "wins": 60,
-    "win_rate": 60.0,
-    "expectancy_usc": 22.37,
-    "avg_points": 0.15,
-    "profit_factor": 8.93,
-    "avg_r": -0.03,
-    "r_samples": 12,
+    "n": 85,
+    "wins": 48,
+    "win_rate": 56.5,
+    "expectancy_usc": 30.61,
+    "avg_points": 0.09,
+    "profit_factor": 11.65,
+    "avg_r": -0.09,
+    "r_samples": 14,
     "days": 2,
     "confidence": "low",
-    "net_usc": 2236.7
+    "net_usc": 2602.0
    }
   },
   "by_timeframe": {
@@ -5921,17 +4045,17 @@
     "net_usc": -329.0
    },
    "M1": {
-    "n": 289,
-    "wins": 148,
-    "win_rate": 51.2,
-    "expectancy_usc": -7.33,
+    "n": 304,
+    "wins": 155,
+    "win_rate": 51.0,
+    "expectancy_usc": -8.7,
     "avg_points": -0.68,
-    "profit_factor": 0.63,
+    "profit_factor": 0.6,
     "avg_r": -0.48,
-    "r_samples": 50,
+    "r_samples": 60,
     "days": 2,
     "confidence": "low",
-    "net_usc": -2117.6
+    "net_usc": -2644.9
    },
    "M15": {
     "n": 3,
@@ -5960,17 +4084,17 @@
     "net_usc": -217.3
    },
    "not recorded": {
-    "n": 131,
-    "wins": 60,
-    "win_rate": 45.8,
-    "expectancy_usc": -1.0,
-    "avg_points": 0.3,
-    "profit_factor": 0.91,
+    "n": 30,
+    "wins": 19,
+    "win_rate": 63.3,
+    "expectancy_usc": 9.51,
+    "avg_points": 2.36,
+    "profit_factor": 1.3,
     "avg_r": null,
     "r_samples": 0,
     "days": 2,
     "confidence": "low",
-    "net_usc": -130.8
+    "net_usc": 285.2
    }
   },
   "by_setup": {
@@ -6001,30 +4125,30 @@
     "net_usc": -34.9
    },
    "hedge": {
-    "n": 5,
+    "n": 7,
     "wins": 0,
     "win_rate": 0.0,
     "expectancy_usc": 0.0,
-    "avg_points": -0.39,
+    "avg_points": -1.03,
     "profit_factor": null,
-    "avg_r": null,
-    "r_samples": 0,
-    "days": 1,
+    "avg_r": -0.49,
+    "r_samples": 2,
+    "days": 2,
     "confidence": "low",
     "net_usc": 0
    },
    "other": {
-    "n": 412,
-    "wins": 199,
-    "win_rate": 48.3,
-    "expectancy_usc": -8.77,
-    "avg_points": -0.71,
-    "profit_factor": 0.53,
+    "n": 324,
+    "wins": 165,
+    "win_rate": 50.9,
+    "expectancy_usc": -11.49,
+    "avg_points": -0.82,
+    "profit_factor": 0.54,
     "avg_r": -0.52,
-    "r_samples": 60,
+    "r_samples": 68,
     "days": 2,
     "confidence": "low",
-    "net_usc": -3612.8
+    "net_usc": -3724.1
    },
    "pullback buy": {
     "n": 1,
@@ -6094,32 +4218,32 @@
     "net_usc": -313.71
    },
    "New York": {
-    "n": 373,
-    "wins": 167,
-    "win_rate": 44.8,
-    "expectancy_usc": -8.84,
-    "avg_points": -0.69,
-    "profit_factor": 0.53,
+    "n": 287,
+    "wins": 133,
+    "win_rate": 46.3,
+    "expectancy_usc": -11.87,
+    "avg_points": -0.82,
+    "profit_factor": 0.55,
     "avg_r": -0.48,
-    "r_samples": 46,
+    "r_samples": 56,
     "days": 2,
     "confidence": "low",
-    "net_usc": -3295.7
+    "net_usc": -3407.0
    }
   },
   "by_hour": {
    "00:00": {
-    "n": 1,
-    "wins": 0,
-    "win_rate": 0.0,
-    "expectancy_usc": -20.8,
-    "avg_points": -0.21,
-    "profit_factor": 0.0,
-    "avg_r": null,
-    "r_samples": 0,
+    "n": 31,
+    "wins": 14,
+    "win_rate": 45.2,
+    "expectancy_usc": -34.69,
+    "avg_points": -0.69,
+    "profit_factor": 0.42,
+    "avg_r": -0.51,
+    "r_samples": 10,
     "days": 1,
     "confidence": "low",
-    "net_usc": -20.8
+    "net_usc": -1075.4
    },
    "08:00": {
     "n": 2,
@@ -6252,43 +4376,43 @@
     "net_usc": -898.3
    },
    "21:00": {
-    "n": 41,
-    "wins": 16,
-    "win_rate": 39.0,
-    "expectancy_usc": -21.2,
-    "avg_points": -0.54,
-    "profit_factor": 0.31,
+    "n": 32,
+    "wins": 12,
+    "win_rate": 37.5,
+    "expectancy_usc": -16.23,
+    "avg_points": -0.53,
+    "profit_factor": 0.41,
     "avg_r": -0.04,
     "r_samples": 4,
-    "days": 2,
+    "days": 1,
     "confidence": "low",
-    "net_usc": -869.4
+    "net_usc": -519.2
    },
    "22:00": {
-    "n": 70,
-    "wins": 36,
-    "win_rate": 51.4,
-    "expectancy_usc": -7.76,
-    "avg_points": -0.39,
-    "profit_factor": 0.33,
+    "n": 45,
+    "wins": 26,
+    "win_rate": 57.8,
+    "expectancy_usc": -6.55,
+    "avg_points": -0.33,
+    "profit_factor": 0.38,
     "avg_r": -0.52,
     "r_samples": 4,
-    "days": 2,
+    "days": 1,
     "confidence": "low",
-    "net_usc": -543.4
+    "net_usc": -294.7
    },
    "23:00": {
-    "n": 192,
-    "wins": 87,
-    "win_rate": 45.3,
-    "expectancy_usc": -2.86,
-    "avg_points": -0.19,
-    "profit_factor": 0.56,
+    "n": 110,
+    "wins": 53,
+    "win_rate": 48.2,
+    "expectancy_usc": -1.85,
+    "avg_points": -0.11,
+    "profit_factor": 0.66,
     "avg_r": -0.43,
     "r_samples": 6,
-    "days": 2,
+    "days": 1,
     "confidence": "low",
-    "net_usc": -548.4
+    "net_usc": -204.0
    }
   },
   "by_news": {
@@ -6306,17 +4430,17 @@
     "net_usc": -0.8
    },
    "NY late, yields firm": {
-    "n": 21,
-    "wins": 3,
-    "win_rate": 14.3,
-    "expectancy_usc": -8.05,
-    "avg_points": -0.22,
-    "profit_factor": 0.46,
-    "avg_r": -0.43,
-    "r_samples": 6,
+    "n": 36,
+    "wins": 10,
+    "win_rate": 27.8,
+    "expectancy_usc": -19.34,
+    "avg_points": -0.42,
+    "profit_factor": 0.43,
+    "avg_r": -0.48,
+    "r_samples": 16,
     "days": 2,
     "confidence": "low",
-    "net_usc": -169.1
+    "net_usc": -696.4
    },
    "NY open": {
     "n": 6,
@@ -6475,17 +4599,17 @@
     "net_usc": 7.6
    },
    "unspecified": {
-    "n": 116,
-    "wins": 48,
-    "win_rate": 41.4,
-    "expectancy_usc": -8.13,
-    "avg_points": -0.36,
-    "profit_factor": 0.31,
+    "n": 15,
+    "wins": 7,
+    "win_rate": 46.7,
+    "expectancy_usc": -35.15,
+    "avg_points": -0.71,
+    "profit_factor": 0.42,
     "avg_r": null,
     "r_samples": 0,
     "days": 1,
     "confidence": "low",
-    "net_usc": -943.3
+    "net_usc": -527.3
    }
   },
   "by_alignment": {
@@ -6555,17 +4679,17 @@
     "net_usc": -215.4
    },
    "0/5 up, 5/5 down": {
-    "n": 114,
-    "wins": 53,
+    "n": 129,
+    "wins": 60,
     "win_rate": 46.5,
-    "expectancy_usc": -3.2,
-    "avg_points": -0.17,
-    "profit_factor": 0.52,
-    "avg_r": -0.48,
-    "r_samples": 9,
+    "expectancy_usc": -6.92,
+    "avg_points": -0.23,
+    "profit_factor": 0.47,
+    "avg_r": -0.5,
+    "r_samples": 19,
     "days": 2,
     "confidence": "low",
-    "net_usc": -364.8
+    "net_usc": -892.1
    },
    "1/5 up, 1/5 down": {
     "n": 25,
@@ -6659,17 +4783,17 @@
     "net_usc": 7.6
    },
    "not recorded": {
-    "n": 131,
-    "wins": 60,
-    "win_rate": 45.8,
-    "expectancy_usc": -1.0,
-    "avg_points": 0.3,
-    "profit_factor": 0.91,
+    "n": 30,
+    "wins": 19,
+    "win_rate": 63.3,
+    "expectancy_usc": 9.51,
+    "avg_points": 2.36,
+    "profit_factor": 1.3,
     "avg_r": null,
     "r_samples": 0,
     "days": 2,
     "confidence": "low",
-    "net_usc": -130.8
+    "net_usc": 285.2
    }
   },
   "best": [
@@ -6767,7 +4891,7 @@
    }
   ],
   "notes": [
-   "ทั้งหมด 437 ไม้ ชนะ 49.0% สุทธิ -2795.91 USC จาก 2 วันซื้อขาย · ตัวอย่างยังน้อย ผลอาจเปลี่ยนได้มาก อย่าเชื่อมากเกินไป",
+   "ทั้งหมด 351 ไม้ ชนะ 51.3% สุทธิ -2907.21 USC จาก 2 วันซื้อขาย · ตัวอย่างยังน้อย ผลอาจเปลี่ยนได้มาก อย่าเชื่อมากเกินไป",
    "ดีสุด: ชั่วโมง '12:00': 8 ไม้ ชนะ 100.0% เฉลี่ย +80.25 USC/ไม้ PF ไม่มีไม้แพ้ (ความมั่นใจต่ำ: ไม่ถึง 10 ไม้ หรือไม่ถึง 3 วัน)",
    "ดีสุด: รูปแบบ 'S/R bounce (buy the dip)': 12 ไม้ ชนะ 100.0% เฉลี่ย +70.62 USC/ไม้ PF ไม่มีไม้แพ้ (ความมั่นใจต่ำ: ไม่ถึง 10 ไม้ หรือไม่ถึง 3 วัน)",
    "ดีสุด: บริบทข่าว 'dovish Fed / softer oil': 15 ไม้ ชนะ 80.0% เฉลี่ย +54.17 USC/ไม้ PF 24.28 (ความมั่นใจต่ำ: ไม่ถึง 10 ไม้ หรือไม่ถึง 3 วัน)",
@@ -6776,7 +4900,7 @@
    "แย่สุด: ชั่วโมง '15:00': 6 ไม้ ชนะ 33.3% เฉลี่ย -39.83 USC/ไม้ PF 0.03 (ความมั่นใจต่ำ: ไม่ถึง 10 ไม้ หรือไม่ถึง 3 วัน)"
   ],
   "notes_en": [
-   "All 437 trades: win 49.0%, net -2795.91 USC over 2 trading day(s) · Small sample; results can change a lot, do not over-trust them",
+   "All 351 trades: win 51.3%, net -2907.21 USC over 2 trading day(s) · Small sample; results can change a lot, do not over-trust them",
    "Best: hour '12:00': 8 trades, win 100.0%, avg +80.25 USC/trade, PF n/a (no losses) (low confidence: under 10 trades or under 3 days)",
    "Best: setup 'S/R bounce (buy the dip)': 12 trades, win 100.0%, avg +70.62 USC/trade, PF n/a (no losses) (low confidence: under 10 trades or under 3 days)",
    "Best: news 'dovish Fed / softer oil': 15 trades, win 80.0%, avg +54.17 USC/trade, PF 24.28 (low confidence: under 10 trades or under 3 days)",
@@ -6784,7 +4908,7 @@
    "Worst: hour '14:00': 2 trades, win 0.0%, avg -42.30 USC/trade, PF 0.0 (low confidence: under 10 trades or under 3 days)",
    "Worst: hour '15:00': 6 trades, win 33.3%, avg -39.83 USC/trade, PF 0.03 (low confidence: under 10 trades or under 3 days)"
   ],
-  "updated": "2026-10-20 00:03"
+  "updated": "2026-10-20 00:14"
  },
  "price_num": 4141.9,
  "res_nums": [
