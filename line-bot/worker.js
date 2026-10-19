@@ -118,6 +118,7 @@ async function handleEvent(env, ev) {
   const m = ev.message, uid = ev.source && ev.source.userId;
   if (m.type === 'text' && m.text.startsWith('/')) {
     const t = m.text.trim();
+    if (/^\/สมัคร/.test(t)) return reply(env, ev, [{ type: 'text', text: 'สมัครบัญชี Exness (ลิงก์แนะนำ partner):\nhttps://one.exnessonelink.com/a/s2didh6p\n\nสอนสมัครทีละขั้น:\nhttps://purefxaidev.github.io/gold-dashboard/signup.html\n\nคำเตือน: CFD/ทองคำมีความเสี่ยงสูง อาจสูญเสียเงินทั้งหมด' }]);
     const so = /^\/ตั้งเจ้าของ\s+(\S+)/.exec(t);
     if (so) { const okS = env.ALERT_SECRET && so[1] === env.ALERT_SECRET && env.MODES; if (okS) await env.MODES.put('owner', uid);
       return reply(env, ev, [{ type: 'text', text: okS ? 'ตั้งคุณเป็นเจ้าของบอทแล้วค่ะ' : 'ตั้งไม่สำเร็จค่ะ (รหัสผิด หรือยังไม่ผูก KV)' }]); }

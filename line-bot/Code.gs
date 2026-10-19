@@ -194,6 +194,7 @@ function langQuickReply_() {
 function handleCommand_(ev, t) {
   var uid = ev.source && ev.source.userId, rt = ev.replyToken;
   // --- เจ้าของ + เปิด/ปิดเทรดอัตโนมัติ ---
+  if (/^\/สมัคร/.test(t)) { lineSend_('reply', { replyToken: rt, messages: [{ type: 'text', text: 'สมัครบัญชี Exness (ลิงก์แนะนำ partner):\nhttps://one.exnessonelink.com/a/s2didh6p\n\nสอนสมัครทีละขั้น:\nhttps://purefxaidev.github.io/gold-dashboard/signup.html\n\nคำเตือน: CFD/ทองคำมีความเสี่ยงสูง อาจสูญเสียเงินทั้งหมด' }] }); return true; }
   var so = /^\/ตั้งเจ้าของ\s+(\S+)/.exec(t);
   if (so && uid) { var okS = prop_('ALERT_SECRET') && so[1] === prop_('ALERT_SECRET');
     if (okS) PropertiesService.getScriptProperties().setProperty('OWNER_USER_ID', uid);

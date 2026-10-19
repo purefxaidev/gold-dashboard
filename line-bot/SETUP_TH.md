@@ -99,3 +99,4 @@
 - คำสั่งเข้าคิว → ระบบเทรดบนคอมดึงทุกรอบด้วย `line_commands.sh fetch` แล้วรายงานผล `line_commands.sh ack <id> ok|fail "ผล"` → บอทส่งผลกลับหาเจ้าของ (push message)
 - Endpoint: Apps Script `GET /exec?action=commands&secret=...` · `POST {"action":"ack","secret","id","ok","result"}` · Worker `GET /commands?secret=` · `POST /ack` (ตั้ง `LINE_BACKEND=worker`)
 - ผู้ใช้อื่นคุยได้อย่างเดียว สั่งงานไม่ได้ · push message ใช้โควตาข้อความของ LINE OA (แผนฟรีมีจำกัด/เดือน)
+- `/สมัคร` → ส่งลิงก์สมัคร Exness (partner) + หน้าสอนสมัคร signup.html
