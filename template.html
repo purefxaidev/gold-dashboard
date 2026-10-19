@@ -390,7 +390,7 @@ let hist = JSON.parse(localStorage.getItem("gd_hist") || sessionStorage.getItem(
 const MEM = {facts: () => JSON.parse(localStorage.getItem("gd_facts") || "[]"), notes: () => localStorage.getItem("gd_notes") || "",
   setFacts: a => localStorage.setItem("gd_facts", JSON.stringify(a.slice(-50))), setNotes: t => localStorage.setItem("gd_notes", String(t).slice(0, 4000))};
 function memText() { const f = MEM.facts(), n = MEM.notes(); return (f.length ? "\n\nสิ่งที่จำเกี่ยวกับผู้ใช้:\n- " + f.join("\n- ") : "") + (n ? "\n\nบันทึกสรุปบทสนทนาก่อนหน้า:\n" + n : ""); }
-const MEM_RULE = "\n\nห้ามใช้อีโมจิในคำตอบ\n\nถ้าผู้ใช้บอกข้อมูลที่ควรจำระยะยาว (ความชอบ สไตล์เทรด เป้าหมาย ข้อห้าม) ให้ใส่แท็ก [[จำ: ข้อความสั้น]] ท้ายคำตอบ (แท็กละ 1 เรื่อง)";
+const MEM_RULE = "\n\nห้ามใช้อีโมจิ ห้ามใช้ markdown (ห้าม ** # - ตาราง) ตอบเป็นข้อความธรรมดาแบ่งบรรทัดสั้นๆในคำตอบ\n\nถ้าผู้ใช้บอกข้อมูลที่ควรจำระยะยาว (ความชอบ สไตล์เทรด เป้าหมาย ข้อห้าม) ให้ใส่แท็ก [[จำ: ข้อความสั้น]] ท้ายคำตอบ (แท็กละ 1 เรื่อง)";
 function takeMem(text) { const add = []; text = text.replace(/\[\[\s*จำ\s*:\s*([^\]]+)\]\]/g, (_, x) => { add.push(x.trim()); return ""; }).trim();
   if (add.length) { const f = MEM.facts(); add.forEach(x => { if (!f.includes(x)) f.push(x); }); MEM.setFacts(f); renderMem(); bubble("a", "จำไว้แล้วค่ะ: " + add.join(" · ")); } return text; }
 function saveHist() { localStorage.setItem("gd_hist", JSON.stringify(hist.slice(-80))); }
@@ -409,7 +409,15 @@ function renderMem() {
 }
 const getKey = () => localStorage.getItem(KEY) || "";
 const getModel = () => localStorage.getItem(MODEL) || "gemini-3.8-flash";
-function bubble(role, text) { const d = document.createElement("div"); d.className = "m " + role; d.textContent = text; $("msgs").appendChild(d); $("msgs").scrollTop = 1e9; return d; }
+function md(t) { // safe plain-text rendering of model output (escape first, then minimal formatting)
+  let h = esc(String(t || "")).replace(/\r/g, "");
+  h = h.replace(/^\s*(-{3,}|\*{3,}|_{3,})\s*$/gm, "").replace(/^\s*#{1,6}\s*/gm, "").replace(/^\s*&gt;\s?/gm, "")
+       .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/__(.+?)__/g, "<b>$1</b>").replace(/`{1,3}([^`]*)`{1,3}/g, "$1")
+       .replace(/^\s*[-*+]\s+/gm, "• ").replace(/^\s*(\d+)[.)]\s+/gm, "$1. ").replace(/(^|[^*])\*(?!\s)([^*\n]+?)\*(?!\*)/g, "$1$2").replace(/\*/g, "")
+       .replace(/\n{3,}/g, "\n\n");
+  return h.trim().replace(/\n/g, "<br>");
+}
+function bubble(role, text) { const d = document.createElement("div"); d.className = "m " + role; if (role === "a") d.innerHTML = md(text); else d.textContent = text; $("msgs").appendChild(d); $("msgs").scrollTop = 1e9; return d; }
 let KB = "", HIST = ""; fetch("knowledge.md?t=" + Date.now()).then(r => r.ok ? r.text() : "").then(t => KB = t.slice(0, 12000)).catch(() => {});
 Promise.all([fetch("lessons.md?t=" + Date.now()).then(r => r.ok ? r.text() : ""), fetch("history/trade_journal.jsonl?t=" + Date.now()).then(r => r.ok ? r.text() : "")]).then(([l, j]) => (l.slice(-3000) + "\n\nบันทึกเทรดล่าสุด:\n" + j.trim().split("\n").slice(-15).join("\n")).slice(0, 5000)).catch(() => "").then(t => HIST = t);
 function context() {
@@ -417,7 +425,7 @@ function context() {
     ev_plans: (D.ev_plans || []).map(({name, side, entry, sl, tp, p_win, rr, ev, decision, status}) => ({name, side, entry, sl, tp, p_win, rr, ev, decision, status})), ev_formula: "EV(R)=p*RR-(1-p); เข้าเมื่อ EV>0", news: D.news, note: D.note},
     live_xauusd_spot: live.price ?? D?.price_num, live_time: live.time, thai_gold_thb: thaiGold && thaiGold.map(x => ({type: x.GoldType, purity: x.GoldCode, buy: x.Buy, sell: x.Sell, change: x.BuyChange, time: x.TimeUpdate})),
     now_bangkok: new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"})};
-  return "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ ห้ามใช้อีโมจิ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nคลังความรู้ (ใช้เป็นหลักการตัดสินใจ):\n" + KB + "\n\nบทเรียน/ประวัติเทรด:\n" + HIST + "\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
+  return "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้นมืออาชีพ ตอบเป็นภาษาไทยเสมอ ห้ามใช้อีโมจิ ห้ามใช้ markdown (ห้าม ** # - ตาราง) ตอบเป็นข้อความธรรมดาแบ่งบรรทัดสั้นๆ กระชับ ชัดเจน ใช้ตัวเลขจากข้อมูลด้านล่าง อ้างอิงแนวรับแนวต้าน แผน EV และข่าว ถ้าแนะนำจุดเข้าต้องมี SL/TP เสมอ และเตือนความเสี่ยงสั้นๆ ทุกครั้ง ห้ามรับประกันกำไร ถ้าข้อมูลไม่พอให้บอกตรงๆ\n\nคลังความรู้ (ใช้เป็นหลักการตัดสินใจ):\n" + KB + "\n\nบทเรียน/ประวัติเทรด:\n" + HIST + "\n\nข้อมูลล่าสุด (JSON):\n" + JSON.stringify(ctx);
 }
 let mode = localStorage.getItem("gd_mode") || "ana";
 const LN = {en:"English",th:"Thai",zh:"Chinese (Simplified)",ja:"Japanese",ko:"Korean",vi:"Vietnamese",lo:"Lao",my:"Burmese",fr:"French",de:"German"};
@@ -462,12 +470,12 @@ async function ask(q, audio) {
         const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
         if (!line.startsWith("data:")) continue;
         try { const j = JSON.parse(line.slice(5)); const parts = j.candidates?.[0]?.content?.parts || []; for (const p of parts) if (p.text && !p.thought) text += p.text; } catch (e) {}
-        out.textContent = text.replace(/\*\*/g, ""); $("msgs").scrollTop = 1e9;
+        out.innerHTML = md(text); $("msgs").scrollTop = 1e9;
       }
     }
     if (!text) text = "(ไม่มีคำตอบ ลองถามใหม่)";
     if (!tr) text = takeMem(text) || "(บันทึกแล้วค่ะ)";
-    out.textContent = text.replace(/\*\*/g, "");
+    out.innerHTML = md(text);
     if (!tr) { hist.push({role: "model", parts: [{text}]}); saveHist(); summarizeOld(); }
   } catch (e) {
     out.remove(); if (!tr) hist.pop(); bubble("e", "เรียก Gemini ไม่สำเร็จ: " + e.message + " (ตรวจสอบ key / ชื่อโมเดลในตั้งค่า)");
@@ -636,7 +644,7 @@ $("callBtn").onclick = openCall; $("callX").onclick = closeCall;
 if (location.hash === "#call") openCall();
 window.addEventListener("hashchange", () => { if (location.hash === "#call") openCall(); });
 // init
-hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text.replace(/\*\*/g, "")));
+hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text));
 if (!hist.length) bubble("a", "สวัสดีค่ะ  ดิฉันคือ เลขา ผู้ช่วยวิเคราะห์ทองค่ะ ถามเรื่องกราฟ แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ต้องใส่ Gemini API key ใน  ตั้งค่า ก่อนใช้ครั้งแรก)");
 syncSet(); setMode(mode); render(); renderPnl(); renderReco(); init3d(); keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
 pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 15000); setInterval(pollThai, 30000); setInterval(pollData, 20000);

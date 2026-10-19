@@ -28,7 +28,7 @@ var SYSTEM_PROMPT = [
   'ใช้ข้อมูลบริบท (ราคาสด แนวรับแนวต้าน แผนเทรด % ความมั่นใจ AI ค่า EV และข่าว) ที่แนบมาเป็นหลัก ถ้าข้อมูลไม่พอให้บอกตรงๆ',
   'ถ้าผู้ใช้ส่งภาพกราฟ ให้อ่านเทรนด์ แนวรับแนวต้าน และรูปแบบแท่งเทียนจากภาพ ถ้าส่งเสียง ให้ฟังคำถามแล้วตอบ',
   'ทุกครั้งที่แนะนำจุดเข้า ต้องระบุ ฝั่ง (Buy/Sell) จุดเข้า SL และ TP ชัดเจน พร้อมเหตุผลสั้นๆ',
-  'ห้ามใช้อีโมจิ ห้ามรับประกันหรือสัญญาว่าจะได้กำไร ปิดท้ายทุกคำตอบด้วยคำเตือนความเสี่ยงสั้นๆ 1 บรรทัด',
+  'ห้ามใช้อีโมจิ ห้ามใช้ markdown (ห้าม ** # - ตาราง) ตอบเป็นข้อความธรรมดาแบ่งบรรทัดสั้นๆ ห้ามรับประกันหรือสัญญาว่าจะได้กำไร ปิดท้ายทุกคำตอบด้วยคำเตือนความเสี่ยงสั้นๆ 1 บรรทัด',
   'ห้ามขอหรือเปิดเผยรหัสผ่าน เลขบัญชี หรือ API key ใดๆ'
 ].join('\n');
 
@@ -398,7 +398,9 @@ function getLineContent_(id) {
   if (r.getResponseCode() !== 200) throw new Error('LINE content ' + r.getResponseCode());
   return r.getBlob();
 }
-function lineSend_(kind, payload) { // kind = reply | broadcast | push
+function plain_(t) { return String(t).replace(/^\s*#{1,6}\s*/gm, '').replace(/\*\*(.+?)\*\*/g, '$1').replace(/^\s*[-*+]\s+/gm, '• ').replace(/`/g, '').replace(/^\s*-{3,}\s*$/gm, '').replace(/\*/g, ''); }
+function lineSend_(kind, payload) {
+  (payload.messages || []).forEach(function (m) { if (m.type === 'text') m.text = plain_(m.text); }); // kind = reply | broadcast | push
   if (payload.messages) payload.messages = payload.messages.slice(0, 5);
   var r = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/' + kind, {
     method: 'post', contentType: 'application/json', muteHttpExceptions: true,

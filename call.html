@@ -6,7 +6,7 @@ body{margin:0;font-family:system-ui,"Noto Sans Thai",sans-serif;background:radia
 .card{background:#11131a;border:1px solid #f5c54233;border-radius:16px;padding:14px;margin:12px 0}
 select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:10px;padding:8px;width:100%;box-sizing:border-box;margin:4px 0}
 .row{display:flex;gap:8px}.row>*{flex:1}
-.big{display:block;margin:18px auto;width:120px;height:120px;border-radius:50%;border:0;font-size:44px;background:#1db954;color:#fff;box-shadow:0 0 30px #1db95488;cursor:pointer}
+.big{display:block;margin:18px auto 10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;width:120px;height:120px;border-radius:50%;border:0;font-size:44px;background:#1db954;color:#fff;box-shadow:0 0 30px #1db95488;cursor:pointer}
 .big.on{background:#e53935;box-shadow:0 0 40px #e5393588;animation:p 1.4s infinite}@keyframes p{50%{transform:scale(1.05)}}
 #st{text-align:center;color:#aaa;font-size:14px}#log{max-height:40vh;overflow:auto;font-size:14px}
 .u{color:#9ecbff}.a{color:#f5c542}.e{color:#ff7b7b}a{color:#f5c542}small{color:#888}
@@ -22,8 +22,12 @@ select,input{background:#0b0d12;color:#eee;border:1px solid #333;border-radius:1
  <div><small>เสียง (ผู้หญิง)</small><select id="voice"><option>Sulafat</option><option>Kore</option><option>Aoede</option><option>Leda</option><option>Zephyr</option><option>Despina</option><option>Callirrhoe</option><option>Autonoe</option><option>Laomedeia</option><option>Achernar</option><option>Gacrux</option><option>Pulcherrima</option><option>Vindemiatrix</option><option>Erinome</option></select></div></div>
  <small id="keyst"></small>
 </div>
-<button class="big" id="call"><svg class="ic" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><div id="st">กดเพื่อเริ่มคุย (ต้องอนุญาตไมค์)</div>
+<button class="big" id="call"><svg class="ic" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></button><div id="callLbl" style="text-align:center;font-weight:700;color:#f5c542;margin-top:-6px">อนุญาตไมค์และเริ่มสาย</div>
+<div id="st">แตะปุ่มด้านบน แล้วกด "อนุญาต" เมื่อเบราว์เซอร์ถามสิทธิ์ไมค์</div>
+<button id="resumeBtn" style="display:none;margin:10px auto;padding:10px 16px;border-radius:12px;border:0;background:#f5c542;color:#111;font-weight:700">แตะเพื่อเปิดเสียงต่อ</button>
+<div class="card" id="inapp" style="display:none;border-color:#fb8c00"><div id="inappTxt" style="margin-bottom:8px"></div><button id="inappBtn" style="padding:10px 14px;border-radius:10px;border:0;background:#f5c542;color:#111;font-weight:700">เปิดในเบราว์เซอร์ภายนอก</button></div>
 <div class="card" id="log"></div>
+<details id="dbg" class="card"><summary style="cursor:pointer;color:#888;font-size:13px">ข้อมูลสำหรับแก้ปัญหา (debug)</summary><div id="dbgLog" style="font:11px/1.5 monospace;color:#9a9;max-height:30vh;overflow:auto;white-space:pre-wrap"></div></details>
 <div class="card"><small> ใช้ Gemini key ที่บันทึกไว้ในเบราว์เซอร์นี้ (ตั้งค่าได้ที่แชทในหน้าแดชบอร์ด) — ไม่มี key ในเว็บไซต์ · ถ้าเปิดใน LINE แล้วไมค์ใช้ไม่ได้ ให้กด ⋮ → <b>เปิดในเบราว์เซอร์ภายนอก</b> · ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน</small></div>
 </div>
 <script>
@@ -52,64 +56,119 @@ async function sysPrompt() {
   let ctx = "";
   try { const [hs, v, p, kb] = await Promise.all([Promise.all([fetch("lessons.md?t=" + Date.now()).then(r => r.ok ? r.text() : ""), fetch("history/trade_journal.jsonl?t=" + Date.now()).then(r => r.ok ? r.text() : "")]).then(([l, j]) => (l.slice(-3000) + "\n\nบันทึกเทรดล่าสุด:\n" + j.trim().split("\n").slice(-15).join("\n")).slice(0, 5000)).catch(() => ""), fetch("view.json?t=" + Date.now()).then(r => r.json()), fetch("https://api.gold-api.com/price/XAU").then(r => r.json()).catch(() => null), fetch("knowledge.md?t=" + Date.now()).then(r => r.text()).catch(() => "")]);
     ctx = JSON.stringify({live_price: p, dashboard: v}).slice(0, 12000) + "\nคลังความรู้:\n" + (kb || "").slice(0, 8000) + "\nบทเรียน/ประวัติ:\n" + (hs || ""); } catch (e) {}
-  return memText() + "\n" + "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย ห้ามใช้อีโมจิ สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + "\nข้อมูล: " + ctx;
+  return memText() + "\n" + "คุณคือ เลขา ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) และเป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น (M5–H1) คุยด้วยเสียงภาษาไทย ห้ามใช้อีโมจิ ห้ามใช้ markdown พูดเป็นข้อความธรรมดา สั้น กระชับ เป็นธรรมชาติ ใช้ข้อมูลด้านล่าง ถ้าแนะนำจุดเข้าต้องบอก Buy/Sell จุดเข้า SL TP เสมอ และเตือนความเสี่ยงสั้นๆ ห้ามรับประกันกำไร\nเวลาไทย: " + new Date().toLocaleString("th-TH", {timeZone: "Asia/Bangkok"}) + "\nข้อมูล: " + ctx;
 }
 
-// mic -> 16 kHz PCM16 via AudioWorklet
-const WORKLET = `class R extends AudioWorkletProcessor{constructor(){super();this.b=[];this.r=sampleRate/16000;this.a=0}
-process(i){const c=i[0][0];if(!c)return true;for(let n=0;n<c.length;n++){this.a+=1;if(this.a>=this.r){this.a-=this.r;this.b.push(c[n])}}
+// ===== audio engine (mobile-safe) =====
+const dbgOn = () => $("dbg") && $("dbg").open;
+function dbg(t) { const d = $("dbgLog"); if (!d) return; const l = document.createElement("div"); l.textContent = new Date().toLocaleTimeString("th-TH") + " " + t; d.appendChild(l); while (d.children.length > 200) d.firstChild.remove(); d.scrollTop = 1e9; }
+const WORKLET = `class R extends AudioWorkletProcessor{constructor(){super();this.r=sampleRate/16000;this.p=0;this.b=[]}
+process(i){const c=i[0]&&i[0][0];if(!c)return true;let p=this.p;while(p<c.length){const k=Math.floor(p),f=p-k,a=c[k],b=k+1<c.length?c[k+1]:a;this.b.push(a+(b-a)*f);p+=this.r}this.p=p-c.length;
 if(this.b.length>=1600){const o=new Int16Array(this.b.length);for(let k=0;k<o.length;k++){const s=Math.max(-1,Math.min(1,this.b[k]));o[k]=s<0?s*32768:s*32767}this.port.postMessage(o.buffer,[o.buffer]);this.b=[]}return true}}
 registerProcessor("rec16",R);`;
-let ws, inCtx, outCtx, stream, node, playT = 0, srcs = [], aLine = null, uLine = null;
+let ws, ac, stream, node, srcNode, playT = 0, srcs = [], aLine = null, uLine = null, inCall = false, spBuf = [], spPos = 0;
 const b64 = buf => { let s = "", u = new Uint8Array(buf); for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
+function sendPcm(buf) { if (ws && ws.readyState === 1) ws.send(JSON.stringify({realtimeInput: {audio: {data: b64(buf), mimeType: "audio/pcm;rate=16000"}}})); }
 function play(data) {
+  if (!ac) return;
   const bin = atob(data), n = bin.length >> 1, f = new Float32Array(n);
   for (let i = 0; i < n; i++) { let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v > 32767) v -= 65536; f[i] = v / 32768; }
-  const buf = outCtx.createBuffer(1, n, 24000); buf.copyToChannel(f, 0);
-  const s = outCtx.createBufferSource(); s.buffer = buf; s.connect(outCtx.destination);
-  playT = Math.max(playT, outCtx.currentTime); s.start(playT); playT += buf.duration;
+  let buf;
+  try { buf = ac.createBuffer(1, n, 24000); buf.getChannelData(0).set(f); }
+  catch (e) { // very old engines: resample 24k -> device rate manually
+    const r = ac.sampleRate / 24000, m = Math.floor(n * r); buf = ac.createBuffer(1, m, ac.sampleRate); const o = buf.getChannelData(0);
+    for (let i = 0; i < m; i++) { const x = i / r, k = Math.floor(x), fr = x - k; o[i] = f[k] + ((f[k + 1] ?? f[k]) - f[k]) * fr; } }
+  const s = ac.createBufferSource(); s.buffer = buf; s.connect(ac.destination);
+  playT = Math.max(playT, ac.currentTime + 0.02); s.start(playT); playT += buf.duration;
   srcs.push(s); s.onended = () => srcs = srcs.filter(x => x !== s);
 }
 function stopPlay() { srcs.forEach(s => { try { s.stop(); } catch (e) {} }); srcs = []; playT = 0; }
-
-async function start() {
-  if (!KEY) { log("e", "ยังไม่มี Gemini key"); return; }
-  $("st").textContent = "กำลังเชื่อมต่อ…";
-  try { stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true, channelCount: 1}}); }
-  catch (e) { log("e", "ใช้ไมค์ไม่ได้: " + e.message + " — ถ้าอยู่ใน LINE ให้เปิดในเบราว์เซอร์ภายนอก"); $("st").textContent = ""; return; }
-  inCtx = new AudioContext(); outCtx = new AudioContext({sampleRate: 24000});
-  await inCtx.audioWorklet.addModule(URL.createObjectURL(new Blob([WORKLET], {type: "application/javascript"})));
-  const sys = await sysPrompt();
-  ws = new WebSocket("wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=" + encodeURIComponent(KEY));
-  ws.onopen = () => ws.send(JSON.stringify({setup: {model: $("model").value,
-    generationConfig: {responseModalities: ["AUDIO"], speechConfig: {voiceConfig: {prebuiltVoiceConfig: {voiceName: $("voice").value || "Sulafat"}}}},
-    systemInstruction: {parts: [{text: sys}]}, inputAudioTranscription: {}, outputAudioTranscription: {},
-    ...(/translate/.test($("model").value) ? {translationConfig: {targetLanguageCode: LC[$("lang").value] || "th", echoTargetLanguage: true}} : {})}}));
-  ws.onmessage = async ev => {
-    const m = JSON.parse(typeof ev.data === "string" ? ev.data : await ev.data.text());
-    if (m.setupComplete) {
-      $("st").textContent = "กำลังฟัง… พูดได้เลย (พูดแทรกได้)"; $("call").classList.add("on"); $("call").innerHTML = ICON_STOP;
-      const src = inCtx.createMediaStreamSource(stream); node = new AudioWorkletNode(inCtx, "rec16");
-      node.port.onmessage = e => { if (ws && ws.readyState === 1) ws.send(JSON.stringify({realtimeInput: {audio: {data: b64(e.data), mimeType: "audio/pcm;rate=16000"}}})); };
-      src.connect(node); return;
-    }
-    const sc = m.serverContent; if (!sc) { if (m.goAway) log("e", "เซสชันใกล้หมดเวลา"); return; }
-    if (sc.interrupted) { stopPlay(); aLine = null; }
-    if (sc.inputTranscription?.text) { uLine = uLine || log("u", "คุณ: "); uLine.textContent += sc.inputTranscription.text; aLine = null; }
-    if (sc.outputTranscription?.text) { aLine = aLine || log("a", "เลขา: "); aLine.textContent += sc.outputTranscription.text; uLine = null; }
-    for (const p of sc.modelTurn?.parts || []) if (p.inlineData?.data) play(p.inlineData.data);
-    if (sc.turnComplete) { aLine = null; uLine = null; }
-  };
-  ws.onerror = () => log("e", "เชื่อมต่อผิดพลาด (ตรวจ key / ลองเปลี่ยนโมเดล)");
-  ws.onclose = e => { if (e.code !== 1000) log("e", "ปิดการเชื่อมต่อ: " + e.code + " " + (e.reason || "")); stop(true); };
+function unlockOutput() { try { const b = ac.createBuffer(1, 1, ac.sampleRate), s = ac.createBufferSource(); s.buffer = b; s.connect(ac.destination); s.start(0); } catch (e) {} }
+function micError(e) {
+  const n = e && e.name, ios = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (n === "NotAllowedError" || n === "PermissionDeniedError" || n === "SecurityError")
+    return "ไม่ได้รับอนุญาตให้ใช้ไมค์ค่ะ\n" + (ios ? "iPhone/iPad: ตั้งค่า > Safari > ไมโครโฟน > เลือก ถาม หรือ อนุญาต แล้วโหลดหน้านี้ใหม่ (หรือแตะ aA บนแถบที่อยู่ > การตั้งค่าเว็บไซต์ > ไมโครโฟน)"
+      : "Android Chrome: แตะไอคอนแม่กุญแจข้างที่อยู่เว็บ > สิทธิ์ > ไมโครโฟน > อนุญาต (หรือ การตั้งค่า > การตั้งค่าเว็บไซต์ > ไมโครโฟน) แล้วโหลดหน้าใหม่");
+  if (n === "NotFoundError" || n === "DevicesNotFoundError") return "ไม่พบไมโครโฟนในเครื่องนี้ค่ะ";
+  if (n === "NotReadableError" || n === "TrackStartError") return "ไมค์ถูกแอปอื่นใช้อยู่ (เช่น โทรศัพท์/แอปอัดเสียง) ปิดแอปนั้นแล้วลองใหม่ค่ะ";
+  if (n === "OverconstrainedError") return "อุปกรณ์ไม่รองรับการตั้งค่าไมค์ที่ขอ ลองใหม่อีกครั้งค่ะ";
+  return "ใช้ไมค์ไม่ได้: " + (e && (e.message || n) || e);
 }
-function stop(fromClose) {
+const WS_CLOSE = {1006: "การเชื่อมต่อหลุด (เน็ตไม่เสถียร หรือ key/โมเดลไม่ถูกต้อง)", 1007: "ข้อมูลตั้งค่าไม่ถูกต้อง (อาจเป็นชื่อโมเดล/เสียงที่ไม่รองรับ)", 1008: "ถูกปฏิเสธ: key ไม่ถูกต้อง ไม่มีสิทธิ์ใช้โมเดลนี้ หรือโควตาหมด", 1011: "เซิร์ฟเวอร์ Gemini ขัดข้อง ลองใหม่อีกครั้ง", 1013: "เซิร์ฟเวอร์ไม่ว่าง ลองใหม่ภายหลัง"};
+function startCapture() {
+  srcNode = ac.createMediaStreamSource(stream);
+  if (ac.audioWorklet && window.AudioWorkletNode) {
+    return ac.audioWorklet.addModule(URL.createObjectURL(new Blob([WORKLET], {type: "application/javascript"}))).then(() => {
+      node = new AudioWorkletNode(ac, "rec16"); node.port.onmessage = e => sendPcm(e.data); srcNode.connect(node); dbg("capture: AudioWorklet @" + ac.sampleRate + "Hz -> 16k");
+    });
+  }
+  // fallback: ScriptProcessor + main-thread resample
+  node = ac.createScriptProcessor(4096, 1, 1); const r = ac.sampleRate / 16000;
+  node.onaudioprocess = ev => { const c = ev.inputBuffer.getChannelData(0); let p = spPos;
+    while (p < c.length) { const k = Math.floor(p), f = p - k, a = c[k], b = k + 1 < c.length ? c[k + 1] : a; spBuf.push(a + (b - a) * f); p += r; } spPos = p - c.length;
+    if (spBuf.length >= 1600) { const o = new Int16Array(spBuf.length); for (let k = 0; k < o.length; k++) { const s = Math.max(-1, Math.min(1, spBuf[k])); o[k] = s < 0 ? s * 32768 : s * 32767; } spBuf = []; sendPcm(o.buffer); } };
+  const mute = ac.createGain(); mute.gain.value = 0; srcNode.connect(node); node.connect(mute); mute.connect(ac.destination);
+  dbg("capture: ScriptProcessor fallback @" + ac.sampleRate + "Hz -> 16k"); return Promise.resolve();
+}
+function start() {
+  // ---- synchronous part (must stay inside the user gesture for iOS) ----
+  if (!window.isSecureContext) { log("e", "หน้านี้ไม่ได้เปิดผ่าน https จึงใช้ไมค์ไม่ได้ค่ะ"); return; }
+  if (!KEY) { log("e", "ยังไม่มี Gemini key — เปิดหน้าแดชบอร์ด > แชท > ตั้งค่า แล้ววาง key ก่อนค่ะ"); return; }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { log("e", "เบราว์เซอร์นี้ไม่รองรับไมค์ค่ะ" + (INAPP ? " (กำลังเปิดในแอป ให้เปิดในเบราว์เซอร์ภายนอก)" : "")); return; }
+  const AC = window.AudioContext || window.webkitAudioContext;
+  try { ac = new AC(); } catch (e) { log("e", "สร้างระบบเสียงไม่ได้: " + e.message); return; }
+  const resumeP = ac.resume ? ac.resume() : Promise.resolve(); unlockOutput();
+  const micP = navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true, noiseSuppression: true, autoGainControl: true, channelCount: 1}});
+  ac.onstatechange = () => { dbg("AudioContext: " + ac.state); if (inCall && ac.state !== "running") $("resumeBtn").style.display = "block"; };
+  inCall = true; $("st").textContent = "กำลังขอสิทธิ์ไมค์…"; $("call").classList.add("on"); $("call").innerHTML = ICON_STOP; $("callLbl").textContent = "วางสาย";
+  dbg("UA: " + navigator.userAgent); dbg("AudioContext rate " + ac.sampleRate + " state " + ac.state);
+  // ---- async part ----
+  Promise.all([micP, resumeP]).then(async ([s]) => {
+    stream = s; dbg("getUserMedia OK: " + s.getAudioTracks().map(t => t.label || "mic").join(",") + " · ctx " + ac.state);
+    window.__callState = {mic: true, ctx: ac.state, rate: ac.sampleRate};
+    s.getAudioTracks().forEach(t => t.onended = () => { dbg("mic track ended"); if (inCall) log("e", "ไมค์ถูกตัด (อาจมีสายเข้า/แอปอื่นใช้ไมค์)"); });
+    await startCapture(); window.__callState.capture = node ? node.constructor.name : "none";
+    $("st").textContent = "กำลังเชื่อมต่อ Gemini…";
+    const sys = await sysPrompt();
+    ws = new WebSocket("wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=" + encodeURIComponent(KEY));
+    ws.onopen = () => { dbg("ws open, model " + $("model").value); ws.send(JSON.stringify({setup: {model: $("model").value,
+      generationConfig: {responseModalities: ["AUDIO"], speechConfig: {voiceConfig: {prebuiltVoiceConfig: {voiceName: $("voice").value || "Sulafat"}}}},
+      systemInstruction: {parts: [{text: sys}]}, inputAudioTranscription: {}, outputAudioTranscription: {},
+      ...(/translate/.test($("model").value) ? {translationConfig: {targetLanguageCode: LC[$("lang").value] || "th", echoTargetLanguage: true}} : {})}})); };
+    ws.onmessage = async ev => {
+      const m = JSON.parse(typeof ev.data === "string" ? ev.data : await ev.data.text());
+      if (m.setupComplete) { dbg("setupComplete"); $("st").textContent = "กำลังฟัง… พูดได้เลย (พูดแทรกได้)"; return; }
+      const sc = m.serverContent; if (!sc) { if (m.goAway) log("e", "เซสชันใกล้หมดเวลา"); return; }
+      if (sc.interrupted) { stopPlay(); aLine = null; }
+      if (sc.inputTranscription?.text) { uLine = uLine || log("u", "คุณ: "); uLine.textContent += sc.inputTranscription.text; aLine = null; }
+      if (sc.outputTranscription?.text) { aLine = aLine || log("a", "เลขา: "); aLine.textContent += sc.outputTranscription.text; uLine = null; }
+      for (const p of sc.modelTurn?.parts || []) if (p.inlineData?.data) play(p.inlineData.data);
+      if (sc.turnComplete) { aLine = null; uLine = null; }
+    };
+    ws.onerror = () => dbg("ws error");
+    ws.onclose = e => { dbg("ws close " + e.code + " " + e.reason); if (inCall && e.code !== 1000) log("e", "ปิดการเชื่อมต่อ (" + e.code + "): " + (/api key/i.test(e.reason || "") ? "Gemini key ไม่ถูกต้องหรือถูกปิดใช้งาน — ตั้งค่า key ใหม่ในหน้าแดชบอร์ด" : /model|not found|unsupported/i.test(e.reason || "") ? "โมเดลนี้ใช้ไม่ได้กับ key นี้ ลองเลือกโมเดลอื่น" : /quota|exhaust|rate/i.test(e.reason || "") ? "โควตาฟรีหมดชั่วคราว ลองใหม่ภายหลังหรือเปลี่ยนโมเดล" : (WS_CLOSE[e.code] || "")) + (e.reason ? " · " + e.reason : "")); stop(true); };
+  }).catch(e => { dbg("start error " + (e && e.name) + " " + (e && e.message)); log("e", micError(e)); window.__callState = {mic: false, err: e && e.name}; stop(true, true); });
+}
+function stop(fromClose, quiet) {
+  const was = inCall; inCall = false;
   if (!fromClose && ws) try { ws.close(1000); } catch (e) {}
-  ws = null; stopPlay(); try { node && node.disconnect(); } catch (e) {}
-  stream && stream.getTracks().forEach(t => t.stop()); inCtx && inCtx.close(); outCtx && outCtx.close(); inCtx = outCtx = stream = node = null;
-  saveCallMemory(); $("call").classList.remove("on"); $("call").innerHTML = ICON_PHONE; $("st").textContent = "วางสายแล้ว · กดเพื่อเริ่มใหม่";
+  ws = null; stopPlay(); try { node && node.disconnect(); srcNode && srcNode.disconnect(); } catch (e) {}
+  stream && stream.getTracks().forEach(t => t.stop()); try { ac && ac.close(); } catch (e) {} ac = stream = node = srcNode = null; spBuf = []; spPos = 0;
+  $("resumeBtn").style.display = "none";
+  if (was && !quiet) saveCallMemory();
+  $("call").classList.remove("on"); $("call").innerHTML = ICON_PHONE; $("callLbl").textContent = "อนุญาตไมค์และเริ่มสาย"; if (!quiet) $("st").textContent = "วางสายแล้ว · กดเพื่อเริ่มใหม่";
 }
-$("call").onclick = () => ws ? stop() : start();
-window.stopCall = () => { if (ws) stop(); };
+$("call").onclick = () => inCall ? stop() : start();
+$("resumeBtn").onclick = () => { if (ac) ac.resume().then(() => { unlockOutput(); $("resumeBtn").style.display = "none"; dbg("resumed"); }); };
+document.addEventListener("visibilitychange", () => { dbg("visibility " + document.visibilityState); if (!document.hidden && inCall && ac && ac.state !== "running") ac.resume().catch(() => $("resumeBtn").style.display = "block"); });
+// in-app browser detection
+const UA = navigator.userAgent, INAPP = /\bLine\//i.test(UA) ? "LINE" : /FBAN|FBAV|FB_IAB|Instagram/i.test(UA) ? "Facebook" : "";
+if (INAPP) {
+  $("inapp").style.display = "block";
+  $("inappTxt").textContent = `กำลังเปิดในแอป ${INAPP} ซึ่งมักใช้ไมค์ไม่ได้ กรุณาเปิดในเบราว์เซอร์ (Safari/Chrome)`;
+  $("inappBtn").onclick = () => { if (INAPP === "LINE") { const u = new URL(top === self ? location.href : location.href.replace(/[?&]embed=1/, "")); u.searchParams.set("openExternalBrowser", "1"); (top === self ? location : top.location).href = u.toString(); }
+    else { navigator.clipboard && navigator.clipboard.writeText(location.href.replace(/[?&]embed=1/, "")); alert("คัดลอกลิงก์แล้ว แตะ ... มุมขวาบน > เปิดในเบราว์เซอร์ หรือวางลิงก์ใน Safari/Chrome"); } };
+}
+window.stopCall = () => { if (inCall) stop(); };
 if (P.get("embed")) { document.querySelector("h1+small a").style.display = "none"; document.body.style.background = "transparent"; }
 </script></body></html>

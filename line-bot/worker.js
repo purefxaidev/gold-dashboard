@@ -13,7 +13,7 @@ const SYSTEM_PROMPT = [
   'ใช้ข้อมูลบริบท (ราคาสด แนวรับแนวต้าน แผนเทรด % ความมั่นใจ AI ค่า EV และข่าว) ที่แนบมาเป็นหลัก ถ้าข้อมูลไม่พอให้บอกตรงๆ',
   'ถ้าผู้ใช้ส่งภาพกราฟ ให้อ่านเทรนด์ แนวรับแนวต้านจากภาพ ถ้าส่งเสียง ให้ฟังคำถามแล้วตอบ',
   'ทุกครั้งที่แนะนำจุดเข้า ต้องระบุ Buy/Sell จุดเข้า SL และ TP พร้อมเหตุผลสั้นๆ',
-  'ห้ามใช้อีโมจิ ห้ามรับประกันกำไร ปิดท้ายด้วยคำเตือนความเสี่ยง 1 บรรทัด ห้ามขอหรือเปิดเผยรหัสผ่าน/API key'
+  'ห้ามใช้อีโมจิ ห้ามใช้ markdown (ห้าม ** # - ตาราง) ตอบเป็นข้อความธรรมดาแบ่งบรรทัดสั้นๆ ห้ามรับประกันกำไร ปิดท้ายด้วยคำเตือนความเสี่ยง 1 บรรทัด ห้ามขอหรือเปิดเผยรหัสผ่าน/API key'
 ].join('\n');
 
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json' } });
@@ -209,7 +209,9 @@ async function tts(env, text) {
   const inl = j.candidates[0].content.parts[0].inlineData;
   return { ok: true, format: 's16le', channels: 1, sampleRate: Number((/rate=(\d+)/.exec(inl.mimeType || '') || [0, 24000])[1]), pcmBase64: inl.data };
 }
+const plain = t => String(t).replace(/^\s*#{1,6}\s*/gm, '').replace(/\*\*(.+?)\*\*/g, '$1').replace(/^\s*[-*+]\s+/gm, '• ').replace(/`/g, '').replace(/^\s*-{3,}\s*$/gm, '').replace(/\*/g, '');
 async function line(env, kind, payload) {
+  (payload.messages || []).forEach(m => { if (m.type === 'text') m.text = plain(m.text); });
   if (payload.messages) payload.messages = payload.messages.slice(0, 5);
   const r = await fetch('https://api.line.me/v2/bot/message/' + kind, { method: 'POST',
     headers: { 'content-type': 'application/json', Authorization: 'Bearer ' + env.LINE_CHANNEL_ACCESS_TOKEN }, body: JSON.stringify(payload) });
