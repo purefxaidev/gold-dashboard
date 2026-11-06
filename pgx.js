@@ -52,14 +52,10 @@
   }
   const gold = () => (S.live && S.live.candles) || (S.C && S.C.candles) || null;
 
-  // ---------- portfolio levels (prices only) ----------
+  // ---------- portfolio levels disabled on public Pages ----------
   function levels() {
-    const P = (S.D && S.D.pnl) || {}, L = [];
-    (P.trades || []).filter(t => t.status === "open").forEach(t => { const b = String(t.side).toLowerCase() === "buy";
-      L.push({p: t.entry, k: "e", b, lab: (b ? "BUY " : "SELL ") + F(t.entry, 1)}); if (N(t.sl) != null) L.push({p: t.sl, k: "sl", b, lab: "SL " + F(t.sl, 1)}); if (N(t.tp) != null) L.push({p: t.tp, k: "tp", b, lab: "TP " + F(t.tp, 1)}); });
-    (P.pending || []).forEach(o => { const b = /buy/i.test(o.type || ""); const nm = (b ? "BUY" : "SELL") + " LMT";
-      L.push({p: o.entry, k: "pe", b, lab: nm + " " + F(o.entry, 1)}); if (N(o.sl) != null) L.push({p: o.sl, k: "sl", b, lab: "SL " + F(o.sl, 1)}); if (N(o.tp) != null) L.push({p: o.tp, k: "tp", b, lab: "TP " + F(o.tp, 1)}); });
-    return L.filter(l => N(l.p) != null);
+    // Do not overlay user open positions / pending orders / lots on the public chart.
+    return [];
   }
 
   // ---------- candlestick svg ----------
