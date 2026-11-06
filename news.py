@@ -33,7 +33,7 @@ from zoneinfo import ZoneInfo
 HERE = os.path.dirname(os.path.abspath(__file__))
 DB = os.path.join(HERE, "news.json")
 CAND = "/workspace/news_candidates.json"
-SITE = "https://purefxaidev.github.io/gold-dashboard/news.html"
+SITE = "https://dashboard.purefxai.store/news.html"
 BKK = ZoneInfo("Asia/Bangkok")
 KEEP = 50
 FEEDS = [

@@ -21,12 +21,12 @@
 var CHAT_MODEL = 'gemini-3.8-flash';      // REST generateContent รับ text/ภาพ/เสียง
 var TTS_MODEL  = 'gemini-3.8-flash-tts';  // REST TTS -> PCM 16-bit mono (24 kHz)
 var TTS_VOICE  = 'Sulafat';
-var DASHBOARD_URL = 'https://purefxaidev.github.io/gold-dashboard/view.json';
-var CONTEXT_URL   = 'https://purefxaidev.github.io/gold-dashboard/ai_context.txt'; // compact all-markets context written by build.py
+var DASHBOARD_URL = 'https://dashboard.purefxai.store/view.json';
+var CONTEXT_URL   = 'https://dashboard.purefxai.store/ai_context.txt'; // compact all-markets context written by build.py
 var PRICE_URL     = 'https://api.gold-api.com/price/XAU';
-var KNOWLEDGE_URL = 'https://purefxaidev.github.io/gold-dashboard/knowledge.md';
-var LESSONS_URL   = 'https://purefxaidev.github.io/gold-dashboard/lessons.md';
-var JOURNAL_URL   = 'https://purefxaidev.github.io/gold-dashboard/history/trade_journal.jsonl';
+var KNOWLEDGE_URL = 'https://dashboard.purefxai.store/knowledge.md';
+var LESSONS_URL   = 'https://dashboard.purefxai.store/lessons.md';
+var JOURNAL_URL   = 'https://dashboard.purefxai.store/history/trade_journal.jsonl';
 var MAX_REPLY_CHARS = 4500;
 var DRIVE_FOLDER_NAME = 'line-gold-bot-audio';
 
@@ -350,7 +350,7 @@ function signupFlex_() {
       { type: 'text', text: 'คำเตือน: CFD และทองคำมีความเสี่ยงสูง อาจสูญเสียเงินทั้งหมด ไม่มีการรับประกันกำไร', color: '#8a8f9c', size: 'xxs', wrap: true, margin: 'md' } ] },
     footer: { type: 'box', layout: 'vertical', spacing: 'sm', contents: [
       { type: 'button', style: 'primary', color: G, height: 'sm', action: { type: 'uri', label: 'สมัคร Exness', uri: 'https://one.exnessonelink.com/a/s2didh6p' } },
-      { type: 'button', style: 'secondary', height: 'sm', action: { type: 'uri', label: 'ดูวิธีสมัครทีละขั้น', uri: 'https://purefxaidev.github.io/gold-dashboard/signup.html' } } ] } } };
+      { type: 'button', style: 'secondary', height: 'sm', action: { type: 'uri', label: 'ดูวิธีสมัครทีละขั้น', uri: 'https://dashboard.purefxai.store/signup.html' } } ] } } };
 }
 function handleCommand_(ev, t) {
   var uid = ev.source && ev.source.userId, rt = ev.replyToken;
@@ -581,9 +581,9 @@ function testGemini() { console.log(askGemini_([{ text: 'ตอนนี้ท�
 function testAlert() { console.log(JSON.stringify(handleAlert_('ทดสอบแจ้งเตือนทองจากระบบ', true))); }
 
 // ===== Rich Menu (รันครั้งเดียวจาก Editor) =====
-var CALL_URL = 'https://purefxaidev.github.io/gold-dashboard/call.html';
-var DASH_URL = 'https://purefxaidev.github.io/gold-dashboard/';
-var RICHMENU_IMG = 'https://purefxaidev.github.io/gold-dashboard/richmenu.png';
+var CALL_URL = 'https://dashboard.purefxai.store/call.html';
+var DASH_URL = 'https://dashboard.purefxai.store/';
+var RICHMENU_IMG = 'https://dashboard.purefxai.store/richmenu.png';
 function createRichMenu() {
   var tok = prop_('LINE_CHANNEL_ACCESS_TOKEN'), w = 625, h = 843;
   function area(i, action) { return { bounds: { x: i * w, y: 0, width: w, height: h }, action: action }; }

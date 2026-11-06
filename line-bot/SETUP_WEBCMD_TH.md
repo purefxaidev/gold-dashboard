@@ -1,6 +1,6 @@
 # ตั้งค่าสั่งเทรดด้วยเสียงจากหน้าโทร PUREGOLD
 
-หน้าโทร https://purefxaidev.github.io/gold-dashboard/call.html จะส่งคำสั่งเทรดเข้าคิวใน Google Apps Script ของคุณเอง
+หน้าโทร https://dashboard.purefxai.store/call.html จะส่งคำสั่งเทรดเข้าคิวใน Google Apps Script ของคุณเอง
 แล้วระบบเทรดจะดึงคิวไปทำภายในราว 10 นาที และแจ้งผลกลับมาที่หน้าโทร
 หน้าเว็บไม่มีรหัสหรือสิทธิ์เข้าบัญชี Exness และไม่มีค่าลับใดๆ อยู่ในเว็บหรือใน GitHub
 
@@ -56,7 +56,7 @@ PIN นี้ใช้ยืนยันตัวตนตอนสั่งเ�
 ## ขั้นที่ 5 ใส่ URL ในหน้าโทร
 
 ทำบนมือถือที่จะใช้โทร
-1. เปิด https://purefxaidev.github.io/gold-dashboard/call.html ใน Chrome หรือ Safari (ไม่ใช่ในแอป LINE)
+1. เปิด https://dashboard.purefxai.store/call.html ใน Chrome หรือ Safari (ไม่ใช่ในแอป LINE)
 2. แตะหัวข้อ คำสั่งเทรดด้วยเสียง (เฉพาะเจ้าของ)
 3. วาง URL /exec ลงในช่อง แล้วกด บันทึก URL
 4. สถานะจะขึ้นว่า ตั้งค่าแล้ว

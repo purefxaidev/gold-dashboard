@@ -6,7 +6,7 @@
 MSG="$1"
 DIR=/workspace
 REPO=/workspace/gold-dashboard
-BASE=https://purefxaidev.github.io/gold-dashboard/audio
+BASE=https://dashboard.purefxai.store/audio
 fallback() { echo "voice alert failed: $1 -> text fallback" >&2; exec "$DIR/line_notify.sh" "$MSG"; }
 
 [ -n "$LINE_CHANNEL_ACCESS_TOKEN" ] || fallback "no LINE token"

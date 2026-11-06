@@ -1,5 +1,7 @@
 # gold-dashboard
 
+Live site: https://dashboard.purefxai.store/
+
 ---
 
 ## 💚 Support PureFxAi / สนับสนุน PureFxAi (USDT)

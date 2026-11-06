@@ -2,12 +2,12 @@
 // Secrets (wrangler secret put): LINE_CHANNEL_ACCESS_TOKEN, LINE_CHANNEL_SECRET, GEMINI_API_KEY, ALERT_SECRET
 // Optional KV binding MODES (translate mode per user). Voice replies: not in Worker (no m4a encoder) — use line_notify_voice.sh for voice alerts.
 const CHAT_MODEL = 'gemini-3.8-flash', TTS_MODEL = 'gemini-3.8-flash-tts', TTS_VOICE = 'Sulafat';
-const DASHBOARD_URL = 'https://purefxaidev.github.io/gold-dashboard/view.json';
-const CONTEXT_URL = 'https://purefxaidev.github.io/gold-dashboard/ai_context.txt'; // compact all-markets context written by build.py
+const DASHBOARD_URL = 'https://dashboard.purefxai.store/view.json';
+const CONTEXT_URL = 'https://dashboard.purefxai.store/ai_context.txt'; // compact all-markets context written by build.py
 const PRICE_URL = 'https://api.gold-api.com/price/XAU';
-const KNOWLEDGE_URL = 'https://purefxaidev.github.io/gold-dashboard/knowledge.md';
-const LESSONS_URL = 'https://purefxaidev.github.io/gold-dashboard/lessons.md';
-const JOURNAL_URL = 'https://purefxaidev.github.io/gold-dashboard/history/trade_journal.jsonl';
+const KNOWLEDGE_URL = 'https://dashboard.purefxai.store/knowledge.md';
+const LESSONS_URL = 'https://dashboard.purefxai.store/lessons.md';
+const JOURNAL_URL = 'https://dashboard.purefxai.store/history/trade_journal.jsonl';
 const LANGS = { th: 'Thai', en: 'English', zh: 'Chinese (Simplified)', ja: 'Japanese', ko: 'Korean', vi: 'Vietnamese', lo: 'Lao', my: 'Burmese', fr: 'French', de: 'German' };
 const SYSTEM_PROMPT = [
   'คุณคือ เลขา PUREGOLD (PUREGOLD AI) ผู้ช่วยหญิงชาวไทย พูดสุภาพลงท้ายด้วย ค่ะ/คะ เสมอ (ห้ามใช้ ครับ) เป็นนักวิเคราะห์ทองคำ (XAUUSD) ระยะสั้น และติดตามตลาดอื่นด้วย ได้แก่ EURUSD GBPUSD USDJPY AUDUSD USDCHF USDCAD BTCUSD ตอบเป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ',
@@ -130,7 +130,7 @@ function signupFlex_() {
       { type: 'text', text: 'คำเตือน: CFD และทองคำมีความเสี่ยงสูง อาจสูญเสียเงินทั้งหมด ไม่มีการรับประกันกำไร', color: '#8a8f9c', size: 'xxs', wrap: true, margin: 'md' } ] },
     footer: { type: 'box', layout: 'vertical', spacing: 'sm', contents: [
       { type: 'button', style: 'primary', color: G, height: 'sm', action: { type: 'uri', label: 'สมัคร Exness', uri: 'https://one.exnessonelink.com/a/s2didh6p' } },
-      { type: 'button', style: 'secondary', height: 'sm', action: { type: 'uri', label: 'ดูวิธีสมัครทีละขั้น', uri: 'https://purefxaidev.github.io/gold-dashboard/signup.html' } } ] } } };
+      { type: 'button', style: 'secondary', height: 'sm', action: { type: 'uri', label: 'ดูวิธีสมัครทีละขั้น', uri: 'https://dashboard.purefxai.store/signup.html' } } ] } } };
 }
 const reply = (env, ev, messages) => line(env, 'reply', { replyToken: ev.replyToken, messages });
 

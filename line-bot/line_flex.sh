@@ -23,7 +23,7 @@
 #   news:      headline*, summary, impact (high|medium|low), effect (up|down), url (https only)
 #   news_article: headline* (TH), summary (2-3 sentences TH), impact (bullish|bearish|neutral), level (high|medium|low),
 #              source, url (original, https), image (optional hero, https JPEG/PNG; news.py card only includes it after
-#              checking it loads), article_url (https://purefxaidev.github.io/gold-dashboard/news.html#<id>), time
+#              checking it loads), article_url (https://dashboard.purefxai.store/news.html#<id>), time
 #              build input with: python3 /workspace/gold-dashboard/news.py card <id>
 #   status:    text*, level (info|warning|error), rows {label: value}
 # Win rate: when wins/total are not given, it is computed from today's closed trades
@@ -35,7 +35,7 @@ TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT
 cat > "$TMP/b.py" <<'PY'
 import json, sys, re, datetime, traceback
 T, raw, out = sys.argv[1], sys.argv[2], sys.argv[3]
-DASH = "https://purefxaidev.github.io/gold-dashboard/"
+DASH = "https://dashboard.purefxai.store/"
 GD = "/workspace/gold-dashboard"
 G, R, Y, B, GR = "#1DB954", "#E53935", "#F5C542", "#4287F5", "#8A8F98"
 
@@ -307,7 +307,7 @@ log() { printf '%s [%s] %s\n' "$(TZ=Asia/Bangkok date '+%F %H:%M:%S %Z')" "$TYPE
 if ! python3 "$TMP/b.py" "$TYPE" "$IN" "$TMP/r.json" 2>"$TMP/err"; then
   log "builder crashed: $(tr '\n' ' ' < "$TMP/err" | head -c 800)"
   # last resort: still not raw JSON
-  printf '{"text":{"messages":[{"type":"text","text":"PUREGOLD AI: มีการแจ้งเตือนใหม่ ดูรายละเอียดที่แดชบอร์ด https://purefxaidev.github.io/gold-dashboard/"}]}}' > "$TMP/r.json"
+  printf '{"text":{"messages":[{"type":"text","text":"PUREGOLD AI: มีการแจ้งเตือนใหม่ ดูรายละเอียดที่แดชบอร์ด https://dashboard.purefxai.store/"}]}}' > "$TMP/r.json"
 fi
 python3 - "$TMP/r.json" "$TMP" <<'PY'
 import json,sys; r=json.load(open(sys.argv[1])); d=sys.argv[2]
