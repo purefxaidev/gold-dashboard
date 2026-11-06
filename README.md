@@ -18,4 +18,5 @@ Live site: https://dashboard.purefxai.store/
 Donations are voluntary support — **not an investment**, with no returns or rewards.
 การบริจาคเป็นการสนับสนุนโดยสมัครใจ **ไม่ใช่การลงทุน** และไม่มีผลตอบแทนใด ๆ
 
-Donation page with QR: https://purefxaidev.github.io/driftwatch-video/
+Support / donate (QR on landing): https://gold.purefxai.store/#support
+Dashboard: https://dashboard.purefxai.store/
