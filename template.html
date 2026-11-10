@@ -12,7 +12,7 @@
 <meta property="og:title" content="PUREGOLD AI · XAUUSD gold analysis"><meta property="og:description" content="Live gold price, support/resistance, AI confidence and EV trade plans in Thai and English."><meta property="og:type" content="website"><meta property="og:image" content="https://dashboard.purefxai.store/icon-512.png"><meta property="og:locale" content="th_TH"><meta property="og:locale:alternate" content="en_US">
 <link rel="alternate" hreflang="th" href="https://dashboard.purefxai.store/?lang=th"><link rel="alternate" hreflang="en" href="https://dashboard.purefxai.store/?lang=en"><link rel="alternate" hreflang="x-default" href="https://dashboard.purefxai.store/">
 <script src="i18n.js"></script>
-<script src="sharecard.js?v=20261111plan1"></script>
+<script src="sharecard.js?v=20261111thai1"></script>
 <script src="gkey.js"></script>
 <script src="pgai.js"></script>
 <link rel="icon" type="image/svg+xml" href="logo.svg"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#0a0b10">
@@ -329,7 +329,7 @@ html.pg-embed .wrap{padding-top:10px}
 
 
 <section class="card c12">
- <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/></svg> ราคาทองไทยวันนี้ (บาทละ) <small id="tgSrc">ฮั่วเซ่งเฮง · อัปเดตทุก 30 วินาที</small></h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/></svg> ราคาทองไทยวันนี้ (บาทละ) <small id="tgSrc">ราคาทองไทย · อัปเดตทุก 30 วินาที</small></h2>
  <div class="tg" id="tg"><div class="mut">กำลังโหลด…</div></div>
 </section>
 
@@ -779,7 +779,7 @@ async function pollPrice() {
   if (L3 && L3.orb && Math.abs((L3.lastPx || 0) - live.price) > .5) { L3.lastPx = live.price; build3d(); }
 }
 
-const TG_NAME = {HSH: "ทองคำแท่ง ฮั่วเซ่งเฮง", REF: "ทองคำแท่ง สมาคมฯ (อ้างอิง)", JEWEL: "ทองรูปพรรณ"};
+const TG_NAME = {HSH: "ทองคำแท่ง", REF: "ทองคำแท่งอ้างอิง", JEWEL: "ทองรูปพรรณ"};
 async function pollThai() {
   try {
     const r = await fetch("https://apicheckprice.huasengheng.com/api/values/getprice/", {cache: "no-store"});
@@ -793,7 +793,7 @@ async function pollThai() {
       <div class="row"><span>ขายออก</span><span class="v">${esc(x.Sell)}</span></div>
       <div class="row" style="margin-top:6px"><span class="${cc}">${ch > 0 ? "▲ +" : ch < 0 ? "▼ " : "• "}${fmt(ch, 0)}</span><span>${esc(t)} น.</span></div></div>`;
     }).join("") + (has9999 ? "" : `<div class="tgi mut" style="font-size:12px;display:flex;align-items:center">ทอง 99.99% : แหล่งข้อมูลสาธารณะยังไม่เปิดให้ดึง</div>`);
-    $("tgSrc").textContent = "ที่มา: ฮั่วเซ่งเฮง (huasengheng.com) · " + esc((a[0] && a[0].StrTimeUpdate) || "") + " · รีเฟรช 30 วินาที";
+    $("tgSrc").textContent = "ที่มา: ราคาทองไทย · " + esc((a[0] && a[0].StrTimeUpdate) || "") + " · รีเฟรช 30 วินาที";
   } catch (e) { $("tgSrc").textContent = "โหลดราคาทองไทยไม่สำเร็จ จะลองใหม่"; }
 }
 

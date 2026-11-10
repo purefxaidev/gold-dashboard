@@ -728,12 +728,12 @@ def build_compare() -> dict:
     fx = fetch_usdthb()
     hsh = http_json(HSH_URL, timeout=15)
     if not isinstance(hsh, list) or not hsh:
-        raise RuntimeError("Hua Seng Heng price feed empty")
+        raise RuntimeError("Thai gold price feed empty")
     bar = _hsh_row(hsh, "HSH") or _hsh_row(hsh, "REF")
     jewel = _hsh_row(hsh, "JEWEL")
     ref = _hsh_row(hsh, "REF")
     if not bar:
-        raise RuntimeError("Hua Seng Heng 96.5% bar row missing")
+        raise RuntimeError("Thai gold 96.5% bar row missing")
     buy = num(bar.get("Buy"))
     sell = num(bar.get("Sell"))
     mid = (buy + sell) / 2 if buy is not None and sell is not None else (sell or buy)
@@ -793,9 +793,9 @@ def build_compare() -> dict:
         "thai_buy": buy,
         "thai_sell": sell,
         "thai_mid": round(mid, 2),
-        "thai_source": "ฮั่วเซ่งเฮง (apicheckprice.huasengheng.com)",
-        "thai_source_en": "Hua Seng Heng (apicheckprice.huasengheng.com)",
-        "thai_source_url": "https://www.huasengheng.com/",
+        "thai_source": "ราคาทองไทย",
+        "thai_source_en": "Thai gold",
+        "thai_source_url": "",
         "thai_as_of_th": bar.get("StrTimeUpdate") or fmt_th(thai_upd),
         "thai_as_of_en": fmt_en(thai_upd),
         "premium_sell": round(premium_sell, 2) if premium_sell is not None else None,

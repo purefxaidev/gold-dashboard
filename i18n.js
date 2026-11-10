@@ -11,7 +11,7 @@
   // sections
   "กราฟ XAUUSD": "XAUUSD chart", "ราคาทองโลกแบบเรียลไทม์": "Live world gold price", "ความมั่นใจ AI (ระยะสั้น)": "AI confidence (short term)", "แผนที่ราคา 3 มิติ": "3D price map",
   "ลูกทอง = ราคาตอนนี้ · เขียว = แนวรับ · แดง = แนวต้าน · ลากเพื่อหมุน": "Gold orb = current price · green = support · red = resistance · drag to rotate",
-  "พอร์ต กำไร/ขาดทุน": "Portfolio P/L", "ราคาทองไทยวันนี้ (บาทละ)": "Thai gold price today (per baht-weight)", "ฮั่วเซ่งเฮง · อัปเดตทุก 30 วินาที": "Hua Seng Heng · updates every 30 s",
+  "พอร์ต กำไร/ขาดทุน": "Portfolio P/L", "ราคาทองไทยวันนี้ (บาทละ)": "Thai gold price today (per baht-weight)", "ราคาทองไทย · อัปเดตทุก 30 วินาที": "Thai gold · updates every 30 s",
   "แนวรับ · แนวต้าน": "Support · Resistance", "จุดเข้า · จุดออก + โมเดลตัดสินใจ EV": "Entries · Exits + EV decision model", "แผนจากระบบ": "System plans", "ข่าววิเคราะห์ทองคำ": "Gold news & analysis",
   "คุยกับกราฟ": "Chat with the chart", "คุยสด": "Live call", "ความจำ": "Memory", "ตั้งค่า": "Settings", "▲ โอกาสขึ้น": "▲ Chance up", "โอกาสลง ▼": "Chance down ▼",
   "EV(R) = p × RR − (1 − p) \u00a0·\u00a0 RR = ระยะ TP ÷ ระยะ SL \u00a0·\u00a0 เข้าเมื่อ EV > 0": "EV(R) = p × RR − (1 − p) · RR = TP distance ÷ SL distance · enter when EV > 0",
@@ -25,7 +25,7 @@
   "สปอต FX · Swissquote": "FX spot · Swissquote", "สปอต FX · ติ๊กสด": "FX spot · live tick", "สปอต FX · สด": "FX spot · live", "สปอต (แคชล่าสุด)": "Spot (last cache)",
   "โมเดลเรียนรู้จากผลจริงโดยอัตโนมัติ": "The model learns automatically from results", "ความแม่นยำ 7 วัน": "7-day accuracy", "วัดจากพยากรณ์ระยะ 4 ชั่วโมง": "scored on 4-hour forecasts",
   "ราคาสดไม่พร้อม · ใช้ราคาจากบทวิเคราะห์": "Live price unavailable · using analysis price", "ตั้งแต่เปิดหน้า": "since page opened",
-  "รับซื้อ": "Buy", "ขายออก": "Sell", "ทองคำแท่ง ฮั่วเซ่งเฮง": "Gold bar · Hua Seng Heng", "ทองคำแท่ง สมาคมฯ (อ้างอิง)": "Gold bar · Gold Traders Assoc. (reference)", "ทองรูปพรรณ": "Gold jewelry",
+  "รับซื้อ": "Buy", "ขายออก": "Sell", "ทองคำแท่ง": "Gold bar", "ทองคำแท่งอ้างอิง": "Reference gold bar", "ทองรูปพรรณ": "Gold jewelry",
   "ทอง 99.99% : แหล่งข้อมูลสาธารณะยังไม่เปิดให้ดึง": "99.99% gold: no public data source available", "โหลดราคาทองไทยไม่สำเร็จ จะลองใหม่": "Could not load Thai gold price; retrying",
   "แหล่งข่าว ↗": "Source ↗", "AI มองขึ้น": "AI sees up", "· ลง": "· down", "โอกาสชนะ p": "Win chance p", "1น.": "1m", "5น.": "5m", "15น.": "15m", "1ชม.": "1h", "4ชม.": "4h", "วัน": "1D", "สัปดาห์": "1W",
   "กำไร/ขาดทุนวันนี้": "Today's P/L", "จุด (ดอลลาร์)": "Points (USD)", "อัตราชนะ (ไม้ที่ปิด)": "Win rate (closed)", "ไม้เปิด / ไม้วันนี้": "Open / today's trades",
@@ -109,8 +109,8 @@
    [/^จำไว้แล้วค่ะ: (.*)$/, "Remembered: $1"], [/^ใช้ไมค์ไม่ได้: (.*)$/, "Microphone unavailable: $1"], [/^เรียก AI ไม่สำเร็จ: (.*) \(ตรวจสอบ key \/ ชื่อโมเดลในตั้งค่า\)$/, "AI request failed: $1 (check key / model in Settings)"],
    [/^● พบ AI key ในเครื่องนี้ \(…(.+)\)$/, "● AI key found on this device (…$1)"], [/^○ ยังไม่มี key — ไปตั้งค่าที่แชทในหน้าแดชบอร์ดก่อน$/, "○ No key — set one in the dashboard chat first"],
    [/^ปิดการเชื่อมต่อ \((\d+)\): (.*)$/, "Connection closed ($1): $2"], [/^ขั้นที่ (\d+) จาก (\d+)$/, "Step $1 of $2"], [/^(\d+) ขั้นเสร็จแล้ว$/, "$1 steps done"], [/^ขั้นที่ (\d+)$/, "STEP $1"],
-   [/^(ทองคำแท่ง ฮั่วเซ่งเฮง|ทองคำแท่ง สมาคมฯ \(อ้างอิง\)|ทองรูปพรรณ) (.*)$/, (m, a, b) => (D[a] || a) + " " + b],
-   [/^ที่มา: ฮั่วเซ่งเฮง \(huasengheng\.com\) · (.*) · รีเฟรช 30 วินาที$/, (m, a) => "Source: Hua Seng Heng (huasengheng.com) · " + a.replace(/อั[ปพ]เดตล่าสุด วันที่ /, "updated ").replace(/ เวลา /, " ").replace(/\s?น\./, "").replace(/ต\.ค\./, "Oct").replace(/\b(25\d\d)\b/, y => +y - 543) + " · refresh 30 s"],
+   [/^(ทองคำแท่งอ้างอิง|ทองคำแท่ง|ทองรูปพรรณ) (.*)$/, (m, a, b) => (D[a] || a) + " " + b],
+   [/^ที่มา: ราคาทองไทย · (.*) · รีเฟรช 30 วินาที$/, (m, a) => "Source: Thai gold · " + a.replace(/อั[ปพ]เดตล่าสุด วันที่ /, "updated ").replace(/ เวลา /, " ").replace(/\s?น\./, "").replace(/ต\.ค\./, "Oct").replace(/\b(25\d\d)\b/, y => +y - 543) + " · refresh 30 s"],
    [/^แผนที่ราคา/, "3D price map"], [/^คำนี้แปลว่า: /, "Meaning: "]
   ];
   const TIPS_EN = {"SL": "SL = stop loss: if price moves against you to this level, the position closes automatically to limit the loss", "TP": "TP = take profit: if price reaches this level, the position closes automatically to lock in profit",
