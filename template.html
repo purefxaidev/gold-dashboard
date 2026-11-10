@@ -2,6 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="utf-8">
+<script>(function(){try{var q=new URLSearchParams(location.search);var e=q.get("embed")==="1"||q.get("embed")==="true";if(!e){try{e=window.self!==window.top;}catch(x){e=true;}}if(e)document.documentElement.classList.add("pg-embed");}catch(x){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#07080d">
 <meta name="referrer" content="no-referrer">
@@ -194,7 +195,20 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
   .spdr-p:last-child{grid-column:1 / -1}
   #spdrChart{height:200px}
   .spdr-actions .btn{flex:1 1 140px;min-height:44px}
+  header{overflow-x:auto}
+  .ev{grid-template-columns:repeat(3,minmax(100px,1fr));overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .spdr-save{padding:0;align-items:flex-end}
+  .spdr-save .box{width:100%;max-width:none;max-height:100dvh;border-radius:16px 16px 0 0}
 }
+@media(max-width:420px){
+  .ev{grid-template-columns:1fr}
+}
+.wrap,.card,.grid,.grid>*,.pgx{min-width:0;max-width:100%}
+.pgx .tw,.tw,table.wide-wrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+html body .ix-kv{grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr))}
+html.pg-embed header,html.pg-embed .fab,html.pg-embed .updb,html.pg-embed #liveUpd,html.pg-embed .langtog{display:none!important}
+html.pg-embed body{padding-top:0}
+html.pg-embed .wrap{padding-top:10px}
 </style>
 </head>
 <body>
@@ -671,7 +685,9 @@ function renderPnl() {
   const el = $("pnlCard"); if (el) el.style.display = "none";
 }
 // first-run AI key prompt// first-run AI key prompt (stored only in this browser)
+function isEmbed() { return document.documentElement.classList.contains("pg-embed"); }
 function exnessPrompt() {
+  if (isEmbed()) return false;
   const force = /[?&]modal=1/.test(location.search);
   if (!force && (localStorage.getItem("gd_exq") || /[?&]shot=1/.test(location.search))) return false;
   const o = document.createElement("div");
@@ -688,6 +704,7 @@ function exnessPrompt() {
   return true;
 }
 function keyPrompt() {
+  if (isEmbed()) return;
   if (getKey() || sessionStorage.getItem("gd_kp_skip") || /[?&]shot=1/.test(location.search)) return;
   GKEY.prompt("first", {onSaved: () => { syncSet(); bubble("a", EN() ? "Key saved. It works for chat, translation and live call." : "บันทึกคีย์แล้วค่ะ ใช้ได้ทั้งแชท แปล และคุยสด"); }, onClose: () => sessionStorage.setItem("gd_kp_skip", "1")});
 }
@@ -856,7 +873,7 @@ if (window.ShareCard) {
 }
 
 </script>
-<script src="pgx.js"></script>
+<script src="pgx.js?v=20261110e"></script>
 <script>PGX.mount(document.getElementById("pgxMtf"),"mtf");PGX.mount(document.getElementById("pgxMk"),"markets");PGX.mount(document.getElementById("pgxSmc"),"smc");PGX.mount(document.getElementById("pgxEdge"),"edge");</script>
 <script>
 /* latest gold news articles (news.json) */
