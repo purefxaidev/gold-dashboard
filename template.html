@@ -12,7 +12,7 @@
 <meta property="og:title" content="PUREGOLD AI · XAUUSD gold analysis"><meta property="og:description" content="Live gold price, support/resistance, AI confidence and EV trade plans in Thai and English."><meta property="og:type" content="website"><meta property="og:image" content="https://dashboard.purefxai.store/icon-512.png"><meta property="og:locale" content="th_TH"><meta property="og:locale:alternate" content="en_US">
 <link rel="alternate" hreflang="th" href="https://dashboard.purefxai.store/?lang=th"><link rel="alternate" hreflang="en" href="https://dashboard.purefxai.store/?lang=en"><link rel="alternate" hreflang="x-default" href="https://dashboard.purefxai.store/">
 <script src="i18n.js"></script>
-<script src="sharecard.js?v=20261110share1"></script>
+<script src="sharecard.js?v=20261111plan1"></script>
 <script src="gkey.js"></script>
 <script src="pgai.js"></script>
 <link rel="icon" type="image/svg+xml" href="logo.svg"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#0a0b10">
@@ -51,6 +51,24 @@ html.pg-mobile .c4,html.pg-mobile .c5,html.pg-mobile .c6,html.pg-mobile .c7,html
 @keyframes rise{to{opacity:1;transform:none}}
 .card h2{flex-wrap:wrap;margin:0 0 12px;font-size:15px;font-weight:600;color:var(--gold2);display:flex;align-items:center;gap:8px;letter-spacing:.3px}
 .card h2 small{margin-left:auto;font:400 11px 'Noto Sans Thai';color:var(--mut)}
+.card h2 .share-host{margin-left:4px;flex:0 0 auto}
+.share-host{display:inline-flex;align-items:center}
+.card-toolbar{display:flex;justify-content:flex-end;margin:0 0 8px}
+.tp-card{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:14px 16px;min-width:0;max-width:100%}
+.tp-card[hidden]{display:none!important}
+.tp-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 8px}
+.tp-title{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:700;margin-right:auto}
+.tp-side,.tp-status{display:inline-flex;align-items:center;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800;border:1px solid #333}
+.tp-side.sell,.tp-status.sl,.tp-status.cancelled{color:#ff4d6d;border-color:rgba(255,77,109,.4)}
+.tp-side.buy,.tp-status.in,.tp-status.tp1{color:#22e39a;border-color:rgba(34,227,154,.4)}
+.tp-side.wait,.tp-status.wait{color:#f5c542;border-color:rgba(245,197,66,.4)}
+.tp-thesis{margin:0 0 10px;font-size:14px;line-height:1.45}
+.tp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px 12px;margin:0 0 10px}
+.tp-grid .k,.tp-inv,.tp-meta,.tp-disc{font-size:11px;color:var(--mut);font-weight:600}
+.tp-grid .v{display:block;font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;margin-top:2px}
+.tp-inv,.tp-meta,.tp-disc{margin:0 0 6px;line-height:1.45}
+.tp-disc{margin-bottom:0}
+html.pg-mobile .tp-grid{grid-template-columns:1fr}
 .hero{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 22px}
 .price{font:700 clamp(40px,11vw,68px)/1 'JetBrains Mono';letter-spacing:-1px;background:linear-gradient(180deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;transition:filter .3s}
 .flash-up{filter:drop-shadow(0 0 14px var(--up))}.flash-dn{filter:drop-shadow(0 0 14px var(--dn))}
@@ -264,11 +282,11 @@ html.pg-embed .wrap{padding-top:10px}
  <div id="tv"></div>
 </section>
 <section class="card c12" id="trendCard">
+ <div class="card-toolbar"><div id="trendShare" data-share="trend" class="share-host"></div></div>
  <div id="pgxMtf"></div>
- <div id="trendShare" data-share="trend"></div>
 </section>
 <section class="card c8" id="priceCard">
- <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg> ราคาทองโลกแบบเรียลไทม์ <small id="pxSrc">—</small></h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg> ราคาทองโลกแบบเรียลไทม์ <small id="pxSrc">—</small><span id="priceShare" data-share="price" class="share-host"></span></h2>
  <div class="hero"><div class="price" id="px">—</div><div><div class="chg" id="pxChg">&nbsp;</div><div class="mut" style="font-size:12px" id="pxTime"></div></div><div id="biasBadge"></div></div>
  <div class="perf-row" id="pxPerf" hidden></div>
  <div class="bias" id="bias"></div>
@@ -280,11 +298,10 @@ html.pg-embed .wrap{padding-top:10px}
   <b>RR</b> = กำไรที่หวังเทียบกับความเสี่ยง เช่น 1.6 คือเสี่ยง 1 ได้ 1.6 · <b>EV</b> = ผลตอบแทนคาดหวังต่อไม้ (หน่วย R) ถ้าเป็นบวกแปลว่าคุ้มเข้าในระยะยาว ·
   <b>ความมั่นใจ</b> = โอกาสที่ AI ประเมินว่าราคาจะไปทางนั้น (ไม่ใช่การรับประกัน)
  </details>
- <div id="priceShare" data-share="price"></div>
 </section>
 
 <section class="card c4" id="forecastCard">
- <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg> ความมั่นใจ AI (ระยะสั้น)</h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg> ความมั่นใจ AI (ระยะสั้น)<span id="forecastShare" data-share="forecast" class="share-host"></span></h2>
  <div class="gl"><span class="up" id="upPct">–</span><span class="dn" id="dnPct">–</span></div>
  <div class="gauge"><div class="g-up" id="gUp"></div><div class="g-dn" id="gDn"></div></div>
  <div class="mut" style="display:flex;justify-content:space-between;font-size:12px"><span>▲ โอกาสขึ้น</span><span>โอกาสลง ▼</span></div>
@@ -292,7 +309,6 @@ html.pg-embed .wrap{padding-top:10px}
  <div class="meth" id="aiMeth"></div>
  <div class="acc" id="aiAcc"></div>
  <div class="meth" id="aiTarget"></div>
- <div id="forecastShare" data-share="forecast"></div>
 </section>
 
 <section class="card c12" id="card3d">
@@ -341,6 +357,10 @@ html.pg-embed .wrap{padding-top:10px}
 <section class="card c12" id="calcCard" hidden>
  <h2>เครื่องคำนวณ</h2>
  <div id="calcBody"></div>
+</section>
+<section class="card c12" id="tradePlanCard" hidden>
+ <h2>แผนเทรด <small id="tpAsOf">—</small><span id="planShare" data-share="plan" class="share-host"></span></h2>
+ <div class="tp-card" id="tradePlanBody"></div>
 </section>
 <section class="card c4">
  <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> แนวรับ · แนวต้าน</h2>
@@ -465,6 +485,65 @@ async function loadPerf() {
     }
   } catch (e) {}
 }
+
+function fmtPlanPx(n) {
+  const v = Number(n);
+  return Number.isFinite(v) ? v.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : "—";
+}
+function paintTradePlan(px) {
+  const plan = window.__TRADE_PLAN;
+  const card = $("tradePlanCard");
+  const body = $("tradePlanBody");
+  const asof = $("tpAsOf");
+  if (!plan || !body) { if (card) card.hidden = true; return; }
+  const lang = EN() ? "en" : "th";
+  const st = (window.ShareCard && ShareCard.planStatus) ? ShareCard.planStatus(plan, px) : { id: "wait", th: "รอเข้า", en: "Waiting" };
+  const th = lang !== "en";
+  const side = plan.side || "wait";
+  const entry = (plan.entry_low != null && plan.entry_high != null)
+    ? (fmtPlanPx(plan.entry_low) + " – " + fmtPlanPx(plan.entry_high))
+    : fmtPlanPx(plan.entry);
+  const tps = (plan.tps || []).map(tp => {
+    const lab = th ? (tp.label || "") : (tp.label_en || tp.label || "");
+    return `<div><span class="k">TP${tp.n}${lab ? " " + lab : ""}</span><span class="v">${fmtPlanPx(tp.price)}${tp.rr != null ? ` <small>${tp.rr}R</small>` : ""}</span></div>`;
+  }).join("");
+  const thesis = th ? (plan.thesis_th || plan.title_th || "") : (plan.thesis_en || plan.title_en || "");
+  const inv = th ? (plan.invalidation_th || "") : (plan.invalidation_en || "");
+  const tf = th ? (plan.timeframe_th || plan.timeframe || "") : (plan.timeframe_en || plan.timeframe || "");
+  const disc = th ? (plan.disclaimer_th || "เพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน ใช้ SL เสมอ") : (plan.disclaimer_en || "");
+  body.innerHTML = `<div class="tp-head">
+      <div class="tp-title">${th ? "แผนเทรด" : "Trade plan"}</div>
+      <span class="tp-side ${side}">${th ? (plan.side_th || "รอ") : (plan.side_en || "WAIT")}</span>
+      <span class="tp-status ${st.id}">${th ? st.th : st.en}</span>
+    </div>
+    <p class="tp-thesis">${esc(thesis)}</p>
+    <div class="tp-grid">
+      <div><span class="k">${th ? "จุดเข้า" : "Entry"}</span><span class="v">${entry}</span></div>
+      <div><span class="k">SL</span><span class="v">${plan.sl != null ? fmtPlanPx(plan.sl) : "—"}</span></div>
+      ${tps}
+    </div>
+    <p class="tp-inv">${esc(inv)}</p>
+    <p class="tp-meta">${esc(tf)}${Number.isFinite(px) ? " · " + (th ? "ราคาสด " : "Live ") + "$" + Number(px).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ""}</p>
+    <p class="tp-disc">${esc(disc)}</p>`;
+  if (asof) asof.textContent = th ? (plan.updated_th || "—") : (plan.updated_en || "—");
+  if (card) card.hidden = false;
+}
+async function loadTradePlan() {
+  try {
+    const r = await fetch("trade_plan.json?t=" + Date.now(), { cache: "no-store" });
+    if (r.ok) {
+      const j = await r.json();
+      if (j && (j.side || j.entry)) {
+        window.__TRADE_PLAN = j;
+        paintTradePlan((typeof live !== "undefined" && live.price) || (D && D.price_num));
+        if (window.ShareCard && $("planShare") && !$("planShare").querySelector(".share-dl")) {
+          ShareCard.mount($("planShare"), () => Object.assign({ kind: "plan", lang: EN() ? "en" : "th", plan: window.__TRADE_PLAN, price: (typeof live !== "undefined" && live.price) || (D && D.price_num) }, window.__TRADE_PLAN));
+        }
+      }
+    }
+  } catch (e) {}
+}
+
 function parseStampMs(s) {
   if (!s) return 0;
   if (typeof s === "number" && Number.isFinite(s)) return s;
@@ -690,6 +769,7 @@ async function pollPrice() {
   if (chip) chip.classList.toggle("delayed", delayed);
   renderLadder(); renderPnl(); renderReco();
   paintPerf(p);
+  paintTradePlan(p);
   syncAnalysisToLive();
   if (L3 && L3.orb && Math.abs((L3.lastPx || 0) - live.price) > .5) { L3.lastPx = live.price; build3d(); }
 }
@@ -1003,7 +1083,7 @@ window.addEventListener("hashchange", () => { if (location.hash === "#call") ope
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text));
 if (!hist.length) bubble("a", EN() ? "Hello, I am the PUREGOLD assistant. Ask me about gold, the FX pairs, Bitcoin, support and resistance, or the news. (Add your API key once before the first use.)" : "สวัสดีค่ะ ดิฉันคือ เลขา PUREGOLD ถามได้ทั้งทองคำ คู่เงิน FX และ Bitcoin แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ใส่คีย์ครั้งเดียวก่อนใช้ครั้งแรก)");
 syncSet(); setMode(mode); render(); renderPnl(); renderReco(); init3d(); if (!exnessPrompt()) keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
-pollPrice(); pollThai(); pollData(); loadPerf(); loadLevels(); setInterval(pollPrice, 4000); setInterval(pollThai, 30000); setInterval(pollData, 20000); setInterval(loadPerf, 5 * 60 * 1000); setInterval(loadLevels, 5 * 60 * 1000);
+pollPrice(); pollThai(); pollData(); loadPerf(); loadLevels(); loadTradePlan(); setInterval(pollPrice, 4000); setInterval(pollThai, 30000); setInterval(pollData, 20000); setInterval(loadPerf, 5 * 60 * 1000); setInterval(loadLevels, 5 * 60 * 1000); setInterval(loadTradePlan, 5 * 60 * 1000);
 if (window.ShareCard) {
   const parseLevelList = arr => (arr || []).map(s => {
     if (s && typeof s === "object" && s.price != null) return s;
@@ -1032,7 +1112,7 @@ if (window.ShareCard) {
       const px = mkt.price;
       const prev = mkt.prevClose;
       const chgV = (prev != null && px != null) ? (px - prev) : null;
-      return Object.assign({ kind, lang, source: $("pxSrc") && $("pxSrc").textContent, time: $("pxTime") && $("pxTime").textContent, change: chgV, changePct: (chgV != null && prev) ? (chgV / prev * 100) : null, changeKnown: prev != null, changeBasis: "prevClose", perf: window.__PERF_LIVE || PERF || null }, mkt, { price: px });
+      return Object.assign({ kind, lang, source: $("pxSrc") && $("pxSrc").textContent, time: $("pxTime") && $("pxTime").textContent, change: chgV, changePct: (chgV != null && prev) ? (chgV / prev * 100) : null, changeKnown: prev != null, changeBasis: "prevClose", perf: window.__PERF_LIVE || PERF || null, plan: window.__TRADE_PLAN || null }, mkt, { price: px });
     }
     if (kind === "forecast" && D) {
       const acc = D.accuracy || {};
@@ -1043,6 +1123,7 @@ if (window.ShareCard) {
       const lb = (typeof analysisFreshness === "function") ? analysisFreshness(D.updated || D.updated_en, (typeof live !== "undefined" && live.price) || D.price_num, LEVELS && LEVELS.daily, D.bias).liveBias : null;
       return Object.assign({ kind, lang, mtf, align: lb ? (EN() ? lb.biasEn : lb.biasTh) : Lf(D, "mtf_align"), alignEn: lb ? lb.biasEn : D.mtf_align_en, bias: lb ? (EN() ? lb.biasEn : lb.biasTh) : Lf(D, "bias") }, mkt);
     }
+    if (kind === "plan") return Object.assign({ kind, lang, plan: window.__TRADE_PLAN || null, price: mkt.price }, mkt, window.__TRADE_PLAN || {});
     if (kind === "spdr") return Object.assign({ kind, lang }, window.__SPDR_SHARE || {});
     return { kind, lang };
   };
@@ -1050,6 +1131,7 @@ if (window.ShareCard) {
     ShareCard.mount($("priceShare"), () => payloadOf("price"));
     ShareCard.mount($("forecastShare"), () => payloadOf("forecast"));
     ShareCard.mount($("trendShare"), () => payloadOf("trend"));
+    if ($("planShare")) ShareCard.mount($("planShare"), () => payloadOf("plan"));
   });
   window.__sharePayloadOf = payloadOf;
 }
