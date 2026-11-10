@@ -130,6 +130,14 @@ def _ctx():
     e = d.get('edge') or {}
     for n in e.get('notes', []): L.append("Edge: " + n)
     for n in (d.get('news') or [])[:4]: L.append("ข่าว: " + str(n[0])[:300])
+    try:
+        sp = json.load(open('spdr.json', encoding='utf-8'))
+        ch = sp.get('change')
+        ytd = ((sp.get('periods') or {}).get('YTD') or {}).get('change')
+        sign = lambda v: ('+' if (v or 0) >= 0 else '') + (f"{v:.2f}" if isinstance(v, (int, float)) else str(v))
+        L.append(f"SPDR Gold Trust (GLD) ถือครอง {sp.get('tonnes')} ตัน ณ {sp.get('as_of')} · รายวัน {sign(ch)} ตัน · YTD {sign(ytd)} ตัน")
+    except Exception:
+        pass
     L.append("หมายเหตุ: " + str(d.get('note', '')))
     return "\n".join(noemo(L))[:14000]
 open('ai_context.txt', 'w', encoding='utf-8').write(_ctx())

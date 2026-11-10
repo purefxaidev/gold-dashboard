@@ -3,6 +3,7 @@
 Live site: https://dashboard.purefxai.store/
 
 The live XAUUSD price uses FX spot (Swissquote mid, with fallbacks) and refreshes on a schedule. Short-term AI confidence is scored against later prices; weights update automatically. Rolling 7-day and 30-day accuracy is shown on the dashboard.
+SPDR Gold Trust (GLD) holdings come from the official historical archive and show the daily change in tonnes held, plus cumulative net change over 1W, 1M, 3M, YTD and 1Y.
 
 
 ---

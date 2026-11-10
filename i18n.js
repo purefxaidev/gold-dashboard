@@ -71,6 +71,16 @@
   "ไม่พบไมโครโฟนในเครื่องนี้ค่ะ": "No microphone found on this device", "ไมค์ถูกแอปอื่นใช้อยู่ (เช่น โทรศัพท์/แอปอัดเสียง) ปิดแอปนั้นแล้วลองใหม่ค่ะ": "The microphone is in use by another app (call/recorder). Close it and try again",
   "บันทึกสรุปการคุยไว้ในความจำแล้วค่ะ": "Call summary saved to memory",
   // signup
+  "กองทุน SPDR Gold Trust (GLD)": "SPDR Gold Trust (GLD)",
+  "บันทึกรูป": "Save image", "แชร์": "Share", "ปิด": "Close",
+  "หากไม่ดาวน์โหลดอัตโนมัติ ให้กดค้างที่รูป แล้วเลือกบันทึกรูป": "If the file does not download, long-press the image and choose Save Image.",
+  "ถือครองล่าสุด": "Latest holdings", "ตัน": "tonnes", "ออนซ์": "ounces",
+  "ซื้อเข้า": "Inflow", "กองทุนขายออก": "Outflow", "ไม่เปลี่ยนแปลง": "Unchanged",
+  "สะสมย้อนหลัง": "Cumulative change",
+  "1 สัปดาห์": "1 week", "1 เดือน": "1 month", "3 เดือน": "3 months", "ปีนี้": "Year to date", "1 ปี": "1 year",
+  "รอบการซื้อขายสหรัฐฯ": "US trading session",
+  "ที่มา: คลังข้อมูลทางการของ SPDR Gold Shares": "Source: official SPDR Gold Shares archive",
+  "กราฟถือครองและซื้อขายรายวัน": "Holdings and daily buy/sell chart",
   "กลับแดชบอร์ด": "Back to dashboard", "สอนสมัคร EXNESS": "EXNESS SIGN-UP GUIDE", "ทำเสร็จแล้วติ๊ก:": "Tick when done:", "ย้อนกลับ": "Back", "ถัดไป": "Next", "เสร็จสิ้น": "Finish"
   };
   const R = [

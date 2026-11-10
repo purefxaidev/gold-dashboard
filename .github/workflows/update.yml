@@ -26,7 +26,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Refresh spot, analysis, and learning
+      - name: Install Python deps
+        run: pip install --quiet openpyxl
+
+      - name: Refresh spot, analysis, learning, and SPDR holdings
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TZ: Asia/Bangkok
@@ -36,6 +39,7 @@ jobs:
           python3 mtf.py || echo "mtf skipped"
           python3 smc.py || echo "smc skipped"
           python3 edge.py || echo "edge skipped"
+          python3 spdr.py || echo "spdr skipped"
           python3 learn.py
           python3 build.py
 
@@ -45,7 +49,7 @@ jobs:
         run: |
           git config user.name "purefxaidev"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data.json view.json index.html candles.json spot.json ai_context.txt \
+          git add data.json view.json index.html candles.json spot.json spdr.json ai_context.txt \
             history/predictions.jsonl history/weights.json history/accuracy.json \
             history/news_impact.jsonl history/trade_journal.jsonl \
             news.json news.html || true
