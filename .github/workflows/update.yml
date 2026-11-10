@@ -1,0 +1,58 @@
+name: Update dashboard
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-dashboard
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh spot, analysis, and learning
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TZ: Asia/Bangkok
+        run: |
+          set -e
+          python3 spot.py
+          python3 mtf.py || echo "mtf skipped"
+          python3 smc.py || echo "smc skipped"
+          python3 edge.py || echo "edge skipped"
+          python3 learn.py
+          python3 build.py
+
+      - name: Commit and push
+        env:
+          TZ: Asia/Bangkok
+        run: |
+          git config user.name "purefxaidev"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data.json view.json index.html candles.json spot.json ai_context.txt \
+            history/predictions.jsonl history/weights.json history/accuracy.json \
+            history/news_impact.jsonl history/trade_journal.jsonl \
+            news.json news.html || true
+          if git diff --staged --quiet; then
+            echo "No data changes"
+            exit 0
+          fi
+          git commit -m "update $(date '+%F %H:%M')"
+          git pull --rebase --autostash origin main
+          git push origin main
