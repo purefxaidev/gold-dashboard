@@ -83,6 +83,13 @@
   "รอบการซื้อขายสหรัฐฯ": "US trading session",
   "ที่มา: คลังข้อมูลทางการของ SPDR Gold Shares": "Source: official SPDR Gold Shares archive",
   "กราฟถือครองและซื้อขายรายวัน": "Holdings and daily buy/sell chart",
+  "สรุปตลาดเช้า–เย็น": "Morning and evening brief",
+  "ปฏิทินข่าวทอง": "Gold economic calendar",
+  "ความกลัวและความโลภของทอง": "Gold fear and greed",
+  "สถานะกองทุนใหญ่ (COT)": "Large-fund positioning (COT)",
+  "ทองไทย เทียบทองโลก": "Thai vs world gold",
+  "เครื่องคำนวณ": "Calculators",
+  "สหรัฐฯ · เวลาไทย": "US · Bangkok time",
   "กลับแดชบอร์ด": "Back to dashboard", "สอนสมัคร EXNESS": "EXNESS SIGN-UP GUIDE", "ทำเสร็จแล้วติ๊ก:": "Tick when done:", "ย้อนกลับ": "Back", "ถัดไป": "Next", "เสร็จสิ้น": "Finish"
   };
   const R = [

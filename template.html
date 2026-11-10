@@ -272,6 +272,31 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
  <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 16V9M12 16V5M17 16v-7"/></svg> กองทุน SPDR Gold Trust (GLD) <small id="spdrAsOf">—</small></h2>
  <div id="spdrBody"><div class="mut">กำลังโหลด…</div></div>
 </section>
+
+<section class="card c12" id="briefCard" hidden>
+ <h2>สรุปตลาดเช้า–เย็น <small id="briefAsOf">—</small></h2>
+ <div id="briefBody"></div>
+</section>
+<section class="card c6" id="calCard" hidden>
+ <h2>ปฏิทินข่าวทอง <small id="calAsOf">สหรัฐฯ · เวลาไทย</small></h2>
+ <div id="calBody"></div>
+</section>
+<section class="card c6" id="fgCard" hidden>
+ <h2>ความกลัวและความโลภของทอง <small id="fgAsOf">—</small></h2>
+ <div id="fgBody"></div>
+</section>
+<section class="card c6" id="cotCard" hidden>
+ <h2>สถานะกองทุนใหญ่ (COT) <small id="cotAsOf">—</small></h2>
+ <div id="cotBody"></div>
+</section>
+<section class="card c6" id="compareCard" hidden>
+ <h2>ทองไทย เทียบทองโลก <small id="compareAsOf">—</small></h2>
+ <div id="compareBody"></div>
+</section>
+<section class="card c12" id="calcCard" hidden>
+ <h2>เครื่องคำนวณ</h2>
+ <div id="calcBody"></div>
+</section>
 <section class="card c4">
  <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> แนวรับ · แนวต้าน</h2>
  <div class="ladder" id="ladder"></div>
@@ -1323,5 +1348,6 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
   addEventListener("resize", () => { if (SPDR) drawSpdrChart(); });
 })();
 </script>
+<script src="features.js?v=20261110f"></script>
 </body>
 </html>

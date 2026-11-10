@@ -138,6 +138,38 @@ def _ctx():
         L.append(f"SPDR Gold Trust (GLD) ถือครอง {sp.get('tonnes')} ตัน ณ {sp.get('as_of')} · รายวัน {sign(ch)} ตัน · YTD {sign(ytd)} ตัน")
     except Exception:
         pass
+    try:
+        ev = json.load(open('events.json', encoding='utf-8'))
+        upcoming = ev.get('events') or []
+        if upcoming:
+            L.append("ปฏิทินข่าวทอง (สหรัฐฯ): " + " | ".join(
+                f"{e.get('title_th') or e.get('title')} {e.get('date_th')} impact {e.get('impact')} fc {e.get('forecast') or '-'} prev {e.get('previous') or '-'}"
+                for e in upcoming[:6]
+            ))
+    except Exception:
+        pass
+    try:
+        cot = json.load(open('cot.json', encoding='utf-8'))
+        L.append(f"CFTC Managed Money COMEX Gold สุทธิ {cot.get('net')} สัญญา ณ {cot.get('as_of')} · รายสัปดาห์ {cot.get('wow')}")
+    except Exception:
+        pass
+    try:
+        fg = json.load(open('feargreed.json', encoding='utf-8'))
+        L.append(f"ดัชนีความกลัวโลภทอง {fg.get('score')} ({fg.get('label_th')}) ณ {fg.get('as_of')}")
+    except Exception:
+        pass
+    try:
+        cmp = json.load(open('compare.json', encoding='utf-8'))
+        L.append(f"ทองไทย vs โลก: ขาย {cmp.get('thai_sell')} ทฤษฎี {cmp.get('theoretical')} พรีเมียม {cmp.get('premium_sell')} USDTHB {cmp.get('usdthb')}")
+    except Exception:
+        pass
+    try:
+        br = json.load(open('brief.json', encoding='utf-8'))
+        latest = br.get('latest') or br.get('morning') or {}
+        if latest.get('text_th'):
+            L.append("สรุปตลาด: " + latest['text_th'][:500])
+    except Exception:
+        pass
     L.append("หมายเหตุ: " + str(d.get('note', '')))
     return "\n".join(noemo(L))[:14000]
 open('ai_context.txt', 'w', encoding='utf-8').write(_ctx())

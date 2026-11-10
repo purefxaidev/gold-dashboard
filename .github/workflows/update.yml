@@ -29,7 +29,7 @@ jobs:
       - name: Install Python deps
         run: pip install --quiet openpyxl
 
-      - name: Refresh spot, analysis, learning, and SPDR holdings
+      - name: Refresh spot, analysis, learning, SPDR, and market desk
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TZ: Asia/Bangkok
@@ -41,6 +41,7 @@ jobs:
           python3 edge.py || echo "edge skipped"
           python3 spdr.py || echo "spdr skipped"
           python3 learn.py
+          python3 insights.py || echo "insights skipped"
           python3 build.py
 
       - name: Commit and push
@@ -51,8 +52,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data.json view.json index.html candles.json spot.json spdr.json ai_context.txt \
             history/predictions.jsonl history/weights.json history/accuracy.json \
-            history/news_impact.jsonl history/trade_journal.jsonl \
-            news.json news.html || true
+            history/news_impact.jsonl history/trade_journal.jsonl history/feargreed.jsonl \
+            news.json news.html events.json cot.json feargreed.json compare.json brief.json || true
           if git diff --staged --quiet; then
             echo "No data changes"
             exit 0
