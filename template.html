@@ -10,7 +10,7 @@
 <meta property="og:title" content="PUREGOLD AI · XAUUSD gold analysis"><meta property="og:description" content="Live gold price, support/resistance, AI confidence and EV trade plans in Thai and English."><meta property="og:type" content="website"><meta property="og:image" content="https://dashboard.purefxai.store/icon-512.png"><meta property="og:locale" content="th_TH"><meta property="og:locale:alternate" content="en_US">
 <link rel="alternate" hreflang="th" href="https://dashboard.purefxai.store/?lang=th"><link rel="alternate" hreflang="en" href="https://dashboard.purefxai.store/?lang=en"><link rel="alternate" hreflang="x-default" href="https://dashboard.purefxai.store/">
 <script src="i18n.js"></script>
-<script src="sharecard.js"></script>
+<script src="sharecard.js?v=20261110d"></script>
 <script src="gkey.js"></script>
 <script src="pgai.js"></script>
 <link rel="icon" type="image/svg+xml" href="logo.svg"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#0a0b10">
@@ -176,7 +176,10 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
 .spdr-p b{display:block;margin-top:5px;font:700 15px 'JetBrains Mono',monospace}
 .spdr-chart-wrap{position:relative;margin-top:6px;border-radius:12px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.06);padding:8px 8px 4px}
 #spdrChart{width:100%;height:240px;display:block;touch-action:manipulation}
-.spdr-tip{position:absolute;display:none;pointer-events:none;background:#0b0d12f2;border:1px solid var(--bd);border-radius:8px;padding:6px 8px;font-size:11px;z-index:3;white-space:nowrap;color:var(--tx)}
+.spdr-tip{position:absolute;display:none;pointer-events:none;background:rgba(12,10,8,.82);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:8px 10px;font-size:11px;z-index:3;white-space:normal;max-width:260px;color:var(--tx);line-height:1.45;box-shadow:0 10px 28px rgba(0,0,0,.35)}
+.spdr-ref{margin-top:8px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);font-size:12px;line-height:1.55;color:var(--tx)}
+.spdr-ref b{color:var(--gold);font-variant-numeric:tabular-nums}
+.spdr-ref-n{color:var(--mut);font-size:11px;margin-top:4px}
 .spdr-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
 .spdr-note{font-size:11px;color:var(--mut);margin-top:10px;line-height:1.65}
 .spdr-note a{color:var(--gold);text-decoration:none}
@@ -475,7 +478,7 @@ const TG_NAME = {HSH: "ทองคำแท่ง ฮั่วเซ่งเ�
 async function pollThai() {
   try {
     const r = await fetch("https://apicheckprice.huasengheng.com/api/values/getprice/", {cache: "no-store"});
-    const a = await r.json(); thaiGold = a;
+    const a = await r.json(); thaiGold = a; window.thaiGold = a;
     const has9999 = a.some(x => String(x.GoldCode).startsWith("99"));
     $("tg").innerHTML = a.map(x => {
       const ch = Number(x.BuyChange || 0); const cc = ch > 0 ? "up" : ch < 0 ? "dn" : "mut";
@@ -779,20 +782,42 @@ if (!hist.length) bubble("a", EN() ? "Hello, I am the PUREGOLD assistant. Ask me
 syncSet(); setMode(mode); render(); renderPnl(); renderReco(); init3d(); if (!exnessPrompt()) keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
 pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 8000); setInterval(pollThai, 30000); setInterval(pollData, 20000);
 if (window.ShareCard) {
+  const parseLevelList = arr => (arr || []).map(s => {
+    if (s && typeof s === "object" && s.price != null) return s;
+    const raw = String(s), m = raw.replace(/,/g, "").match(/(\d+(?:\.\d+)?)/);
+    if (!m) return null;
+    return { price: +m[1], label: raw.replace(/^[0-9,.\s]+/, "").replace(/[()]/g, "").trim() };
+  }).filter(Boolean);
+  const marketPayload = () => {
+    const m = window.__SHARE_MARKET || {};
+    const px = (typeof live !== "undefined" && live.price) ?? (D && D.price_num) ?? m.spot;
+    return {
+      price: px, prevClose: m.prevClose, dayOpen: m.dayOpen,
+      bars: m.barsM15 || m.barsH1, barsH1: m.barsH1 || m.barsM15,
+      support: D ? parseLevelList(D.support) : [],
+      resistance: D ? parseLevelList(D.resistance) : [],
+      mtf: D ? ((EN() ? (D.mtf_en || D.mtf) : D.mtf) || []) : [],
+      align: D ? D.mtf_align : "",
+      alignEn: D ? D.mtf_align_en : ""
+    };
+  };
+  if (ShareCard.loadMarket) ShareCard.loadMarket(["candles.json", "https://dashboard.purefxai.store/candles.json"]);
   const payloadOf = kind => {
     const lang = EN() ? "en" : "th";
+    const mkt = marketPayload();
     if (kind === "price") {
-      const px = live.price ?? (D && D.price_num);
-      const chgV = (live.open != null && px != null) ? (px - live.open) : null;
-      return { kind, lang, price: px, change: chgV, changePct: (chgV != null && live.open) ? (chgV / live.open * 100) : null, source: $("pxSrc") && $("pxSrc").textContent, time: $("pxTime") && $("pxTime").textContent };
+      const px = mkt.price;
+      const prev = mkt.prevClose;
+      const chgV = (prev != null && px != null) ? (px - prev) : null;
+      return Object.assign({ kind, lang, source: $("pxSrc") && $("pxSrc").textContent, time: $("pxTime") && $("pxTime").textContent, change: chgV, changePct: (chgV != null && prev) ? (chgV / prev * 100) : null, changeKnown: prev != null, changeBasis: "prevClose" }, mkt, { price: px });
     }
     if (kind === "forecast" && D) {
       const acc = D.accuracy || {};
-      return { kind, lang, up: D.ai_up_pct, down: D.ai_down_pct, reasons: Lf(D, "ai_reasons"), reasonsEn: D.ai_reasons_en, updated: acc.updated, horizon: acc.horizon_minutes || 240, acc7: acc.acc_7d, acc30: acc.acc_30d };
+      return Object.assign({ kind, lang, up: D.ai_up_pct, down: D.ai_down_pct, reasons: Lf(D, "ai_reasons"), reasonsEn: D.ai_reasons_en, updated: acc.updated, horizon: acc.horizon_minutes || 240, acc7: acc.acc_7d, acc30: acc.acc_30d }, mkt);
     }
     if (kind === "trend" && D) {
       const mtf = (lang === "en" ? (D.mtf_en || D.mtf) : D.mtf) || [];
-      return { kind, lang, mtf, align: Lf(D, "mtf_align"), alignEn: D.mtf_align_en, bias: Lf(D, "bias") };
+      return Object.assign({ kind, lang, mtf, align: Lf(D, "mtf_align"), alignEn: D.mtf_align_en, bias: Lf(D, "bias") }, mkt);
     }
     if (kind === "spdr") return Object.assign({ kind, lang }, window.__SPDR_SHARE || {});
     return { kind, lang };
@@ -829,6 +854,7 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
     if (Math.abs(v) < 0.0005) return "0.00";
     return (v > 0 ? "+" : "−") + abs;
   };
+  const tonU = () => EN() ? "t" : "ตัน";
   const isiOS = () => {
     const ua = navigator.userAgent || "";
     return /iP(ad|hone|od)/.test(ua) || ((navigator.platform === "MacIntel" || /Mac/.test(ua)) && navigator.maxTouchPoints > 1);
@@ -885,6 +911,25 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
     return `${d} ${["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."][m-1]}`;
   }
 
+
+  function fmtUsdShort(n, en) {
+    if (n == null || !isFinite(Number(n))) return "—";
+    const v = Math.abs(Number(n)), sign = Number(n) < 0 ? "−" : "";
+    if (v >= 1e9) return sign + "$" + (v / 1e9).toFixed(2) + (en ? " bn" : " พันล้าน");
+    if (v >= 1e6) return sign + "$" + (v / 1e6).toFixed(1) + (en ? " million" : " ล้าน");
+    return sign + "$" + Math.round(v).toLocaleString("en-US");
+  }
+  function spdrRefBlock(S, en) {
+    if (S.implied_gold_usd == null) return "";
+    const flow = S.flow_value_usd;
+    const side = S.side || (S.change > 0 ? "buy" : S.change < 0 ? "sell" : "flat");
+    const flowLbl = side === "buy" ? (en ? "Approx. inflow value" : "ประมาณมูลค่าซื้อเข้า") : side === "sell" ? (en ? "Approx. outflow value" : "ประมาณมูลค่าขายออก") : (en ? "Approx. flow value" : "ประมาณมูลค่าการเปลี่ยนแปลง");
+    const priceLbl = en ? (S.implied_gold_label_en || "Gold price implied from the Trust NAV (not an execution price)") : (S.implied_gold_label_th || "ราคาทองคำโดยนัยจาก NAV ของกองทุน (ไม่ใช่ราคาซื้อจริง)");
+    const lbma = en ? "LBMA Gold Price PM is not in the official archive (removed at ICE Benchmark Administration’s request)." : "ไม่มีคอลัมน์ LBMA PM ในคลังข้อมูลทางการ (ถอดออกตามคำขอของ ICE Benchmark Administration)";
+    const nav = S.nav_per_share != null ? (en ? "NAV/share " : "NAV ต่อหน่วย ") + "$" + Number(S.nav_per_share).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2}) : "";
+    const px = "$" + Number(S.implied_gold_usd).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    return `<div class="spdr-ref"><div class="spdr-ref-p">${priceLbl} · <b>${px}</b> / oz</div>${flow != null ? `<div class="spdr-ref-f">${flowLbl} <b>${fmtUsdShort(flow, en)}</b></div>` : ""}<div class="spdr-ref-n">${nav}${nav ? " · " : ""}${lbma}</div></div>`;
+  }
   function renderSpdr() {
     if (!SPDR) return;
     const en = EN();
@@ -898,7 +943,7 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
       const p = (SPDR.periods || {})[k];
       if (!p) return "";
       const s = p.side || sideOf(p.change);
-      return `<div class="spdr-p"><small>${en ? enL : th}</small><b class="${s === "buy" ? "up" : s === "sell" ? "dn" : ""}">${fmtChg(p.change)} t</b></div>`;
+      return `<div class="spdr-p"><small>${en ? enL : th}</small><b class="${s === "buy" ? "up" : s === "sell" ? "dn" : ""}">${fmtChg(p.change)} ${tonU()}</b></div>`;
     }).join("");
     const ranges = RANGES.map(k => `<button type="button" data-r="${k}" class="${k === RANGE ? "on" : ""}">${k}</button>`).join("");
     $("spdrBody").innerHTML = `
@@ -909,9 +954,10 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
           <div class="mut" style="margin-top:4px">${en ? "tonnes" : "ตัน"}</div>
         </div>
         <div class="spdr-meta">
-          <span class="badge ${sideClass(side)}">${sideLabel(side)} ${fmtChg(SPDR.change)} t${SPDR.change_pct != null ? " · " + fmtChg(SPDR.change_pct) + "%" : ""}</span>
+          <span class="badge ${sideClass(side)}">${sideLabel(side)} ${fmtChg(SPDR.change)} ${tonU()}${SPDR.change_pct != null ? " · " + fmtChg(SPDR.change_pct) + "%" : ""}</span>
           <div class="oz">${en ? "Trade date " : "วันที่ซื้อขาย "}${en ? (SPDR.as_of_en || SPDR.as_of) : (SPDR.as_of_th || SPDR.as_of)} · ${en ? "vs prior session " : "เทียบรอบก่อน "}${shortDate(SPDR.prev_date)}</div>
           <div class="oz">${en ? (SPDR.basis_en || "Trade-date basis, not settlement date") : (SPDR.basis_th || "ฐานวันที่ซื้อขาย ไม่ใช่วันชำระราคา")}</div>
+          ${spdrRefBlock(SPDR, en)}
         </div>
       </div>
       <div class="mut" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin-top:8px">${en ? "Cumulative change" : "สะสมย้อนหลัง"}</div>
@@ -940,7 +986,11 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
       asOf: SPDR.as_of, asOfTh: SPDR.as_of_th, asOfEn: SPDR.as_of_en,
       periods: SPDR.periods, series: SPDR.series,
       publicationTh: SPDR.publication_th, publicationEn: SPDR.publication_en,
-      basisTh: SPDR.basis_th, basisEn: SPDR.basis_en
+      basisTh: SPDR.basis_th, basisEn: SPDR.basis_en,
+      impliedGold: SPDR.implied_gold_usd, navPerShare: SPDR.nav_per_share, navTotal: SPDR.nav_total,
+      flowValueUsd: SPDR.flow_value_usd, gldClose: SPDR.gld_close,
+      lbmaPmAvailable: SPDR.lbma_pm_available, impliedLabelTh: SPDR.implied_gold_label_th, impliedLabelEn: SPDR.implied_gold_label_en,
+      impliedNoteTh: SPDR.implied_gold_note_th, impliedNoteEn: SPDR.implied_gold_note_en
     };
     if (window.ShareCard) {
       const host = $("spdrShareBtns");
@@ -1077,7 +1127,12 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
     if (!tip) return;
     const en = EN();
     const p = pt.p;
-    tip.innerHTML = `<b>${esc(shortDate(p.date))}</b><br>${en ? "Holdings" : "ถือครอง"} ${fmtT(p.tonnes)} t<br>${en ? "Change" : "เปลี่ยนแปลง"} ${fmtChg(p.change)} t`;
+    const unit = en ? "tonnes" : "ตัน";
+    let html = `<b>${esc(shortDate(p.date))}</b><br>${en ? "Holdings" : "ถือครอง"} ${fmtT(p.tonnes)} ${unit}<br>${en ? "Change" : "เปลี่ยนแปลง"} ${fmtChg(p.change)} ${unit}`;
+    if (p.implied_gold_usd != null) html += `<br>${en ? "NAV-implied gold (not an execution price)" : "ราคาโดยนัยจาก NAV (ไม่ใช่ราคาซื้อจริง)"} $${Number(p.implied_gold_usd).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2})} / oz`;
+    if (p.nav_per_share != null) html += `<br>${en ? "NAV/share" : "NAV ต่อหน่วย"} $${Number(p.nav_per_share).toLocaleString("en-US", {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    if (p.flow_value_usd != null) html += `<br>${en ? "Approx. flow" : "ประมาณมูลค่า"} ${fmtUsdShort(p.flow_value_usd, en)}`;
+    tip.innerHTML = html;
     tip.style.display = "block";
     const wrap = canvas.parentElement.getBoundingClientRect();
     const cr = canvas.getBoundingClientRect();
@@ -1121,7 +1176,7 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
     ctx.font = "400 16px 'Noto Sans Thai', sans-serif";
     ctx.fillText(en ? "tonnes held" : "ตัน ที่กองทุนถือครอง", 56, 208);
     const side = SPDR.side || sideOf(SPDR.change);
-    const badge = `${sideLabel(side)}  ${fmtChg(SPDR.change)} t`;
+    const badge = `${sideLabel(side)}  ${fmtChg(SPDR.change)} ${tonU()}`;
     ctx.font = "700 20px 'JetBrains Mono', monospace";
     const tw = ctx.measureText(badge).width;
     ctx.fillStyle = side === "buy" ? "rgba(34,227,154,.12)" : side === "sell" ? "rgba(255,77,109,.12)" : "rgba(245,197,66,.12)";
@@ -1148,7 +1203,7 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
       ctx.fillText(en ? enL : th, x + 12, y + 22);
       ctx.fillStyle = colorOf(p.side || sideOf(p.change));
       ctx.font = "700 22px 'JetBrains Mono', monospace";
-      ctx.fillText(fmtChg(p.change) + " t", x + 12, y + 54);
+      ctx.fillText(fmtChg(p.change) + " " + tonU(), x + 12, y + 54);
     });
     ctx.save();
     ctx.translate(0, 330);

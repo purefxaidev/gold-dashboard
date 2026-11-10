@@ -49,6 +49,12 @@ TH_MONTHS = "ม.ค. ก.พ. มี.ค. เม.ย. พ.ค. มิ.ย. ก.
 EN_MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
 SHEET = "US GLD Historical Archive"
 SERIES_DAYS = 370
+OZ_PER_TONNE = 32150.75  # troy ounces per metric tonne, as used for approx. flow value
+ARCHIVE_COLUMNS_NOTE = (
+    "The official US GLD Historical Archive no longer includes an LBMA Gold Price column. "
+    "A Disclaimer sheet in the same workbook states the LBMA Gold Price was removed at the "
+    "request of ICE Benchmark Administration."
+)
 
 
 def now_bkk() -> dt.datetime:
@@ -101,7 +107,40 @@ def download_archive() -> bytes:
         return data
 
 
-def parse_rows(blob: bytes) -> list[tuple[dt.date, float, float | None]]:
+def col_idx(header: list[str], *names: str) -> int | None:
+    for n in names:
+        if n in header:
+            return header.index(n)
+    return None
+
+
+def cell(raw, idx) -> float | None:
+    if idx is None or idx >= len(raw):
+        return None
+    v = raw[idx]
+    return float(v) if is_num(v) else None
+
+
+def implied_gold_usd(row: dict) -> float | None:
+    """Gold price implied by official NAV fields. Not an LBMA PM print and not an execution price."""
+    nav = row.get("nav_total")
+    oz = row.get("ounces")
+    if nav and oz:
+        return round(nav / oz, 3)
+    nav_sh = row.get("nav_per_share")
+    oz_sh = row.get("oz_per_share")
+    if nav_sh and oz_sh:
+        return round(nav_sh / oz_sh, 3)
+    return None
+
+
+def flow_value_usd(change_tonnes: float | None, price: float | None) -> float | None:
+    if change_tonnes is None or price is None:
+        return None
+    return round(float(change_tonnes) * OZ_PER_TONNE * float(price), 0)
+
+
+def parse_rows(blob: bytes) -> list[dict]:
     bio = io.BytesIO(blob)
     wb = load_workbook(bio, data_only=True, read_only=True)
     if SHEET not in wb.sheetnames:
@@ -113,13 +152,19 @@ def parse_rows(blob: bytes) -> list[tuple[dt.date, float, float | None]]:
     if not rows:
         raise RuntimeError("empty archive sheet")
     header = [str(c or "").strip() for c in rows[0]]
-    try:
-        i_date = header.index("Date")
-        i_tonnes = header.index("Tonnes of Gold")
-    except ValueError as e:
-        raise RuntimeError(f"unexpected columns: {header}") from e
-    i_oz = header.index("Total Ounces of Gold in the Trust") if "Total Ounces of Gold in the Trust" in header else None
-    out: list[tuple[dt.date, float, float | None]] = []
+    i_date = col_idx(header, "Date")
+    i_tonnes = col_idx(header, "Tonnes of Gold")
+    if i_date is None or i_tonnes is None:
+        raise RuntimeError(f"unexpected columns: {header}")
+    # Official workbook no longer has an LBMA Gold Price / London Fix column
+    # (Disclaimer sheet: removed at the request of ICE Benchmark Administration).
+    lbma_names = [h for h in header if "lbma" in h.lower() or "london fix" in h.lower() or h.lower() in ("gold price", "gold price pm")]
+    i_oz = col_idx(header, "Total Ounces of Gold in the Trust")
+    i_nav = col_idx(header, "Total Net Asset Value in the Trust")
+    i_nav_sh = col_idx(header, "NAV/Share at 10:30am NYT", "NAV/Share")
+    i_oz_sh = col_idx(header, "Ounces of Gold per Share")
+    i_close = col_idx(header, "Closing Price")
+    out: list[dict] = []
     for raw in rows[1:]:
         if not raw:
             continue
@@ -127,20 +172,27 @@ def parse_rows(blob: bytes) -> list[tuple[dt.date, float, float | None]]:
         tonnes = raw[i_tonnes] if i_tonnes < len(raw) else None
         if day is None or not is_num(tonnes) or tonnes <= 0:
             continue
-        oz = None
-        if i_oz is not None and i_oz < len(raw) and is_num(raw[i_oz]):
-            oz = float(raw[i_oz])
-        out.append((day, float(tonnes), oz))
-    out.sort(key=lambda x: x[0])
+        rec = {
+            "day": day,
+            "tonnes": float(tonnes),
+            "ounces": cell(raw, i_oz),
+            "nav_total": cell(raw, i_nav),
+            "nav_per_share": cell(raw, i_nav_sh),
+            "oz_per_share": cell(raw, i_oz_sh),
+            "gld_close": cell(raw, i_close),
+        }
+        rec["implied_gold_usd"] = implied_gold_usd(rec)
+        out.append(rec)
+    out.sort(key=lambda x: x["day"])
     if len(out) < 20:
         raise RuntimeError(f"too few trading sessions parsed: {len(out)}")
     return out
 
 
-def on_or_before(series: list[tuple[dt.date, float, float | None]], target: dt.date):
-    for day, tonnes, oz in reversed(series):
-        if day <= target:
-            return day, tonnes, oz
+def on_or_before(series: list[dict], target: dt.date):
+    for rec in reversed(series):
+        if rec["day"] <= target:
+            return rec
     return None
 
 
@@ -162,10 +214,10 @@ def period(series, as_of: dt.date, tonnes: float, days: int | None, ytd: bool = 
     ref = on_or_before(series, target)
     if ref is None:
         raise RuntimeError(f"no reference session on or before {target.isoformat()}")
-    chg = r2(tonnes - ref[1])
+    chg = r2(tonnes - ref["tonnes"])
     item = {
-        "from": ref[0].isoformat(),
-        "from_tonnes": r2(ref[1]),
+        "from": ref["day"].isoformat(),
+        "from_tonnes": r2(ref["tonnes"]),
         "change": chg,
         "side": side_of(chg),
     }
@@ -174,29 +226,45 @@ def period(series, as_of: dt.date, tonnes: float, days: int | None, ytd: bool = 
     return item
 
 
+def session_point(rec: dict, change: float | None) -> dict:
+    px = rec.get("implied_gold_usd")
+    pt = {
+        "date": rec["day"].isoformat(),
+        "tonnes": r2(rec["tonnes"]),
+        "change": change,
+        "implied_gold_usd": px,
+        "nav_per_share": rec.get("nav_per_share"),
+        "nav_total": rec.get("nav_total"),
+        "gld_close": rec.get("gld_close"),
+        "flow_value_usd": flow_value_usd(change, px) if change is not None else None,
+    }
+    return pt
+
+
 def build_payload(series, fetched_at: dt.datetime) -> dict:
-    as_of, tonnes, oz = series[-1]
-    prev_date, prev_tonnes, _ = series[-2]
+    last, prev = series[-1], series[-2]
+    as_of, tonnes, oz = last["day"], last["tonnes"], last.get("ounces")
+    prev_date, prev_tonnes = prev["day"], prev["tonnes"]
     change = r2(tonnes - prev_tonnes)
     start = as_of - dt.timedelta(days=SERIES_DAYS)
     daily = []
     prev_t = None
-    # include one extra prior point so the first visible change is correct
-    window = [row for row in series if row[0] >= start - dt.timedelta(days=14)]
+    window = [row for row in series if row["day"] >= start - dt.timedelta(days=14)]
     if len(window) < 2:
         window = series[-260:]
-    for day, t, _oz in window:
+    for rec in window:
+        t = rec["tonnes"]
         chg = None if prev_t is None else r2(t - prev_t)
-        if day >= start:
-            daily.append({"date": day.isoformat(), "tonnes": r2(t), "change": chg})
+        if rec["day"] >= start:
+            daily.append(session_point(rec, chg))
         prev_t = t
-    # ensure first change is filled from the session immediately before the window
     if daily and daily[0]["change"] is None:
-        before = on_or_before(series, daily[0]["date"])
-        # find previous session
-        idx = next(i for i, row in enumerate(series) if row[0] == dt.date.fromisoformat(daily[0]["date"]))
+        idx = next(i for i, row in enumerate(series) if row["day"] == dt.date.fromisoformat(daily[0]["date"]))
         if idx > 0:
-            daily[0]["change"] = r2(series[idx][1] - series[idx - 1][1])
+            chg = r2(series[idx]["tonnes"] - series[idx - 1]["tonnes"])
+            daily[0]["change"] = chg
+            daily[0]["flow_value_usd"] = flow_value_usd(chg, daily[0].get("implied_gold_usd"))
+    implied = last.get("implied_gold_usd")
     payload = {
         "ticker": "GLD",
         "name": "SPDR Gold Trust",
@@ -219,6 +287,34 @@ def build_payload(series, fetched_at: dt.datetime) -> dict:
         "change": change,
         "change_pct": r2((change / prev_tonnes) * 100) if prev_tonnes else 0.0,
         "side": side_of(change),
+        "gld_close": last.get("gld_close"),
+        "oz_per_share": last.get("oz_per_share"),
+        "nav_per_share": last.get("nav_per_share"),
+        "nav_total": last.get("nav_total"),
+        "lbma_pm": None,
+        "lbma_pm_available": False,
+        "lbma_pm_note_th": (
+            "คลังข้อมูลทางการของ SPDR (US GLD Historical Archive) ได้ถอดคอลัมน์ LBMA Gold Price ออกตามคำขอของ "
+            "ICE Benchmark Administration จึงไม่มีตัวเลข LBMA PM ในไฟล์ทางการ"
+        ),
+        "lbma_pm_note_en": ARCHIVE_COLUMNS_NOTE,
+        "implied_gold_usd": implied,
+        "implied_gold_method": "total_nav_div_total_ounces",
+        "implied_gold_label_th": "ราคาทองคำโดยนัยจาก NAV ของกองทุน (ไม่ใช่ราคาซื้อจริง)",
+        "implied_gold_label_en": "Gold price implied from the Trust NAV (not an execution price)",
+        "implied_gold_note_th": (
+            "คำนวณจากมูลค่าสินทรัพย์สุทธิรวม ÷ จำนวนออนซ์ในคลังข้อมูลทางการของวันซื้อขายนั้น "
+            "ไม่ใช่ราคาที่กองทุนซื้อหรือขายจริง และไม่ใช่ตัวเลข LBMA Gold Price PM โดยตรง "
+            "เพราะคอลัมน์นั้นถูกถอดออกจากไฟล์ทางการ"
+        ),
+        "implied_gold_note_en": (
+            "Derived from official Total Net Asset Value divided by Total Ounces of Gold in the Trust "
+            "on that trade date. This is not the Trust's execution price, and it is not a direct LBMA Gold Price PM print "
+            "(that column was removed from the official archive)."
+        ),
+        "flow_value_usd": flow_value_usd(change, implied),
+        "flow_value_method": "change_tonnes * 32150.75 oz * implied_gold_usd",
+        "oz_per_tonne": OZ_PER_TONNE,
         "periods": {
             "1W": period(series, as_of, tonnes, 7),
             "1M": period(series, as_of, tonnes, 30),
@@ -251,6 +347,8 @@ def core_fingerprint(payload: dict) -> dict:
         "as_of": payload.get("as_of"),
         "tonnes": payload.get("tonnes"),
         "change": payload.get("change"),
+        "implied_gold_usd": payload.get("implied_gold_usd"),
+        "nav_per_share": payload.get("nav_per_share"),
         "periods": payload.get("periods"),
         "series": payload.get("series"),
     }
