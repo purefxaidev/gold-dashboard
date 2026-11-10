@@ -11,7 +11,7 @@
 <meta property="og:title" content="PUREGOLD AI · XAUUSD gold analysis"><meta property="og:description" content="Live gold price, support/resistance, AI confidence and EV trade plans in Thai and English."><meta property="og:type" content="website"><meta property="og:image" content="https://dashboard.purefxai.store/icon-512.png"><meta property="og:locale" content="th_TH"><meta property="og:locale:alternate" content="en_US">
 <link rel="alternate" hreflang="th" href="https://dashboard.purefxai.store/?lang=th"><link rel="alternate" hreflang="en" href="https://dashboard.purefxai.store/?lang=en"><link rel="alternate" hreflang="x-default" href="https://dashboard.purefxai.store/">
 <script src="i18n.js"></script>
-<script src="sharecard.js?v=20261110d"></script>
+<script src="sharecard.js?v=20261110perf1"></script>
 <script src="gkey.js"></script>
 <script src="pgai.js"></script>
 <link rel="icon" type="image/svg+xml" href="logo.svg"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#0a0b10">
@@ -47,6 +47,13 @@ header .wrap{display:flex;align-items:center;gap:12px;padding:10px 14px}
 .price{font:700 clamp(40px,11vw,68px)/1 'JetBrains Mono';letter-spacing:-1px;background:linear-gradient(180deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;transition:filter .3s}
 .flash-up{filter:drop-shadow(0 0 14px var(--up))}.flash-dn{filter:drop-shadow(0 0 14px var(--dn))}
 .chg{font:600 15px 'JetBrains Mono'}.up{color:var(--up)}.dn{color:var(--dn)}.mut{color:var(--mut)}
+.perf-row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+.perf-chip{display:inline-flex;align-items:baseline;gap:6px;padding:4px 9px;border-radius:8px;border:1px solid var(--line,#2a2618);background:rgba(12,14,20,.45);font-variant-numeric:tabular-nums;font-size:12px;font-weight:700}
+.perf-chip .k{color:var(--mut);font-weight:600;font-size:11px}
+.perf-chip.up .v{color:var(--up)}.perf-chip.dn .v{color:var(--dn)}.perf-chip.flat .v{color:var(--mut)}
+.perf-src{margin-top:4px;font-size:11px;color:var(--mut)}
+#analysisFresh{margin-top:6px;font-size:12px}
+#analysisFresh.stale{color:#e0a14a}
 .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font:600 13px Prompt;border:1px solid}
 .b-up{color:var(--up);border-color:rgba(34,227,154,.4);background:rgba(34,227,154,.08)}
 .b-dn{color:var(--dn);border-color:rgba(255,77,109,.4);background:rgba(255,77,109,.08)}
@@ -243,7 +250,9 @@ html.pg-embed .wrap{padding-top:10px}
 <section class="card c8" id="priceCard">
  <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg> ราคาทองโลกแบบเรียลไทม์ <small id="pxSrc">—</small></h2>
  <div class="hero"><div class="price" id="px">—</div><div><div class="chg" id="pxChg">&nbsp;</div><div class="mut" style="font-size:12px" id="pxTime"></div></div><div id="biasBadge"></div></div>
+ <div class="perf-row" id="pxPerf" hidden></div>
  <div class="bias" id="bias"></div>
+ <div class="mut" id="analysisFresh"></div>
  <div class="ind mono" id="ind"></div>
  <div id="reco" class="reco"></div>
  <details class="legend"><summary><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg> คำศัพท์ง่ายๆ</summary>
@@ -393,6 +402,123 @@ const fmt = (n, d = 2) => n == null || isNaN(n) ? "—" : Number(n).toLocaleStri
 const safeUrl = u => /^https?:\/\//i.test(u) ? u : "#";
 let live = {price: null, prev: null, open: null, time: null, src: null};
 let thaiGold = null;
+let LEVELS = null;
+let PERF = null;
+
+function fmtPerfPct(pct) {
+  if (!Number.isFinite(pct)) return "";
+  return (pct > 0 ? "+" : pct < 0 ? "\u2212" : "") + Math.abs(pct).toFixed(2) + "%";
+}
+function perfWithLive(data, livePx) {
+  if (!data || !Array.isArray(data.periods)) return null;
+  const spot = Number(livePx != null ? livePx : data.spot);
+  const periods = data.periods.map(p => {
+    const ref = Number(p.ref_close);
+    if (!(ref > 0) || !Number.isFinite(spot)) return null;
+    const change = spot - ref;
+    return Object.assign({}, p, {change, change_pct: change / ref * 100});
+  }).filter(Boolean);
+  if (!periods.length) return null;
+  return Object.assign({}, data, {spot, periods});
+}
+function paintPerf(px) {
+  const el = $("pxPerf");
+  const data = perfWithLive(PERF, px != null ? px : (live && live.price));
+  window.__PERF_LIVE = data;
+  if (!el) return;
+  if (!data || !data.periods.length) { el.hidden = true; el.innerHTML = ""; return; }
+  el.hidden = false;
+  const lang = EN() ? "en" : "th";
+  el.innerHTML = data.periods.map(p => {
+    const pct = Number(p.change_pct);
+    const cls = !Number.isFinite(pct) || Math.abs(pct) < 0.005 ? "flat" : (pct > 0 ? "up" : "dn");
+    const lab = lang === "en" ? (p.label_en || p.id) : (p.label_th || p.id);
+    return `<span class="perf-chip ${cls}"><span class="k">${esc(lab)}</span><span class="v">${fmtPerfPct(pct)}</span></span>`;
+  }).join("") + (data.history_source ? `<div class="perf-src">${EN() ? "Source: " : "ที่มา: "}${esc(data.history_source)}</div>` : "");
+}
+async function loadPerf() {
+  try {
+    const r = await fetch("perf.json?t=" + Date.now(), {cache: "no-store"});
+    if (r.ok) {
+      const j = await r.json();
+      if (j && Array.isArray(j.periods) && j.periods.length) { PERF = j; paintPerf(live.price); }
+    }
+  } catch (e) {}
+}
+function parseStampMs(s) {
+  if (!s) return 0;
+  if (typeof s === "number" && Number.isFinite(s)) return s;
+  const n = Date.parse(s);
+  if (Number.isFinite(n)) return n;
+  const m = String(s).match(/(\d{1,2})\s*[/\.]\s*(\d{1,2})\s*[/\.]\s*(\d{2,4}).*?(\d{1,2}):(\d{2})/);
+  // Thai "10 พ.ย. 2026 14:07"
+  const th = String(s).match(/(\d{1,2})\s*พ\.ย\.\s*(\d{4})\s*(\d{1,2}):(\d{2})/);
+  if (th) return Date.parse(`${th[2]}-11-${th[1].padStart(2,"0")}T${th[3].padStart(2,"0")}:${th[4]}:00+07:00`) || 0;
+  return 0;
+}
+function biasFromSpot(spot, daily) {
+  if (!daily || !Number.isFinite(spot)) return null;
+  const pp = Number(daily.pp), s1 = Number(daily.s1), r1 = Number(daily.r1);
+  if (!Number.isFinite(pp)) return null;
+  let bias = "neutral", biasTh = "ใกล้จุดพิวอต", biasEn = "Near the pivot";
+  if (Number.isFinite(r1) && spot > r1) { bias = "up"; biasTh = "เอียงขึ้นเหนือ R1"; biasEn = "Bias up above R1"; }
+  else if (spot > pp + 1) { bias = "up"; biasTh = "เอียงขึ้นเหนือจุดพิวอต"; biasEn = "Bias up above the pivot"; }
+  else if (Number.isFinite(s1) && spot < s1) { bias = "down"; biasTh = "เอียงลงต่ำกว่า S1"; biasEn = "Bias down below S1"; }
+  else if (spot < pp - 1) { bias = "down"; biasTh = "เอียงลงต่ำกว่าจุดพิวอต"; biasEn = "Bias down below the pivot"; }
+  return {bias, biasTh, biasEn, pp, s1, r1};
+}
+function analysisFreshness(updated, spot, daily, stated) {
+  const at = parseStampMs(updated);
+  const age = at ? (Date.now() - at) : 1e15;
+  const liveBias = biasFromSpot(spot, daily);
+  const text = String(stated || "");
+  const statedUp = /เอียงขึ้น|ขาขึ้น|lean up|uptrend|bias up/i.test(text);
+  const statedDn = /เอียงลง|ขาลง|lean down|downtrend|bias down/i.test(text);
+  const crossed = !!(liveBias && ((liveBias.bias === "up" && statedDn) || (liveBias.bias === "down" && statedUp)));
+  return {stale: age > 30 * 60 * 1000 || crossed, age, liveBias, crossed, asOf: at};
+}
+function syncAnalysisToLive() {
+  if (!D) return;
+  const daily = LEVELS && LEVELS.daily;
+  const spot = live.price != null ? live.price : D.price_num;
+  const fresh = analysisFreshness(D.updated || D.updated_en, spot, daily, D.bias);
+  const lb = fresh.liveBias;
+  const badge = $("biasBadge");
+  const biasEl = $("bias");
+  const freshEl = $("analysisFresh");
+  if (lb) {
+    const cls = lb.bias === "up" ? "b-up" : lb.bias === "down" ? "b-dn" : "b-neu";
+    const lbl = lb.bias === "up" ? (EN() ? "▲ Uptrend" : "▲ ขาขึ้น") : lb.bias === "down" ? (EN() ? "▼ Downtrend" : "▼ ขาลง") : "◆ " + (EN() ? lb.biasEn : lb.biasTh);
+    if (badge) badge.innerHTML = `<span class="badge ${cls}">${lbl}</span>`;
+    const short = EN() ? lb.biasEn : lb.biasTh;
+    const desk = Lf(D, "bias") || "";
+    if (biasEl) biasEl.textContent = short + (desk && desk !== short ? " · " + desk : "");
+  }
+  if (freshEl) {
+    const when = Lf(D, "updated") || D.updated || "";
+    if (fresh.stale) {
+      freshEl.hidden = false;
+      freshEl.classList.add("stale");
+      freshEl.textContent = EN()
+        ? ("Updating analysis · desk as of " + when)
+        : ("กำลังอัปเดตการวิเคราะห์ · บทวิเคราะห์เมื่อ " + when);
+    } else {
+      freshEl.hidden = false;
+      freshEl.classList.remove("stale");
+      freshEl.textContent = when ? ((EN() ? "Analysis as of " : "บทวิเคราะห์เมื่อ ") + when) : "";
+    }
+  }
+}
+async function loadLevels() {
+  const urls = ["levels.json?t=" + Date.now(), "https://gold.purefxai.store/assets/levels.json?t=" + Date.now()];
+  for (const u of urls) {
+    try {
+      const r = await fetch(u, {cache: "no-store"});
+      if (r.ok) { const j = await r.json(); if (j && j.daily) { LEVELS = j; syncAnalysisToLive(); return; } }
+    } catch (e) {}
+  }
+}
+
 
 const EN = () => window.LANG === "en";
 const noEmo = x => typeof x === "string" ? x.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\uFE0F\u200D]/gu, "").replace(/\s{2,}/g, " ").trim() : Array.isArray(x) ? x.map(noEmo) : x;
@@ -404,6 +530,7 @@ function render() {
   const lbl = cls === "b-up" ? (EN() ? "▲ Uptrend" : "▲ ขาขึ้น") : cls === "b-dn" ? (EN() ? "▼ Downtrend" : "▼ ขาลง") : "◆ " + esc(bL.split("·")[0].trim().slice(0, 24));
   $("biasBadge").innerHTML = `<span class="badge ${cls}">${lbl}</span>`;
   $("bias").textContent = bL;
+  syncAnalysisToLive();
   $("ind").textContent = Lf(D, "indicators") || "";
   // AI confidence
   const up = Number(D.ai_up_pct ?? 50), dn = Number(D.ai_down_pct ?? 100 - up);
@@ -542,6 +669,8 @@ async function pollPrice() {
   if (timeEl) timeEl.classList.toggle("delayed", delayed);
   if (chip) chip.classList.toggle("delayed", delayed);
   renderLadder(); renderPnl(); renderReco();
+  paintPerf(p);
+  syncAnalysisToLive();
   if (L3 && L3.orb && Math.abs((L3.lastPx || 0) - live.price) > .5) { L3.lastPx = live.price; build3d(); }
 }
 
@@ -854,7 +983,7 @@ window.addEventListener("hashchange", () => { if (location.hash === "#call") ope
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text));
 if (!hist.length) bubble("a", EN() ? "Hello, I am the PUREGOLD assistant. Ask me about gold, the FX pairs, Bitcoin, support and resistance, or the news. (Add your API key once before the first use.)" : "สวัสดีค่ะ ดิฉันคือ เลขา PUREGOLD ถามได้ทั้งทองคำ คู่เงิน FX และ Bitcoin แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ใส่คีย์ครั้งเดียวก่อนใช้ครั้งแรก)");
 syncSet(); setMode(mode); render(); renderPnl(); renderReco(); init3d(); if (!exnessPrompt()) keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
-pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 4000); setInterval(pollThai, 30000); setInterval(pollData, 20000);
+pollPrice(); pollThai(); pollData(); loadPerf(); loadLevels(); setInterval(pollPrice, 4000); setInterval(pollThai, 30000); setInterval(pollData, 20000); setInterval(loadPerf, 5 * 60 * 1000); setInterval(loadLevels, 5 * 60 * 1000);
 if (window.ShareCard) {
   const parseLevelList = arr => (arr || []).map(s => {
     if (s && typeof s === "object" && s.price != null) return s;
@@ -883,7 +1012,7 @@ if (window.ShareCard) {
       const px = mkt.price;
       const prev = mkt.prevClose;
       const chgV = (prev != null && px != null) ? (px - prev) : null;
-      return Object.assign({ kind, lang, source: $("pxSrc") && $("pxSrc").textContent, time: $("pxTime") && $("pxTime").textContent, change: chgV, changePct: (chgV != null && prev) ? (chgV / prev * 100) : null, changeKnown: prev != null, changeBasis: "prevClose" }, mkt, { price: px });
+      return Object.assign({ kind, lang, source: $("pxSrc") && $("pxSrc").textContent, time: $("pxTime") && $("pxTime").textContent, change: chgV, changePct: (chgV != null && prev) ? (chgV / prev * 100) : null, changeKnown: prev != null, changeBasis: "prevClose", perf: window.__PERF_LIVE || PERF || null }, mkt, { price: px });
     }
     if (kind === "forecast" && D) {
       const acc = D.accuracy || {};
@@ -891,7 +1020,8 @@ if (window.ShareCard) {
     }
     if (kind === "trend" && D) {
       const mtf = (lang === "en" ? (D.mtf_en || D.mtf) : D.mtf) || [];
-      return Object.assign({ kind, lang, mtf, align: Lf(D, "mtf_align"), alignEn: D.mtf_align_en, bias: Lf(D, "bias") }, mkt);
+      const lb = (typeof analysisFreshness === "function") ? analysisFreshness(D.updated || D.updated_en, (typeof live !== "undefined" && live.price) || D.price_num, LEVELS && LEVELS.daily, D.bias).liveBias : null;
+      return Object.assign({ kind, lang, mtf, align: lb ? (EN() ? lb.biasEn : lb.biasTh) : Lf(D, "mtf_align"), alignEn: lb ? lb.biasEn : D.mtf_align_en, bias: lb ? (EN() ? lb.biasEn : lb.biasTh) : Lf(D, "bias") }, mkt);
     }
     if (kind === "spdr") return Object.assign({ kind, lang }, window.__SPDR_SHARE || {});
     return { kind, lang };
