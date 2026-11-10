@@ -32,6 +32,8 @@ header .wrap{display:flex;align-items:center;gap:12px;padding:10px 14px}
 .logo{font:700 18px Prompt;letter-spacing:.5px;background:linear-gradient(90deg,var(--gold),#fff3c4,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200%;animation:shine 6s linear infinite}
 @keyframes shine{to{background-position:200% 0}}
 .live{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mut)}
+#liveTxt.delayed,#pxTime.delayed{color:#e0a14a}
+.live.delayed .dot{background:#e0a14a;box-shadow:0 0 10px #e0a14a;animation:none}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--up);box-shadow:0 0 10px var(--up);animation:pulse 1.6s infinite}
 @keyframes pulse{50%{opacity:.3}}
 .grid{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}.grid>*{min-width:0}
@@ -480,35 +482,65 @@ async function pollPrice() {
   const [sq, ga] = await Promise.all(tasks);
   const sqPx = sq && Number(sq.price);
   const gaPx = ga && Number(ga.price);
+  const gaAt = (ga && ga.updatedAt) ? Date.parse(ga.updatedAt) : (gaPx ? Date.now() : 0);
+  const sqAt = sq ? Date.parse(sq.fetched_at || sq.updated_utc) : 0;
   const gaSnap = sq && (sq.sources || []).find(s => s && s.name === "gold-api" && s.ok && Number(s.price));
   const basis = (gaSnap && sqPx) ? (Number(gaSnap.price) - sqPx) : null;
-  const fresh = sq && sqPx && !sq.stale && ageMin(sq.fetched_at || sq.updated_utc) <= 45;
-  let p = null, src = "", when = "";
-  // Estimate current FX mid: Swissquote snapshot + gold-api movement since that snapshot.
-  const est = (fresh && gaPx && basis != null) ? (gaPx - basis) : null;
-  if (est && est > 0 && Math.abs(est - sqPx) < 25) {
-    p = est;
-    src = EN() ? "FX spot · live" : "สปอต FX · สด";
-    when = bkkTime(ga && ga.updatedAt ? new Date(ga.updatedAt) : new Date()) + (EN() ? " (Bangkok time)" : " น. (เวลาไทย)");
-  } else if (sqPx) {
+  const freshSq = sq && sqPx && !sq.stale && ageMin(sq.fetched_at || sq.updated_utc) <= 45;
+  let p = null, src = "", when = "", tickAt = 0, isLive = false;
+  if (gaPx > 0) {
+    let px = gaPx;
+    if (freshSq && basis != null) {
+      const est = gaPx - basis;
+      if (est > 0 && Math.abs(est - sqPx) < 25) px = est;
+    }
+    p = px;
+    tickAt = gaAt || Date.now();
+    isLive = true;
+    src = EN() ? "Spot · gold-api.com" : "สปอต · gold-api.com";
+    if (freshSq && basis != null && Math.abs((gaPx - basis) - sqPx) < 25) src = EN() ? "FX spot · live" : "สปอต FX · สด";
+    when = bkkTime(new Date(tickAt)) + (EN() ? " (Bangkok time)" : " น. (เวลาไทย)");
+  } else if (live.price != null && live.tickAt && (Date.now() - live.tickAt) < 15 * 60 * 1000) {
+    p = live.price;
+    tickAt = live.tickAt;
+    isLive = true;
+    src = live.src || src;
+    when = bkkTime(new Date(tickAt)) + (EN() ? " (Bangkok time)" : " น. (เวลาไทย)");
+  } else if (sqPx > 0) {
     p = sqPx;
+    tickAt = sqAt || 0;
+    isLive = false;
     src = EN() ? (sq.src_label_en || "FX spot · Swissquote") : (sq.src_label_th || "สปอต FX · Swissquote");
     when = EN() ? (sq.updated_en || (bkkTime() + " (Bangkok time)")) : (sq.updated_th || (bkkTime() + " น. (เวลาไทย)"));
-  } else if (gaPx) {
-    p = gaPx;
-    src = EN() ? "Spot · gold-api.com" : "สปอต · gold-api.com";
-    when = bkkTime(ga && ga.updatedAt ? new Date(ga.updatedAt) : new Date()) + (EN() ? " (Bangkok time)" : " น. (เวลาไทย)");
   }
+  const delayed = !p || !isLive || !tickAt || ((Date.now() - tickAt) / 1000 > 60);
+  const liveEl = $("liveTxt");
+  const timeEl = $("pxTime");
+  const chip = liveEl && liveEl.closest(".live");
   if (!p) {
     if (live.price == null && D && D.price_num) showPrice(D.price_num, EN() ? "Price from latest analysis" : "ราคาจากบทวิเคราะห์ล่าสุด");
-    $("liveTxt").textContent = EN() ? "Live price unavailable · using analysis price" : "ราคาสดไม่พร้อม · ใช้ราคาจากบทวิเคราะห์";
+    if (liveEl) {
+      liveEl.textContent = EN() ? "Delayed · live feed unavailable" : "ล่าช้า · ไม่มีราคาสด";
+      liveEl.classList.add("delayed");
+    }
+    if (timeEl) timeEl.classList.add("delayed");
+    if (chip) chip.classList.add("delayed");
     return;
   }
   if (live.open == null) live.open = p;
   live.prev = live.price; live.price = p; live.src = src;
   live.time = when;
+  if (isLive) live.tickAt = tickAt;
   showPrice(p, src, when);
-  $("liveTxt").textContent = "LIVE · " + (when.replace(/ น\. \(เวลาไทย\)| \(Bangkok time\)| \(Thai time\)/g, ""));
+  const clock = (tickAt ? bkkTime(new Date(tickAt)) : bkkTime());
+  if (liveEl) {
+    liveEl.textContent = delayed
+      ? ((EN() ? "Delayed · " : "ล่าช้า · ") + clock)
+      : ("LIVE · " + clock);
+    liveEl.classList.toggle("delayed", delayed);
+  }
+  if (timeEl) timeEl.classList.toggle("delayed", delayed);
+  if (chip) chip.classList.toggle("delayed", delayed);
   renderLadder(); renderPnl(); renderReco();
   if (L3 && L3.orb && Math.abs((L3.lastPx || 0) - live.price) > .5) { L3.lastPx = live.price; build3d(); }
 }
@@ -822,7 +854,7 @@ window.addEventListener("hashchange", () => { if (location.hash === "#call") ope
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text));
 if (!hist.length) bubble("a", EN() ? "Hello, I am the PUREGOLD assistant. Ask me about gold, the FX pairs, Bitcoin, support and resistance, or the news. (Add your API key once before the first use.)" : "สวัสดีค่ะ ดิฉันคือ เลขา PUREGOLD ถามได้ทั้งทองคำ คู่เงิน FX และ Bitcoin แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ใส่คีย์ครั้งเดียวก่อนใช้ครั้งแรก)");
 syncSet(); setMode(mode); render(); renderPnl(); renderReco(); init3d(); if (!exnessPrompt()) keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
-pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 8000); setInterval(pollThai, 30000); setInterval(pollData, 20000);
+pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 4000); setInterval(pollThai, 30000); setInterval(pollData, 20000);
 if (window.ShareCard) {
   const parseLevelList = arr => (arr || []).map(s => {
     if (s && typeof s === "object" && s.price != null) return s;
