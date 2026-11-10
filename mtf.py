@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Multi-timeframe trends for XAUUSD + Markets (FX, BTC). Free sources only, analysis only.
-Gold: Binance PAXGUSDT klines (tracks gold), offset-corrected to spot (gold-api.com XAU).
+Gold: Binance PAXGUSDT klines (shape only), offset-corrected to FX spot from spot.py (Swissquote mid, with fallbacks).
 Markets: Yahoo chart API (EURUSD=X ... BTC-USD); H4 = 4 x H1 aggregated.
 Writes data.json fields: mtf, mtf_en, mtf_align, mtf_align_en, markets, markets_en, mtf_updated.
 Also writes candles.json (gold OHLC per TF, already offset to spot) for the site.
 Trend: EMA20>EMA50, EMA20 rising (vs 5 bars ago), close>EMA20 -> up; mirror -> down; else sideways."""
 import json, urllib.request, datetime, time, sys
+from spot import now_bkk, fetch_spot, _load_cache
 UA = {"User-Agent": "Mozilla/5.0"}
 def get(u):
     for i in range(3):
@@ -29,17 +30,21 @@ def trend(c):
     t = "up" if e20[-1] > e50[-1] and sl > 0 and c[-1] > e20[-1] else "down" if e20[-1] < e50[-1] and sl < 0 and c[-1] < e20[-1] else "sideways"
     return t, rsi(c), e20[-1], e50[-1]
 TH = {"up": "ขาขึ้น", "down": "ขาลง", "sideways": "ไซด์เวย์"}; EN = {"up": "Uptrend", "down": "Downtrend", "sideways": "Sideways"}
-now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+now = now_bkk().strftime("%Y-%m-%d %H:%M")
 d = json.load(open("data.json", encoding="utf-8"))
 CJ = {"updated": now, "candles": {}}
 MC = {}
 # ---------- gold ----------
 try:
-    spot = float(get("https://api.gold-api.com/price/XAU")["price"])
-    TFS = [("M5", "5m"), ("M15", "15m"), ("H1", "1h"), ("H4", "4h"), ("D1", "1d")]
+    try:
+        sj = _load_cache("spot.json") or fetch_spot()
+        spot = float(sj["price"])
+    except Exception:
+        spot = float(get("https://api.gold-api.com/price/XAU")["price"])
+    TFS = [("M5", "5m", 120), ("M15", "15m", 200), ("H1", "1h", 800), ("H4", "4h", 400), ("D1", "1d", 400)]
     C = {}; mtf = []; off = None
-    for tf, iv in TFS:
-        k = get(f"https://data-api.binance.vision/api/v3/klines?symbol=PAXGUSDT&interval={iv}&limit=120")
+    for tf, iv, lim in TFS:
+        k = get(f"https://data-api.binance.vision/api/v3/klines?symbol=PAXGUSDT&interval={iv}&limit={lim}")
         if off is None:
             last = float(get("https://data-api.binance.vision/api/v3/klines?symbol=PAXGUSDT&interval=1m&limit=1")[-1][4]); off = spot - last
         o = [[int(x[0] / 1000), *(round(float(x[j]) + off, 2) for j in (1, 2, 3, 4))] for x in k]
@@ -51,7 +56,7 @@ try:
     side = "up" if ups > dns else "down" if dns > ups else "mixed"
     d["mtf_align"] = f"ขาขึ้น {ups}/5 · ขาลง {dns}/5 · ไซด์เวย์ {5-ups-dns}/5 · " + {"up": "ภาพรวมเอียงขึ้น", "down": "ภาพรวมเอียงลง", "mixed": "ภาพรวมยังไม่ชัด"}[side]
     d["mtf_align_en"] = f"Up {ups}/5 · Down {dns}/5 · Sideways {5-ups-dns}/5 · " + {"up": "overall leaning up", "down": "overall leaning down", "mixed": "no clear overall direction"}[side]
-    CJ = {"updated": now, "source": "Binance PAXGUSDT offset to gold-api.com spot", "offset": round(off, 2), "spot": spot, "candles": C}
+    CJ = {"updated": now, "source": "Binance PAXGUSDT offset to FX spot (Swissquote mid, with fallbacks)", "offset": round(off, 2), "spot": spot, "candles": C}
 except Exception as e: print("gold mtf failed:", e, file=sys.stderr)
 # ---------- markets ----------
 SYM = [("EURUSD", "EURUSD=X", 5), ("GBPUSD", "GBPUSD=X", 5), ("USDJPY", "JPY=X", 3), ("AUDUSD", "AUDUSD=X", 5), ("USDCHF", "CHF=X", 5), ("USDCAD", "CAD=X", 5), ("BTCUSD", "BTC-USD", 0)]

@@ -38,3 +38,12 @@ Required: time_open, time_close (Bangkok "YYYY-MM-DD HH:MM"), symbol (e.g. XAUUS
 For the edge finder, record from now on: timeframe (M5|M15|H1|H4|D1 used for the decision), setup_type (OB retest | FVG | breakout | S/R bounce (buy the dip) | chase near high | other),
 session (Asia | London | New York, by Bangkok hour: 05-14 Asia, 14-19 London, 19-05 New York), news_tag (short tag), mtf_align (e.g. "4/5 up"), smc_context (e.g. "H1 bullish OB, discount").
 Optional: setup, news, lesson, close (manual|tp|sl). Never put ticket ids, account numbers, balance or equity in the journal.
+
+
+## Live spot and self-learning (written by the scheduled pipeline)
+Run order: `python3 spot.py && python3 mtf.py && python3 smc.py && python3 edge.py && python3 learn.py && python3 build.py`.
+- `spot.json`: FX spot mid (Swissquote first, then gold-api / Yahoo XAUUSD). Displayed price is never raw PAXG or gold futures.
+- `accuracy` / `accuracy_en` fields live on `data.json` as `accuracy.{acc_7d,acc_30d,n_7d,n_30d,label_th,label_en,learns,horizon_minutes}`.
+- `history/predictions.jsonl`: each forecast (time, price, up/down %, horizon, signals). Matured rows get `hit` vs later spot.
+- `history/weights.json`: per-signal weights and calibration, updated from recent hit rates.
+- Public pages stay analysis-only: do not add portfolio, tickets, lots, or P/L.

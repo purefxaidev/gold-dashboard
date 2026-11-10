@@ -1,5 +1,5 @@
 /* PUREGOLD analysis widgets: multi-timeframe charts, markets, Smart Money mode, AI Edge. Analysis only, no trading.
-   Usage: PGX.mount(element, "mtf"|"markets"|"smc"|"edge", {compact:true|false}). Data: view.json (+ candles.json, live Binance PAXG/BTC + gold-api spot). */
+   Usage: PGX.mount(element, "mtf"|"markets"|"smc"|"edge", {compact:true|false}). Data: view.json (+ candles.json, live Binance PAXG/BTC offset to FX spot). */
 (function () {
   const EN = window.LANG === "en", T = (th, en) => EN ? en : th;
   const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
@@ -41,7 +41,10 @@
   const TFS = [["M5", "5m"], ["M15", "15m"], ["H1", "1h"], ["H4", "4h"], ["D1", "1d"]];
   async function pullLive() {
     try {
-      const sp = Number((await (await fetch("https://api.gold-api.com/price/XAU", {cache: "no-store"})).json()).price); if (!sp) throw 0;
+      let sp = 0;
+      try { const sj = await (await fetch("spot.json?t=" + Date.now(), {cache: "no-store"})).json(); sp = Number(sj.price); } catch (e) {}
+      if (!sp) { try { sp = Number((await (await fetch("https://api.gold-api.com/price/XAU", {cache: "no-store"})).json()).price); } catch (e) {} }
+      if (!sp) throw 0;
       const B = "https://data-api.binance.vision/api/v3/klines?symbol=PAXGUSDT&limit=120&interval=";
       const arr = await Promise.all(TFS.map(([, iv]) => fetch(B + iv).then(r => r.json())));
       const last = Number(arr[0][arr[0].length - 1][4]), off = sp - last, C = {};
@@ -98,7 +101,7 @@
     const side = ups > dns ? "up" : dns > ups ? "down" : "mixed";
     const bar = TFS.map(([tf]) => { const rows = G[tf] || []; const t = rows.length ? trend(rows.map(r => r[4])).t : null; return `<i title="${tf}" style="background:${t === "up" ? "#22e39a" : t === "down" ? "#ff4d6d" : "#f5c542"}"></i>`; }).join("");
     const al = `<div class="al"><b>${T("ความสอดคล้องหลายไทม์เฟรม", "Multi-timeframe alignment")}:</b><span class="bar">${bar}</span><span class="up">${T("ขึ้น", "Up")} ${ups}/5</span><span class="dn">${T("ลง", "Down")} ${dns}/5</span><span class="sw">${T("ไซด์เวย์", "Sideways")} ${5 - ups - dns}/5</span><span>${side === "up" ? T("ภาพรวมเอียงขึ้น", "Overall leaning up") : side === "down" ? T("ภาพรวมเอียงลง", "Overall leaning down") : T("ภาพรวมยังไม่ชัด รอ", "No clear direction, wait")}</span></div>`;
-    const lg = `<div class="lg"><span style="color:#f5c542">EMA20</span><span style="color:#a78bfa">EMA50</span><span style="color:#22e39a">${T("ไม้ Buy", "Buy position")}</span><span class="d" style="color:#22e39a">${T("ออเดอร์รอ", "Pending order")}</span><span class="d" style="color:#ff4d6d">SL</span><span class="d" style="color:#36e2ff">TP</span>${S.smc ? `<span style="color:#22e39a">OB+ / OB-</span><span style="color:#36e2ff">FVG</span><span class="d" style="color:#a78bfa">EQ = ${T("กึ่งกลางกรอบ", "range mid")}</span>` : ""}<span>${T("ราคาสปอต (PAXG ปรับเข้าราคาสปอต)", "Spot-based (PAXG offset to spot)")} · ${T("แนวโน้ม = EMA20 เทียบ EMA50 + ความชัน + ตำแหน่งราคา", "trend = EMA20 vs EMA50 + slope + price position")}</span></div>`;
+    const lg = `<div class="lg"><span style="color:#f5c542">EMA20</span><span style="color:#a78bfa">EMA50</span><span style="color:#22e39a">${T("ไม้ Buy", "Buy position")}</span><span class="d" style="color:#22e39a">${T("ออเดอร์รอ", "Pending order")}</span><span class="d" style="color:#ff4d6d">SL</span><span class="d" style="color:#36e2ff">TP</span>${S.smc ? `<span style="color:#22e39a">OB+ / OB-</span><span style="color:#36e2ff">FVG</span><span class="d" style="color:#a78bfa">EQ = ${T("กึ่งกลางกรอบ", "range mid")}</span>` : ""}<span>${T("ราคาสปอต FX (ปรับจาก PAXG ให้ตรงสปอต)", "FX spot (PAXG candles offset to spot)")} · ${T("แนวโน้ม = EMA20 เทียบ EMA50 + ความชัน + ตำแหน่งราคา", "trend = EMA20 vs EMA50 + slope + price position")}</span></div>`;
     return head + `<div class="g5">${cells}</div>` + al + lg;
   }
   function spark(a, up) { if (!a || a.length < 2) return ""; const mn = Math.min(...a), mx = Math.max(...a), rg = mx - mn || 1; const pts = a.map((v, i) => `${(i / (a.length - 1) * 200).toFixed(1)},${(30 - (v - mn) / rg * 26).toFixed(1)}`).join(" ");

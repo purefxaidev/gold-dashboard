@@ -22,6 +22,8 @@
   "ราคาอยู่กลางกรอบ ยังไม่คุ้มเข้า รอให้ถึงจุดด้านล่าง": "Price is mid-range; not worth entering yet. Wait for the levels below.", "ราคาอยู่ที่จุดเข้าตามแผน": "Price is at the planned entry",
   "ขาย": "SELL", "ซื้อ": "BUY", "เข้า": "Enter", "รอ": "Wait", "เปิดอยู่": "Open", "ปิดแล้ว": "Closed", "ขึ้น": "up", "ลง": "down", "ไทย": "Thai",
   "ไม่มีไม้ที่เปิดอยู่ตอนนี้": "No open positions right now", "สปอต · gold-api.com": "Spot · gold-api.com", "ราคาจากบทวิเคราะห์ล่าสุด": "Price from latest analysis",
+  "สปอต FX · Swissquote": "FX spot · Swissquote", "สปอต FX · ติ๊กสด": "FX spot · live tick", "สปอต (แคชล่าสุด)": "Spot (last cache)",
+  "โมเดลเรียนรู้จากผลจริงโดยอัตโนมัติ": "The model learns automatically from results", "ความแม่นยำ 7 วัน": "7-day accuracy", "วัดจากพยากรณ์ระยะ 4 ชั่วโมง": "scored on 4-hour forecasts",
   "ราคาสดไม่พร้อม · ใช้ราคาจากบทวิเคราะห์": "Live price unavailable · using analysis price", "ตั้งแต่เปิดหน้า": "since page opened",
   "รับซื้อ": "Buy", "ขายออก": "Sell", "ทองคำแท่ง ฮั่วเซ่งเฮง": "Gold bar · Hua Seng Heng", "ทองคำแท่ง สมาคมฯ (อ้างอิง)": "Gold bar · Gold Traders Assoc. (reference)", "ทองรูปพรรณ": "Gold jewelry",
   "ทอง 99.99% : แหล่งข้อมูลสาธารณะยังไม่เปิดให้ดึง": "99.99% gold: no public data source available", "โหลดราคาทองไทยไม่สำเร็จ จะลองใหม่": "Could not load Thai gold price; retrying",

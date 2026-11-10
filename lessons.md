@@ -13,7 +13,7 @@
 Public lessons only. User trade history, lots, and USC P/L are not published on this site.
 
 <!-- edge:auto start -->
-## Edge finder (อัปเดตอัตโนมัติ 2026-11-06 16:55)
+## Edge finder (อัปเดตอัตโนมัติ 2026-11-10 10:35)
 - ทั้งหมด 0 ไม้ ชนะ None% สุทธิ +0.00 USC จาก 0 วันซื้อขาย · ตัวอย่างยังน้อย ผลอาจเปลี่ยนได้มาก อย่าเชื่อมากเกินไป
 - ยังคำนวณค่า R ไม่ได้ เพราะบันทึกเก่าไม่มี SL ตอนเข้า ต่อไปจะบันทึก sl ทุกไม้
 <!-- edge:auto end -->

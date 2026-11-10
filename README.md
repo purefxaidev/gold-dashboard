@@ -2,6 +2,9 @@
 
 Live site: https://dashboard.purefxai.store/
 
+The live XAUUSD price uses FX spot (Swissquote mid, with fallbacks) and refreshes on a schedule. Short-term AI confidence is scored against later prices; weights update automatically. Rolling 7-day and 30-day accuracy is shown on the dashboard.
+
+
 ---
 
 ## 💚 Support PureFxAi / สนับสนุน PureFxAi (USDT)

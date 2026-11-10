@@ -78,6 +78,9 @@ header .wrap{display:flex;align-items:center;gap:12px;padding:10px 14px}
 .reasons .up:before{content:"▲";color:var(--up)}.reasons .down:before{content:"▼";color:var(--dn)}.reasons .neutral:before{content:"●";color:var(--gold)}
 .reasons li{color:var(--tx)}
 .meth{font-size:11px;color:var(--mut);margin-top:10px;line-height:1.6}
+.acc{margin-top:12px;padding-top:10px;border-top:1px solid rgba(245,197,66,.18);font-size:12px;line-height:1.55;color:var(--c)}
+.acc b{color:#f5c542;font-weight:700}
+.acc .mut{font-size:11px}
 /* plans + EV */
 .plans{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))}
 .plan{padding:14px;border-radius:14px;background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.08)}
@@ -206,6 +209,7 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
  <div class="mut" style="display:flex;justify-content:space-between;font-size:12px"><span>▲ โอกาสขึ้น</span><span>โอกาสลง ▼</span></div>
  <ul class="reasons" id="reasons"></ul>
  <div class="meth" id="aiMeth"></div>
+ <div class="acc" id="aiAcc"></div>
 </section>
 
 <section class="card c12" id="card3d">
@@ -301,7 +305,7 @@ const Lf = (o, k) => noEmo(EN() && o && o[k + "_en"] != null && o[k + "_en"] !==
 function render() {
   if (!D) return;
   const b = String(D.bias || ""), bL = String(Lf(D, "bias") || "");
-  const cls = /ขาขึ้น|บวก/.test(b.split("·")[0]) ? "b-up" : /ขาลง|ลบ/.test(b.split("·")[0]) ? "b-dn" : "b-neu";
+  const cls = /ขาขึ้น|เอียงขึ้น|บวก/.test(b.split("·")[0]) ? "b-up" : /ขาลง|เอียงลง|ลบ/.test(b.split("·")[0]) ? "b-dn" : "b-neu";
   const lbl = cls === "b-up" ? (EN() ? "▲ Uptrend" : "▲ ขาขึ้น") : cls === "b-dn" ? (EN() ? "▼ Downtrend" : "▼ ขาลง") : "◆ " + esc(bL.split("·")[0].trim().slice(0, 24));
   $("biasBadge").innerHTML = `<span class="badge ${cls}">${lbl}</span>`;
   $("bias").textContent = bL;
@@ -312,6 +316,16 @@ function render() {
   requestAnimationFrame(() => { $("gUp").style.width = up + "%"; $("gDn").style.width = dn + "%"; });
   $("reasons").innerHTML = (Lf(D, "ai_reasons") || []).map(([d, t]) => `<li class="${esc(d)}">${esc(t)}</li>`).join("");
   $("aiMeth").textContent = D.ai_method ? (EN() ? "Method: " : "วิธีคำนวณ: ") + Lf(D, "ai_method") : "";
+  const acc = D.accuracy || {};
+  const fmtA = (v, n) => (v == null || v === "") ? "—" : (Math.round(Number(v)) + "%" + (n ? " (" + n + ")" : ""));
+  const accEl = $("aiAcc");
+  if (accEl) {
+    const l7 = EN() ? "7-day accuracy " : "ความแม่นยำ 7 วัน ";
+    const l30 = EN() ? "30-day " : "30 วัน ";
+    const learn = Lf(acc, "label") || (EN() ? "The model learns automatically from results" : "โมเดลเรียนรู้จากผลจริงโดยอัตโนมัติ");
+    accEl.innerHTML = `<b>${l7}${fmtA(acc.acc_7d, acc.n_7d)}</b> · ${l30}${fmtA(acc.acc_30d, acc.n_30d)}`
+      + `<div class="mut">${esc(learn)} · ${EN() ? "scored on 4-hour forecasts" : "วัดจากพยากรณ์ระยะ 4 ชั่วโมง"}</div>`;
+  }
   // EV
   $("evPlans").innerHTML = (D.ev_plans || []).map(p => `<div class="plan">
     <b>${p.side === "buy" ? '<span class="up">▲</span>' : '<span class="dn">▼</span>'} ${esc(Lf(p, "name"))}</b>
@@ -324,7 +338,7 @@ function render() {
   $("news").innerHTML = (Lf(D, "news") || []).map(([t, u]) => `<li><span style="flex:1">${esc(t)}</span><a href="${esc(safeUrl(u))}" target="_blank" rel="noopener noreferrer">แหล่งข่าว ↗</a></li>`).join("");
   $("upd").textContent = "อัปเดตบทวิเคราะห์: " + (Lf(D, "updated") || "—");
   $("note").textContent = Lf(D, "note") || "";
-  if (live.price == null) showPrice(D.price_num, "ราคาจากบทวิเคราะห์ล่าสุด");
+  if (live.price == null) showPrice(D.price_num, EN() ? "Price from latest analysis" : "ราคาจากบทวิเคราะห์ล่าสุด");
   renderLadder();
 }
 
@@ -339,27 +353,61 @@ function renderLadder() {
     + (p ? `<div class="now" style="top:${y(p)}"><i></i><span>${fmt(p)}</span></div>` : "");
 }
 
+function bkkTime(d) {
+  return (d || new Date()).toLocaleTimeString("th-TH", {timeZone: "Asia/Bangkok", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false});
+}
 function showPrice(p, src, t) {
   if (p == null) return;
   const el = $("px");
   if (live.prev != null && p !== live.prev) { el.classList.remove("flash-up", "flash-dn"); void el.offsetWidth; el.classList.add(p > live.prev ? "flash-up" : "flash-dn"); }
   el.textContent = fmt(p);
   $("pxSrc").textContent = src;
-  if (live.open != null) { const c = p - live.open, pc = c / live.open * 100; $("pxChg").innerHTML = `<span class="${c >= 0 ? "up" : "dn"}">${c >= 0 ? "▲ +" : "▼ "}${fmt(c)} (${pc.toFixed(2)}%)</span> <span class="mut" style="font-size:11px">ตั้งแต่เปิดหน้า</span>`; }
-  if (t) $("pxTime").textContent = "อัปเดต " + t;
+  if (live.open != null) { const c = p - live.open, pc = c / live.open * 100; $("pxChg").innerHTML = `<span class="${c >= 0 ? "up" : "dn"}">${c >= 0 ? "▲ +" : "▼ "}${fmt(c)} (${pc.toFixed(2)}%)</span> <span class="mut" style="font-size:11px">${EN() ? "since page opened" : "ตั้งแต่เปิดหน้า"}</span>`; }
+  if (t) $("pxTime").textContent = (EN() ? "Updated " : "อัปเดต ") + t;
+}
+
+function ageMin(iso) {
+  if (!iso) return 9999;
+  const t = Date.parse(iso);
+  return Number.isFinite(t) ? (Date.now() - t) / 60000 : 9999;
 }
 
 async function pollPrice() {
-  try {
-    const r = await fetch("https://api.gold-api.com/price/XAU", {cache: "no-store"});
-    const j = await r.json(); const p = Number(j.price);
-    if (!p) throw 0;
-    if (live.open == null) live.open = p;
-    live.prev = live.price; live.price = p;
-    live.time = new Date(j.updatedAt || Date.now()).toLocaleTimeString("th-TH", {timeZone: "Asia/Bangkok"});
-    showPrice(p, "สปอต · gold-api.com", live.time + "น. (เวลาไทย)");
-    $("liveTxt").textContent = "LIVE · " + live.time; renderLadder(); renderPnl(); renderReco(); if (L3 && L3.orb && Math.abs((L3.lastPx || 0) - live.price) > .5) { L3.lastPx = live.price; build3d(); }
-  } catch (e) { $("liveTxt").textContent = "ราคาสดไม่พร้อม · ใช้ราคาจากบทวิเคราะห์"; }
+  const tasks = [
+    fetch("spot.json?t=" + Date.now(), {cache: "no-store"}).then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch("https://api.gold-api.com/price/XAU", {cache: "no-store"}).then(r => r.ok ? r.json() : null).catch(() => null)
+  ];
+  const [sq, ga] = await Promise.all(tasks);
+  const sqPx = sq && Number(sq.price);
+  const gaPx = ga && Number(ga.price);
+  const fresh = sq && sqPx && !sq.stale && ageMin(sq.fetched_at || sq.updated_utc) <= 20;
+  let p = null, src = "", when = "";
+  // Prefer FX spot from the pipeline (Swissquote mid). If gold-api is within $2, use it for a fresher tick.
+  if (fresh && gaPx && Math.abs(gaPx - sqPx) <= 2) {
+    p = gaPx;
+    src = EN() ? "FX spot · live tick" : "สปอต FX · ติ๊กสด";
+    when = bkkTime(ga && ga.updatedAt ? new Date(ga.updatedAt) : new Date()) + (EN() ? " (Bangkok time)" : " น. (เวลาไทย)");
+  } else if (sqPx) {
+    p = sqPx;
+    src = EN() ? (sq.src_label_en || "FX spot · Swissquote") : (sq.src_label_th || "สปอต FX · Swissquote");
+    when = EN() ? (sq.updated_en || (bkkTime() + " (Bangkok time)")) : (sq.updated_th || (bkkTime() + " น. (เวลาไทย)"));
+  } else if (gaPx) {
+    p = gaPx;
+    src = EN() ? "Spot · gold-api.com" : "สปอต · gold-api.com";
+    when = bkkTime(ga && ga.updatedAt ? new Date(ga.updatedAt) : new Date()) + (EN() ? " (Bangkok time)" : " น. (เวลาไทย)");
+  }
+  if (!p) {
+    if (live.price == null && D && D.price_num) showPrice(D.price_num, EN() ? "Price from latest analysis" : "ราคาจากบทวิเคราะห์ล่าสุด");
+    $("liveTxt").textContent = EN() ? "Live price unavailable · using analysis price" : "ราคาสดไม่พร้อม · ใช้ราคาจากบทวิเคราะห์";
+    return;
+  }
+  if (live.open == null) live.open = p;
+  live.prev = live.price; live.price = p; live.src = src;
+  live.time = when;
+  showPrice(p, src, when);
+  $("liveTxt").textContent = "LIVE · " + (when.replace(/ น\. \(เวลาไทย\)| \(Bangkok time\)| \(Thai time\)/g, ""));
+  renderLadder(); renderPnl(); renderReco();
+  if (L3 && L3.orb && Math.abs((L3.lastPx || 0) - live.price) > .5) { L3.lastPx = live.price; build3d(); }
 }
 
 const TG_NAME = {HSH: "ทองคำแท่ง ฮั่วเซ่งเฮง", REF: "ทองคำแท่ง สมาคมฯ (อ้างอิง)", JEWEL: "ทองรูปพรรณ"};
@@ -668,7 +716,7 @@ window.addEventListener("hashchange", () => { if (location.hash === "#call") ope
 hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text));
 if (!hist.length) bubble("a", EN() ? "Hello, I am the PUREGOLD assistant. Ask me about gold, the FX pairs, Bitcoin, support and resistance, or the news. (Add your API key once before the first use.)" : "สวัสดีค่ะ ดิฉันคือ เลขา PUREGOLD ถามได้ทั้งทองคำ คู่เงิน FX และ Bitcoin แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ใส่คีย์ครั้งเดียวก่อนใช้ครั้งแรก)");
 syncSet(); setMode(mode); render(); renderPnl(); renderReco(); init3d(); if (!exnessPrompt()) keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
-pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 15000); setInterval(pollThai, 30000); setInterval(pollData, 20000);
+pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 8000); setInterval(pollThai, 30000); setInterval(pollData, 20000);
 </script>
 <script src="pgx.js"></script>
 <script>PGX.mount(document.getElementById("pgxMtf"),"mtf");PGX.mount(document.getElementById("pgxMk"),"markets");PGX.mount(document.getElementById("pgxSmc"),"smc");PGX.mount(document.getElementById("pgxEdge"),"edge");</script>
