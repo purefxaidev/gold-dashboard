@@ -103,7 +103,8 @@ def http_json(url: str, timeout: int = 20, headers: dict | None = None) -> Any:
         h.update(headers)
     req = urllib.request.Request(url, headers=h)
     with urllib.request.urlopen(req, timeout=timeout) as r:
-        return json.loads(r.read().decode("utf-8"))
+        raw = r.read()
+        return json.loads(raw.decode("utf-8-sig"))
 
 
 def load_json(path: Path) -> Any | None:
@@ -304,6 +305,28 @@ def build_calendar() -> dict:
     # Prefer upcoming + recently released (48h)
     cutoff = now_bkk() - timedelta(hours=48)
     events = [e for e in events if parse_iso(e["date_utc"]) and parse_iso(e["date_utc"]) >= cutoff] or events[-20:]
+    dxy_th = dxy_en = ""
+    if dollar and dollar.get("dxy"):
+        dxy = dollar["dxy"]
+        fed = dollar.get("fed") or {}
+        an = dollar.get("analysis") or {}
+        ch = dxy.get("change")
+        chs = "" if ch is None else f" ({ch:+.2f})"
+        dxy_th = f"ดัชนี DXY อยู่ที่ {dxy.get('price')}{chs}."
+        dxy_en = f"The US dollar index (DXY) is at {dxy.get('price')}{chs}."
+        if an.get("th"):
+            dxy_th += " " + an["th"]
+        if an.get("en"):
+            dxy_en += " " + an["en"]
+        if fed.get("next_fomc_th"):
+            top = None
+            for row in fed.get("probs") or []:
+                if top is None or row.get("p", 0) > top.get("p", 0):
+                    top = row
+            if top:
+                dxy_th += f" ประชุมเฟดครั้งถัดไป {fed['next_fomc_th']} ตลาดให้น้ำหนัก{top.get('label_th')} {top['p']*100:.0f}%."
+                dxy_en += f" Next FOMC {fed.get('next_fomc_en') or fed.get('next_fomc')}: {top['p']*100:.0f}% on a {top.get('label_en')}."
+
     stamp = now_bkk()
     return {
         "source": "Forex Factory weekly calendar",
@@ -803,7 +826,432 @@ def build_compare() -> dict:
 
 
 # ---------------------------------------------------------------------------
-# 5. Morning / evening brief
+
+# 5. DXY and Fed funds expectations
+# ---------------------------------------------------------------------------
+
+Y_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+)
+YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{sym}?interval=1d&range={rng}"
+NYFED_EFFR = "https://markets.newyorkfed.org/api/rates/unsecured/effr/last/15.json"
+FED_CAL_HTML = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+FED_CAL_JSON = "https://www.federalreserve.gov/json/calendar.json"
+ZQ_MONTH = {1: "F", 2: "G", 3: "H", 4: "J", 5: "K", 6: "M",
+            7: "N", 8: "Q", 9: "U", 10: "V", 11: "X", 12: "Z"}
+# Official FOMC end-dates as a fallback if the Fed pages cannot be parsed.
+FOMC_FALLBACK = [
+    date(2026, 12, 9),
+    date(2027, 1, 27), date(2027, 3, 17), date(2027, 4, 28),
+    date(2027, 6, 16), date(2027, 7, 28), date(2027, 9, 15),
+    date(2027, 10, 27), date(2027, 12, 8),
+]
+
+
+def yahoo_chart(symbol: str, rng: str = "6mo") -> list[tuple[date, float]]:
+    url = YAHOO_CHART.format(sym=urllib.parse.quote(symbol, safe="=."), rng=rng)
+    data = http_json(url, timeout=25, headers={"User-Agent": Y_UA})
+    res = ((data or {}).get("chart") or {}).get("result") or []
+    if not res:
+        raise RuntimeError(f"yahoo empty {symbol}")
+    r0 = res[0]
+    ts = r0.get("timestamp") or []
+    cl = ((r0.get("indicators") or {}).get("quote") or [{}])[0].get("close") or []
+    out = []
+    for t, c in zip(ts, cl):
+        if c is None:
+            continue
+        d = datetime.fromtimestamp(int(t), tz=timezone.utc).date()
+        out.append((d, float(c)))
+    if not out:
+        raise RuntimeError(f"yahoo no closes {symbol}")
+    return out
+
+
+def zq_symbol(d: date) -> str:
+    yy = d.year % 100
+    return f"ZQ{ZQ_MONTH[d.month]}{yy:02d}.CBT"
+
+
+def parse_fomc_dates() -> list[date]:
+    found: set[date] = set()
+    months = {m.lower(): i for i, m in enumerate(
+        "January February March April May June July August September October November December".split(), 1)}
+    try:
+        req = urllib.request.Request(FED_CAL_HTML, headers={"User-Agent": Y_UA, "Accept": "text/html"})
+        with urllib.request.urlopen(req, timeout=25) as r:
+            html = r.read().decode("utf-8", "replace")
+        for year in range(now_bkk().year, now_bkk().year + 3):
+            block = re.search(rf"{year}\s*FOMC Meetings([\s\S]{{0,9000}}?)(?:20\d{{2}}\s*FOMC|Future Year|$)", html, re.I)
+            chunk = block.group(1) if block else ""
+            text = re.sub(r"<[^>]+>", " ", chunk)
+            for m in re.finditer(
+                r"(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})\s*[-–]\s*(\d{1,2})",
+                text, re.I,
+            ):
+                mon = months[m.group(1).lower()]
+                found.add(date(year, mon, int(m.group(3))))
+    except Exception as e:
+        print(f"[insights] FOMC HTML parse skipped ({e})", file=sys.stderr)
+    try:
+        data = http_json(FED_CAL_JSON, timeout=25, headers={"User-Agent": Y_UA})
+        for ev in data.get("events") or []:
+            title = str(ev.get("title") or "")
+            if "FOMC Meeting" not in title or "Minutes" in title:
+                continue
+            month = str(ev.get("month") or "")
+            days = str(ev.get("days") or "").strip()
+            if re.match(r"\d{4}-\d{2}$", month) and days.isdigit():
+                y, mo = int(month[:4]), int(month[5:7])
+                found.add(date(y, mo, int(days)))
+    except Exception as e:
+        print(f"[insights] FOMC JSON parse skipped ({e})", file=sys.stderr)
+    for d in FOMC_FALLBACK:
+        found.add(d)
+    return sorted(found)
+
+
+def pearson(xs: list[float], ys: list[float]) -> float | None:
+    n = min(len(xs), len(ys))
+    if n < 8:
+        return None
+    xs, ys = xs[-n:], ys[-n:]
+    mx, my = sum(xs) / n, sum(ys) / n
+    num_ = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
+    dx = math.sqrt(sum((x - mx) ** 2 for x in xs))
+    dy = math.sqrt(sum((y - my) ** 2 for y in ys))
+    if dx == 0 or dy == 0:
+        return None
+    return round(num_ / (dx * dy), 3)
+
+
+def aligned_returns(a: list[tuple[date, float]], b: list[tuple[date, float]]) -> tuple[list[float], list[float]]:
+    da = {d: c for d, c in a}
+    db = {d: c for d, c in b}
+    days = sorted(set(da) & set(db))
+    ra, rb = [], []
+    prev = None
+    for d in days:
+        if prev is not None and da[prev] > 0 and db[prev] > 0 and da[d] > 0 and db[d] > 0:
+            ra.append(math.log(da[d] / da[prev]))
+            rb.append(math.log(db[d] / db[prev]))
+        prev = d
+    return ra, rb
+
+
+def xau_daily_from_candles() -> list[tuple[date, float]]:
+    candles = load_json(ROOT / "candles.json") or {}
+    d1 = (candles.get("candles") or {}).get("D1") or []
+    out = []
+    for row in d1:
+        if not isinstance(row, (list, tuple)) or len(row) < 5:
+            continue
+        ts = float(row[0])
+        if ts < 1e12:
+            ts *= 1000
+        d = datetime.fromtimestamp(ts / 1000, tz=timezone.utc).date()
+        c = float(row[4])
+        out.append((d, c))
+    return out
+
+
+def fed_probs(r1: float, target_from: float, target_to: float) -> list[dict]:
+    mid = round((target_from + target_to) / 2, 4)
+    step = 0.25
+    # Place probability mass on the two 25 bp steps surrounding the implied post-meeting mid.
+    levels = [round(mid + i * step, 4) for i in range(-3, 4)]
+    # If r1 is outside, clamp to the edge and 100% that step.
+    if r1 <= levels[0]:
+        chosen = [(levels[0], 1.0)]
+    elif r1 >= levels[-1]:
+        chosen = [(levels[-1], 1.0)]
+    else:
+        lo = max(l for l in levels if l <= r1)
+        hi = min(l for l in levels if l >= r1)
+        if abs(hi - lo) < 1e-9:
+            chosen = [(lo, 1.0)]
+        else:
+            p_hi = (r1 - lo) / (hi - lo)
+            chosen = [(lo, 1 - p_hi), (hi, p_hi)]
+    rows = []
+    for level, p in chosen:
+        if p < 0.005:
+            continue
+        n_steps = int(round((level - mid) / step))
+        if n_steps == 0:
+            action, th, en = "hold", "คงอัตรา", "Hold"
+        elif n_steps > 0:
+            bps = n_steps * 25
+            action, th, en = f"hike_{bps}", f"ขึ้น {bps/100:.2f}%", f"{bps} bp hike"
+        else:
+            bps = abs(n_steps) * 25
+            action, th, en = f"cut_{bps}", f"ลด {bps/100:.2f}%", f"{bps} bp cut"
+        rows.append({
+            "action": action,
+            "steps": n_steps,
+            "target_mid": level,
+            "label_th": th,
+            "label_en": en,
+            "p": round(max(0, min(1, p)), 3),
+        })
+    s = sum(r["p"] for r in rows) or 1
+    for r in rows:
+        r["p"] = round(r["p"] / s, 3)
+    # fix rounding remainder
+    if rows:
+        rows[0]["p"] = round(1 - sum(r["p"] for r in rows[1:]), 3)
+    return rows
+
+
+def rule_analysis(dxy_chg: float | None, corr20: float | None, probs: list[dict], lang: str) -> str:
+    bits = []
+    if dxy_chg is not None:
+        if dxy_chg <= -0.08:
+            bits.append("DXY อ่อนค่า → หนุนทอง" if lang == "th" else "A softer DXY is supportive for gold")
+        elif dxy_chg >= 0.08:
+            bits.append("DXY แข็งค่า → กดดันทอง" if lang == "th" else "A firmer DXY is a headwind for gold")
+        else:
+            bits.append("DXY ทรงตัวใกล้ระดับล่าสุด" if lang == "th" else "DXY is little changed")
+    if corr20 is not None:
+        if corr20 <= -0.2:
+            bits.append(
+                f"ความสัมพันธ์ 20 วันกับทองอยู่ที่ {corr20:.2f} (ผกผันตามปกติ)" if lang == "th"
+                else f"20-day correlation with gold is {corr20:.2f} (the usual inverse link)"
+            )
+        elif corr20 >= 0.2:
+            bits.append(
+                f"ความสัมพันธ์ 20 วันกับทองอยู่ที่ {corr20:.2f} (เคลื่อนทางเดียวกัน ผิดปกติจากภาวะทั่วไป)" if lang == "th"
+                else f"20-day correlation with gold is {corr20:.2f} (they have been moving together, which is unusual)"
+            )
+    if probs:
+        top = max(probs, key=lambda r: r["p"])
+        pct = f"{top['p']*100:.0f}%"
+        if top["action"].startswith("cut"):
+            bits.append(
+                f"ตลาดให้น้ำหนัก{top['label_th']} {pct} ในการประชุมเฟดครั้งถัดไป → แนวโน้มหนุนทอง" if lang == "th"
+                else f"The funds market puts {pct} on a {top['label_en']} at the next FOMC, a backdrop that often supports gold"
+            )
+        elif top["action"].startswith("hike"):
+            bits.append(
+                f"ตลาดให้น้ำหนัก{top['label_th']} {pct} ในการประชุมเฟดครั้งถัดไป → อาจกดดันทอง" if lang == "th"
+                else f"The funds market puts {pct} on a {top['label_en']} at the next FOMC, which can weigh on gold"
+            )
+        else:
+            bits.append(
+                f"ตลาดให้น้ำหนักคงอัตราดอกเบี้ย {pct} ในการประชุมเฟดครั้งถัดไป" if lang == "th"
+                else f"The funds market puts {pct} on a hold at the next FOMC"
+            )
+    bits.append("ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน" if lang == "th" else "For education only — not investment advice")
+    return " · ".join(bits)
+
+
+def polish_dollar_text(th: str, en: str, facts: str) -> tuple[str, str, str]:
+    key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("OPENROUTER_KEY")
+    if not key:
+        return th, en, "rules"
+    sys_msg = (
+        "You refine two short gold-market captions, one in Thai and one in English, "
+        "about the US dollar index and Fed funds expectations. Keep each under 280 characters. "
+        "Do not invent figures. Return JSON {\"th\": \"...\", \"en\": \"...\"} only."
+    )
+    user = f"Facts:\n{facts}\n\nDraft TH:\n{th}\n\nDraft EN:\n{en}"
+    last_err = None
+    for model in OR_MODELS:
+        try:
+            body = json.dumps({
+                "model": model,
+                "messages": [
+                    {"role": "system", "content": sys_msg},
+                    {"role": "user", "content": user},
+                ],
+                "temperature": 0.2,
+                "max_tokens": 400,
+            }).encode("utf-8")
+            req = urllib.request.Request(
+                OPENROUTER,
+                data=body,
+                headers={
+                    "Authorization": f"Bearer {key}",
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://dashboard.purefxai.store/",
+                    "X-Title": "PureGold dollar analysis",
+                    "User-Agent": UA,
+                },
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=25) as r:
+                data = json.loads(r.read().decode("utf-8"))
+            text = (((data.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+            m = re.search(r"\{[\s\S]*\}", text)
+            obj = json.loads(m.group(0) if m else text)
+            nth, nen = (obj.get("th") or "").strip(), (obj.get("en") or "").strip()
+            if len(nth) >= 20 and len(nen) >= 20:
+                return nth, nen, "rules+openrouter"
+        except Exception as e:
+            last_err = e
+            continue
+    if last_err:
+        print(f"[insights] openrouter dollar analysis skipped ({last_err})", file=sys.stderr)
+    return th, en, "rules"
+
+
+def build_dollar() -> dict:
+    dxy_series = yahoo_chart("DX-Y.NYB", "6mo")
+    last_d, last_px = dxy_series[-1]
+    prev_px = dxy_series[-2][1] if len(dxy_series) >= 2 else None
+    chg = round(last_px - prev_px, 3) if prev_px else None
+    chg_pct = round((last_px / prev_px - 1) * 100, 3) if prev_px else None
+
+    xau = xau_daily_from_candles()
+    ra, rb = aligned_returns(dxy_series, xau) if xau else ([], [])
+    corr20 = pearson(ra[-20:], rb[-20:]) if len(ra) >= 20 else pearson(ra, rb)
+    corr60 = pearson(ra[-60:], rb[-60:]) if len(ra) >= 60 else pearson(ra, rb)
+
+    effr = target_from = target_to = None
+    effr_as_of = None
+    ny = http_json(NYFED_EFFR, timeout=25, headers={"User-Agent": Y_UA})
+    rows = ny.get("refRates") or []
+    if not rows:
+        raise RuntimeError("NY Fed EFFR empty")
+    latest = rows[0]
+    effr = float(latest["percentRate"])
+    target_from = float(latest["targetRateFrom"])
+    target_to = float(latest["targetRateTo"])
+    effr_as_of = latest.get("effectiveDate")
+
+    today = now_bkk().date()
+    meetings = [d for d in parse_fomc_dates() if d >= today]
+    next_fomc = meetings[0] if meetings else None
+    if next_fomc is None:
+        raise RuntimeError("no upcoming FOMC date")
+
+    # Use the 30-day Fed funds futures contract for the meeting month.
+    # If that contract is missing, fall back to the front-month ZQ=F.
+    contract = zq_symbol(next_fomc)
+    fut_px = fut_name = None
+    for sym in (contract, "ZQ=F"):
+        try:
+            series = yahoo_chart(sym, "3mo")
+            fut_px = series[-1][1]
+            fut_name = sym
+            if sym == contract:
+                contract = sym
+            break
+        except Exception as e:
+            print(f"[insights] futures {sym} failed ({e})", file=sys.stderr)
+    if fut_px is None:
+        raise RuntimeError("no ZQ futures price")
+    implied_avg = round(100 - fut_px, 4)
+
+    # CME-style: the meeting-month contract is the month's average EFFR.
+    # Days before the effective date stay at the current rate; later days at r1.
+    # A FOMC statement on the listed end-date usually takes effect the next business day.
+    month_start = date(next_fomc.year, next_fomc.month, 1)
+    if next_fomc.month == 12:
+        month_end = date(next_fomc.year + 1, 1, 1) - timedelta(days=1)
+    else:
+        month_end = date(next_fomc.year, next_fomc.month + 1, 1) - timedelta(days=1)
+    D = (month_end - month_start).days + 1
+    effective = next_fomc + timedelta(days=1)
+    if effective.weekday() >= 5:  # Sat/Sun → Monday
+        effective += timedelta(days=(7 - effective.weekday()))
+    d1 = max(0, (effective - month_start).days)
+    d2 = D - d1
+    if d2 <= 0:
+        r1 = implied_avg
+        split = {"d1": d1, "d2": 0, "days_in_month": D, "effective_on": effective.isoformat(), "note": "meeting at month-end; used the contract implied rate directly"}
+    else:
+        r1 = (implied_avg * D - effr * d1) / d2
+        split = {"d1": d1, "d2": d2, "days_in_month": D, "effective_on": effective.isoformat()}
+    r1 = round(r1, 4)
+    probs = fed_probs(r1, target_from, target_to)
+
+    th = rule_analysis(chg, corr20, probs, "th")
+    en = rule_analysis(chg, corr20, probs, "en")
+    facts = (
+        f"DXY {last_px:.3f} change {chg} ({chg_pct}%), as of {last_d.isoformat()}; "
+        f"corr20={corr20} corr60={corr60}; EFFR {effr}% target {target_from}-{target_to} as of {effr_as_of}; "
+        f"next FOMC {next_fomc.isoformat()}; {fut_name} {fut_px} implied month-average {implied_avg}%; "
+        f"implied post-meeting mid {r1}%; probs={probs}"
+    )
+    th, en, via = polish_dollar_text(th, en, facts)
+
+    method_th = (
+        f"ดัชนี DXY จาก Yahoo Finance สัญลักษณ์ DX-Y.NYB ความสัมพันธ์คือสหสัมพันธ์เพียร์สันของผลตอบแทนรายวัน "
+        f"เทียบกับ XAUUSD (แท่ง D1). อัตราดอกเบี้ยนโยบายอ้างอิงจาก Effective Federal Funds Rate และกรอบเป้าหมายของ "
+        f"ธนาคารกลางนิวยอร์ก วันที่ประชุม FOMC จากปฏิทินของคณะกรรมการธนาคารกลางสหรัฐฯ "
+        f"โอกาสขึ้น/ลดดอกเบี้ยประมาณจากราคาฟิวเจอร์ส Fed Funds 30 วัน (Yahoo {fut_name}) ด้วยวิธีเดียวกับแนวคิดของ CME FedWatch: "
+        f"ราคาฟิวเจอร์ส = 100 − อัตราเฉลี่ยทั้งเดือน แล้วแยกเป็นอัตราก่อนและหลังวันที่มีผล (วันทำการถัดจากวันประกาศ) "
+        f"จากนั้นกระจายความน่าจะเป็นบนขั้นละ 0.25 จุดรอบกลางกรอบเป้าหมายปัจจุบัน "
+        f"นี่เป็นการประมาณจากข้อมูลสาธารณะ ไม่ใช่ตัวเลขทางการของ CME FedWatch"
+    )
+    method_en = (
+        f"DXY is Yahoo Finance DX-Y.NYB. Correlation is Pearson on daily log returns versus XAUUSD daily closes. "
+        f"The effective federal funds rate and target range come from the Federal Reserve Bank of New York. "
+        f"FOMC dates come from the Federal Reserve Board calendar. Odds are inferred from 30-day Fed funds futures "
+        f"(Yahoo {fut_name}) using the same idea as CME FedWatch: the contract prices the month's average effective rate, "
+        f"which is split into the current rate before the effective date (the business day after the statement) and a "
+        f"post-meeting rate, then allocated across 25 bp steps around the current target midpoint. "
+        f"This is a public-data estimate, not CME's official FedWatch tool."
+    )
+
+    now = now_bkk()
+    series_out = [
+        {"t": d.isoformat(), "c": round(c, 3)}
+        for d, c in dxy_series[-90:]
+    ]
+    return {
+        "timezone": "Asia/Bangkok",
+        "updated_at": iso_z(),
+        "updated_at_bkk": now.strftime("%Y-%m-%d %H:%M"),
+        "updated_th": fmt_th(now),
+        "updated_en": fmt_en(now),
+        "dxy": {
+            "price": round(last_px, 3),
+            "change": chg,
+            "change_pct": chg_pct,
+            "as_of": last_d.isoformat(),
+            "source": "Yahoo Finance DX-Y.NYB (ICE US Dollar Index)",
+            "source_url": "https://finance.yahoo.com/quote/DX-Y.NYB",
+            "series": series_out,
+        },
+        "corr": {
+            "n20": corr20,
+            "n60": corr60,
+            "sample_20": min(20, len(ra)),
+            "sample_60": min(60, len(ra)),
+            "method_th": "สหสัมพันธ์เพียร์สันของผลตอบแทนรายวัน DXY กับ XAUUSD",
+            "method_en": "Pearson correlation of daily log returns, DXY vs XAUUSD",
+        },
+        "fed": {
+            "effr": effr,
+            "effr_as_of": effr_as_of,
+            "target_from": target_from,
+            "target_to": target_to,
+            "effr_source": "Federal Reserve Bank of New York, Effective Federal Funds Rate",
+            "effr_source_url": "https://markets.newyorkfed.org/markets/reference-rates/effr",
+            "implied_month_avg": implied_avg,
+            "implied_post": r1,
+            "futures_price": round(fut_px, 4),
+            "futures_symbol": fut_name,
+            "futures_source": f"Yahoo Finance 30-day Fed funds futures ({fut_name})",
+            "futures_source_url": f"https://finance.yahoo.com/quote/{fut_name}",
+            "next_fomc": next_fomc.isoformat(),
+            "next_fomc_th": fmt_th(datetime(next_fomc.year, next_fomc.month, next_fomc.day, 14, 0, tzinfo=timezone.utc), False),
+            "next_fomc_en": fmt_en(datetime(next_fomc.year, next_fomc.month, next_fomc.day, 14, 0, tzinfo=timezone.utc), False),
+            "split": split,
+            "probs": probs,
+            "method_th": method_th,
+            "method_en": method_en,
+        },
+        "analysis": {"th": th, "en": en, "via": via},
+        "edu_th": "เพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน",
+        "edu_en": "For education only — not investment advice",
+    }
+
+
+# 6. Morning / evening brief
 # ---------------------------------------------------------------------------
 
 def _chg_phrase(n: float | None, unit: str, lang: str) -> str:
@@ -827,6 +1275,7 @@ def template_brief(kind: str, facts: dict) -> dict:
     spdr_line_th = facts.get("spdr_th")
     spdr_line_en = facts.get("spdr_en")
     ev_th, ev_en = facts.get("event_th"), facts.get("event_en")
+    dxy_th, dxy_en = facts.get("dxy_th") or "", facts.get("dxy_en") or ""
     fg_th, fg_en = facts.get("fg_th"), facts.get("fg_en")
     cot_th, cot_en = facts.get("cot_th"), facts.get("cot_en")
     bias_th, bias_en = facts.get("bias_th"), facts.get("bias_en")
@@ -852,14 +1301,14 @@ def template_brief(kind: str, facts: dict) -> dict:
         f"{head_th} {stamp_th}. ราคาทองโลก XAUUSD อยู่ที่ {px:,.2f} ดอลลาร์ต่อออนซ์ ({chg_th}) "
         f"แหล่งราคา {facts.get('price_source_th')}. มุมมองระบบ: {bias_th}. "
         f"แนวรับใกล้สุดประมาณ {facts.get('support')} และแนวต้านใกล้สุดประมาณ {facts.get('resistance')}. "
-        f"{spdr_line_th} {cot_th} {fg_th} {cmp_th} {ev_th} "
+        f"{spdr_line_th} {cot_th} {fg_th} {cmp_th} {dxy_th} {ev_th} "
         "ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน."
     )
     en = (
         f"{head_en}, {stamp_en}. Spot XAUUSD is at {px:,.2f} an ounce ({chg_en}), "
         f"source {facts.get('price_source_en')}. System view: {bias_en}. "
         f"Nearest support is around {facts.get('support_en') or s1} and nearest resistance around {facts.get('resistance_en') or r1}. "
-        f"{spdr_line_en} {cot_en} {fg_en} {cmp_en} {ev_en} "
+        f"{spdr_line_en} {cot_en} {fg_en} {cmp_en} {dxy_en} {ev_en} "
         "For education only — not investment advice."
     )
     th = re.sub(r"\s{2,}", " ", th).strip()
@@ -867,7 +1316,7 @@ def template_brief(kind: str, facts: dict) -> dict:
     return {"th": th, "en": en, "via": "template"}
 
 
-def collect_facts(kind: str, cal, cot, fg, cmp) -> dict:
+def collect_facts(kind: str, cal, cot, fg, cmp, dollar=None) -> dict:
     spot = load_json(ROOT / "spot.json") or {}
     data = load_json(ROOT / "data.json") or {}
     spdr = load_json(ROOT / "spdr.json") or {}
@@ -1072,7 +1521,7 @@ def phrase_with_openrouter(kind: str, facts: dict, fallback: dict) -> dict:
     return fallback
 
 
-def build_brief(cal, cot, fg, cmp) -> dict:
+def build_brief(cal, cot, fg, cmp, dollar=None) -> dict:
     path = ROOT / "brief.json"
     prev = load_json(path) or {"briefs": {}}
     briefs = prev.get("briefs") or {}
@@ -1097,7 +1546,7 @@ def build_brief(cal, cot, fg, cmp) -> dict:
                 stale = False
         if not stale:
             continue
-        facts = collect_facts(kind, cal, cot, fg, cmp)
+        facts = collect_facts(kind, cal, cot, fg, cmp, dollar)
         if facts.get("price") is None:
             print("[insights] brief skipped: no price", file=sys.stderr)
             continue
@@ -1178,9 +1627,10 @@ def main() -> int:
     cot = run_one("cot", ROOT / "cot.json", build_cot)
     fg = run_one("feargreed", ROOT / "feargreed.json", build_feargreed)
     cmp = run_one("compare", ROOT / "compare.json", build_compare)
+    dollar = run_one("dollar", ROOT / "dollar.json", build_dollar)
 
     def _brief():
-        return build_brief(cal, cot, fg, cmp)
+        return build_brief(cal, cot, fg, cmp, dollar)
 
     run_one("brief", ROOT / "brief.json", _brief)
     return 0

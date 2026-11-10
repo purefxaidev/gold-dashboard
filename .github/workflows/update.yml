@@ -27,7 +27,13 @@ jobs:
           python-version: "3.12"
 
       - name: Install Python deps
-        run: pip install --quiet openpyxl
+        run: pip install --quiet openpyxl playwright
+
+      - name: Cache Chromium for share posters
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}
 
       - name: Refresh spot, analysis, learning, SPDR, and market desk
         env:
@@ -43,6 +49,14 @@ jobs:
           python3 learn.py
           python3 insights.py || echo "insights skipped"
           python3 build.py
+          # Re-render same-origin share PNGs hourly (and on manual dispatch)
+          # so the repo is not bloated with 15MB binaries every 10 minutes.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ $((10#$(date +%M))) -lt 10 ]; then
+            python3 -m playwright install --with-deps chromium || python3 -m playwright install chromium || true
+            python3 render_share.py || echo "share render skipped"
+          else
+            echo "share render deferred to the top of the hour"
+          fi
 
       - name: Commit and push
         env:
@@ -53,7 +67,7 @@ jobs:
           git add data.json view.json index.html candles.json spot.json spdr.json ai_context.txt \
             history/predictions.jsonl history/weights.json history/accuracy.json \
             history/news_impact.jsonl history/trade_journal.jsonl history/feargreed.jsonl \
-            news.json news.html events.json cot.json feargreed.json compare.json brief.json || true
+            news.json news.html events.json cot.json feargreed.json compare.json brief.json dollar.json share/*.png || true
           if git diff --staged --quiet; then
             echo "No data changes"
             exit 0

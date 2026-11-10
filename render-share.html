@@ -1,0 +1,61 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>BOOT</title>
+<body>
+<script src="sharecard.js?v=render"></script>
+<script>
+(async function () {
+  const j = async (u) => { try { const r = await fetch(u); return r.ok ? r.json() : null; } catch (e) { return null; } };
+  const blobToDataUrl = (blob) => new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+    r.readAsDataURL(blob);
+  });
+  try {
+    document.title = "LOAD";
+    const [spot, spdr, brief] = await Promise.all([j("spot.json"), j("spdr.json"), j("brief.json")]);
+    if (window.ShareCard && ShareCard.loadMarket) {
+      await ShareCard.loadMarket(["candles.json"]);
+    }
+    if (window.ShareCard && ShareCard.ready) await ShareCard.ready();
+    const lang = "th";
+    const price = spot && spot.price;
+    const kinds = {
+      price: { kind: "price", lang, price },
+      forecast: { kind: "forecast", lang, price },
+      trend: { kind: "trend", lang, price },
+      spdr: Object.assign({ kind: "spdr", lang }, spdr || {}),
+      brief: {
+        kind: "brief", lang,
+        title: brief && brief.latest
+          ? (brief.latest.session === "evening" ? "สรุปตลาดเย็น" : "สรุปตลาดเช้า")
+          : "สรุปตลาด",
+        price: (brief && brief.latest && brief.latest.price) || price,
+        change: brief && brief.latest && brief.latest.change,
+        changePct: brief && brief.latest && brief.latest.change_pct,
+        note: brief && brief.latest && brief.latest.text_th,
+        date: brief && brief.latest && brief.latest.date,
+        session: brief && brief.latest && brief.latest.session
+      }
+    };
+    window.__SHARE_POSTERS = [];
+    for (const [k, payload] of Object.entries(kinds)) {
+      document.title = "DRAW:" + k;
+      const files = await ShareCard.blobsFor(k, payload);
+      for (const f of files) {
+        const dataUrl = await blobToDataUrl(f.blob);
+        window.__SHARE_POSTERS.push({
+          name: "latest-" + k + "-" + f.w + "x" + f.h + ".png",
+          w: f.w, h: f.h, dataUrl
+        });
+      }
+    }
+    document.title = "READY";
+  } catch (e) {
+    window.__SHARE_ERROR = String(e && e.stack || e);
+    document.title = "ERROR";
+  }
+})();
+</script>
+</body>
