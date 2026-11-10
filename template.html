@@ -10,6 +10,7 @@
 <meta property="og:title" content="PUREGOLD AI · XAUUSD gold analysis"><meta property="og:description" content="Live gold price, support/resistance, AI confidence and EV trade plans in Thai and English."><meta property="og:type" content="website"><meta property="og:image" content="https://dashboard.purefxai.store/icon-512.png"><meta property="og:locale" content="th_TH"><meta property="og:locale:alternate" content="en_US">
 <link rel="alternate" hreflang="th" href="https://dashboard.purefxai.store/?lang=th"><link rel="alternate" hreflang="en" href="https://dashboard.purefxai.store/?lang=en"><link rel="alternate" hreflang="x-default" href="https://dashboard.purefxai.store/">
 <script src="i18n.js"></script>
+<script src="sharecard.js"></script>
 <script src="gkey.js"></script>
 <script src="pgai.js"></script>
 <link rel="icon" type="image/svg+xml" href="logo.svg"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#0a0b10">
@@ -216,8 +217,11 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
  <div class="tfs" id="tfs"></div>
  <div id="tv"></div>
 </section>
-<section class="card c12" id="pgxMtf"></section>
-<section class="card c8">
+<section class="card c12" id="trendCard">
+ <div id="pgxMtf"></div>
+ <div id="trendShare" data-share="trend"></div>
+</section>
+<section class="card c8" id="priceCard">
  <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg> ราคาทองโลกแบบเรียลไทม์ <small id="pxSrc">—</small></h2>
  <div class="hero"><div class="price" id="px">—</div><div><div class="chg" id="pxChg">&nbsp;</div><div class="mut" style="font-size:12px" id="pxTime"></div></div><div id="biasBadge"></div></div>
  <div class="bias" id="bias"></div>
@@ -228,9 +232,10 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
   <b>RR</b> = กำไรที่หวังเทียบกับความเสี่ยง เช่น 1.6 คือเสี่ยง 1 ได้ 1.6 · <b>EV</b> = ผลตอบแทนคาดหวังต่อไม้ (หน่วย R) ถ้าเป็นบวกแปลว่าคุ้มเข้าในระยะยาว ·
   <b>ความมั่นใจ</b> = โอกาสที่ AI ประเมินว่าราคาจะไปทางนั้น (ไม่ใช่การรับประกัน)
  </details>
+ <div id="priceShare" data-share="price"></div>
 </section>
 
-<section class="card c4">
+<section class="card c4" id="forecastCard">
  <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></svg> ความมั่นใจ AI (ระยะสั้น)</h2>
  <div class="gl"><span class="up" id="upPct">–</span><span class="dn" id="dnPct">–</span></div>
  <div class="gauge"><div class="g-up" id="gUp"></div><div class="g-dn" id="gDn"></div></div>
@@ -238,6 +243,8 @@ footer{color:var(--mut);font-size:12px;text-align:center;padding:20px 14px 40px;
  <ul class="reasons" id="reasons"></ul>
  <div class="meth" id="aiMeth"></div>
  <div class="acc" id="aiAcc"></div>
+ <div class="meth" id="aiTarget"></div>
+ <div id="forecastShare" data-share="forecast"></div>
 </section>
 
 <section class="card c12" id="card3d">
@@ -369,6 +376,13 @@ function render() {
     const learn = Lf(acc, "label") || (EN() ? "The model learns automatically from results" : "โมเดลเรียนรู้จากผลจริงโดยอัตโนมัติ");
     accEl.innerHTML = `<b>${l7}${fmtA(acc.acc_7d, acc.n_7d)}</b> · ${l30}${fmtA(acc.acc_30d, acc.n_30d)}`
       + `<div class="mut">${esc(learn)} · ${EN() ? "scored on 4-hour forecasts" : "วัดจากพยากรณ์ระยะ 4 ชั่วโมง"}</div>`;
+    const tgtEl = $("aiTarget");
+    if (tgtEl && window.ShareCard) {
+      const tgt = ShareCard.forecastTarget(acc.updated, acc.horizon_minutes || 240);
+      tgtEl.textContent = EN()
+        ? ("Target " + ShareCard.fmtBkk(tgt.to, "en") + " · " + (tgt.minutes / 60) + "-hour forecast")
+        : ("เป้าถึง " + ShareCard.fmtBkk(tgt.to, "th") + " · พยากรณ์ระยะ " + (tgt.minutes / 60) + " ชั่วโมง");
+    }
   }
   // EV
   $("evPlans").innerHTML = (D.ev_plans || []).map(p => `<div class="plan">
@@ -764,6 +778,33 @@ hist.forEach(h => bubble(h.role === "user" ? "u" : "a", h.parts[0].text));
 if (!hist.length) bubble("a", EN() ? "Hello, I am the PUREGOLD assistant. Ask me about gold, the FX pairs, Bitcoin, support and resistance, or the news. (Add your API key once before the first use.)" : "สวัสดีค่ะ ดิฉันคือ เลขา PUREGOLD ถามได้ทั้งทองคำ คู่เงิน FX และ Bitcoin แนวรับแนวต้าน หรือข่าวได้เลยค่ะ (ใส่คีย์ครั้งเดียวก่อนใช้ครั้งแรก)");
 syncSet(); setMode(mode); render(); renderPnl(); renderReco(); init3d(); if (!exnessPrompt()) keyPrompt(); setInterval(renderPnl, 15000); tv(localStorage.getItem("gd_tf") || "15");
 pollPrice(); pollThai(); pollData(); setInterval(pollPrice, 8000); setInterval(pollThai, 30000); setInterval(pollData, 20000);
+if (window.ShareCard) {
+  const payloadOf = kind => {
+    const lang = EN() ? "en" : "th";
+    if (kind === "price") {
+      const px = live.price ?? (D && D.price_num);
+      const chgV = (live.open != null && px != null) ? (px - live.open) : null;
+      return { kind, lang, price: px, change: chgV, changePct: (chgV != null && live.open) ? (chgV / live.open * 100) : null, source: $("pxSrc") && $("pxSrc").textContent, time: $("pxTime") && $("pxTime").textContent };
+    }
+    if (kind === "forecast" && D) {
+      const acc = D.accuracy || {};
+      return { kind, lang, up: D.ai_up_pct, down: D.ai_down_pct, reasons: Lf(D, "ai_reasons"), reasonsEn: D.ai_reasons_en, updated: acc.updated, horizon: acc.horizon_minutes || 240, acc7: acc.acc_7d, acc30: acc.acc_30d };
+    }
+    if (kind === "trend" && D) {
+      const mtf = (lang === "en" ? (D.mtf_en || D.mtf) : D.mtf) || [];
+      return { kind, lang, mtf, align: Lf(D, "mtf_align"), alignEn: D.mtf_align_en, bias: Lf(D, "bias") };
+    }
+    if (kind === "spdr") return Object.assign({ kind, lang }, window.__SPDR_SHARE || {});
+    return { kind, lang };
+  };
+  ShareCard.ready().then(() => {
+    ShareCard.mount($("priceShare"), () => payloadOf("price"));
+    ShareCard.mount($("forecastShare"), () => payloadOf("forecast"));
+    ShareCard.mount($("trendShare"), () => payloadOf("trend"));
+  });
+  window.__sharePayloadOf = payloadOf;
+}
+
 </script>
 <script src="pgx.js"></script>
 <script>PGX.mount(document.getElementById("pgxMtf"),"mtf");PGX.mount(document.getElementById("pgxMk"),"markets");PGX.mount(document.getElementById("pgxSmc"),"smc");PGX.mount(document.getElementById("pgxEdge"),"edge");</script>
@@ -869,7 +910,8 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
         </div>
         <div class="spdr-meta">
           <span class="badge ${sideClass(side)}">${sideLabel(side)} ${fmtChg(SPDR.change)} t${SPDR.change_pct != null ? " · " + fmtChg(SPDR.change_pct) + "%" : ""}</span>
-          <div class="oz">${oz}${oz ? " · " : ""}${en ? "vs previous session " : "เทียบรอบก่อน "}${shortDate(SPDR.prev_date)}</div>
+          <div class="oz">${en ? "Trade date " : "วันที่ซื้อขาย "}${en ? (SPDR.as_of_en || SPDR.as_of) : (SPDR.as_of_th || SPDR.as_of)} · ${en ? "vs prior session " : "เทียบรอบก่อน "}${shortDate(SPDR.prev_date)}</div>
+          <div class="oz">${en ? (SPDR.basis_en || "Trade-date basis, not settlement date") : (SPDR.basis_th || "ฐานวันที่ซื้อขาย ไม่ใช่วันชำระราคา")}</div>
         </div>
       </div>
       <div class="mut" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin-top:8px">${en ? "Cumulative change" : "สะสมย้อนหลัง"}</div>
@@ -879,11 +921,8 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
         <canvas id="spdrChart" width="720" height="240" aria-label="${en ? "Holdings and daily buy/sell chart" : "กราฟถือครองและซื้อขายรายวัน"}"></canvas>
         <div id="spdrTip" class="spdr-tip"></div>
       </div>
-      <div class="spdr-actions">
-        <button type="button" class="btn pri" id="spdrDl">${en ? "Save image" : "บันทึกรูป"}</button>
-        <button type="button" class="btn" id="spdrShare">${en ? "Share" : "แชร์"}</button>
-      </div>
-      <p class="spdr-note">${esc(en ? SPDR.note_en : SPDR.note_th)}
+      <div id="spdrShareBtns" data-share="spdr"></div>
+      <p class="spdr-note">${esc(en ? (SPDR.publication_en || SPDR.note_en) : (SPDR.publication_th || SPDR.note_th))}
         ${en ? "Source:" : "ที่มา:"} <a href="${esc(SPDR.source_url || "https://www.spdrgoldshares.com/usa/gld/")}" target="_blank" rel="noopener noreferrer">${en ? "official SPDR Gold Shares archive" : "คลังข้อมูลทางการของ SPDR Gold Shares"}</a>
       </p>`;
     const rangesEl = $("spdrRanges");
@@ -895,8 +934,18 @@ el.className+=" notr";el.innerHTML=(d.items||[]).slice(0,3).map(i=>`<a class="na
       hover = null;
       drawSpdrChart();
     });
-    $("spdrDl").addEventListener("click", () => downloadSpdrPng());
-    $("spdrShare").addEventListener("click", () => shareSpdrPng());
+    window.__SPDR_SHARE = {
+      kind: "spdr", lang: en ? "en" : "th",
+      tonnes: SPDR.tonnes, change: SPDR.change, changePct: SPDR.change_pct, side: side,
+      asOf: SPDR.as_of, asOfTh: SPDR.as_of_th, asOfEn: SPDR.as_of_en,
+      periods: SPDR.periods, series: SPDR.series,
+      publicationTh: SPDR.publication_th, publicationEn: SPDR.publication_en,
+      basisTh: SPDR.basis_th, basisEn: SPDR.basis_en
+    };
+    if (window.ShareCard) {
+      const host = $("spdrShareBtns");
+      if (host) { host.innerHTML = ""; ShareCard.mount(host, () => Object.assign({ kind: "spdr" }, window.__SPDR_SHARE)); }
+    }
     const canvas = $("spdrChart");
     canvas.addEventListener("mousemove", onHover);
     canvas.addEventListener("mouseleave", () => { hover = null; const t = $("spdrTip"); if (t) t.style.display = "none"; drawSpdrChart(); });

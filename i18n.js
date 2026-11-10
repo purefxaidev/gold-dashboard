@@ -73,6 +73,8 @@
   // signup
   "กองทุน SPDR Gold Trust (GLD)": "SPDR Gold Trust (GLD)",
   "บันทึกรูป": "Save image", "แชร์": "Share", "ปิด": "Close",
+  "วันที่ซื้อขาย": "Trade date", "ถือครองล่าสุด": "Latest holdings",
+  "ราคาทองสปอต": "Spot gold price", "คาดการณ์ AI": "AI forecast", "วิเคราะห์แนวโน้ม": "Trend analysis",
   "หากไม่ดาวน์โหลดอัตโนมัติ ให้กดค้างที่รูป แล้วเลือกบันทึกรูป": "If the file does not download, long-press the image and choose Save Image.",
   "ถือครองล่าสุด": "Latest holdings", "ตัน": "tonnes", "ออนซ์": "ounces",
   "ซื้อเข้า": "Inflow", "กองทุนขายออก": "Outflow", "ไม่เปลี่ยนแปลง": "Unchanged",

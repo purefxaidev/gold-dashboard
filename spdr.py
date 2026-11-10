@@ -227,15 +227,20 @@ def build_payload(series, fetched_at: dt.datetime) -> dict:
             "1Y": period(series, as_of, tonnes, 365),
         },
         "series": daily,
+        "basis": "trade_date",
+        "basis_th": "ปริมาณตามวันที่ซื้อขาย (trade date) ไม่ใช่วันชำระราคา",
+        "basis_en": "Holdings are on a trade-date basis, not settlement date.",
+        "publication_th": "คลังข้อมูลทางการมักเผยแพร่เช้าวันถัดไปตามเวลานิวยอร์ก จึงไม่ใช่ตัวเลขสดของวันนี้ รายการแท่งทองเป็นฐานวันชำระ (T+1) ส่วนตัวเลขนี้เป็นวันซื้อขาย",
+        "publication_en": "The official archive is typically published the next morning New York time, so this is not a live same-day figure. The bar list is settlement-date (T+1); this print is trade-date.",
         "note_th": (
             "การเปลี่ยนแปลงรายวันของปริมาณทองคำที่กองทุน SPDR Gold Trust (GLD) ถือครอง มีหน่วยเป็นตัน "
             "ค่าบวกหมายถึงทองถูกซื้อเข้าหรือสร้างหน่วยใหม่ ค่าลบหมายถึงทองถูกขายออกหรือไถ่ถอน "
-            "วันที่อ้างอิงคือรอบการซื้อขายล่าสุดที่กองทุนเผยแพร่ ไม่ใช่ตัวเลขสด"
+            "วันที่อ้างอิงคือวันที่ซื้อขายล่าสุดในคลังข้อมูลทางการ (trade date) ซึ่งมักเผยแพร่เช้าวันถัดไปตามเวลานิวยอร์ก ไม่ใช่ตัวเลขสด"
         ),
         "note_en": (
             "Daily change in official tonnes of gold held by SPDR Gold Trust (GLD). "
             "Positive = gold added (creations / buying). Negative = gold removed (redemptions / selling). "
-            "The as-of date is the Trust's last published US trading session, not a live figure."
+            "The as-of date is the last official trade date, typically published the next morning New York time, not a live figure."
         ),
     }
     return payload
