@@ -380,12 +380,15 @@ async function pollPrice() {
   const [sq, ga] = await Promise.all(tasks);
   const sqPx = sq && Number(sq.price);
   const gaPx = ga && Number(ga.price);
-  const fresh = sq && sqPx && !sq.stale && ageMin(sq.fetched_at || sq.updated_utc) <= 20;
+  const gaSnap = sq && (sq.sources || []).find(s => s && s.name === "gold-api" && s.ok && Number(s.price));
+  const basis = (gaSnap && sqPx) ? (Number(gaSnap.price) - sqPx) : null;
+  const fresh = sq && sqPx && !sq.stale && ageMin(sq.fetched_at || sq.updated_utc) <= 45;
   let p = null, src = "", when = "";
-  // Prefer FX spot from the pipeline (Swissquote mid). If gold-api is within $2, use it for a fresher tick.
-  if (fresh && gaPx && Math.abs(gaPx - sqPx) <= 2) {
-    p = gaPx;
-    src = EN() ? "FX spot · live tick" : "สปอต FX · ติ๊กสด";
+  // Estimate current FX mid: Swissquote snapshot + gold-api movement since that snapshot.
+  const est = (fresh && gaPx && basis != null) ? (gaPx - basis) : null;
+  if (est && est > 0 && Math.abs(est - sqPx) < 25) {
+    p = est;
+    src = EN() ? "FX spot · live" : "สปอต FX · สด";
     when = bkkTime(ga && ga.updatedAt ? new Date(ga.updatedAt) : new Date()) + (EN() ? " (Bangkok time)" : " น. (เวลาไทย)");
   } else if (sqPx) {
     p = sqPx;
