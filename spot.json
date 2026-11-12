@@ -1,24 +1,24 @@
 {
- "price": 3872.78,
- "bid": 3872.463,
- "ask": 3873.098,
+ "price": 3876.5,
+ "bid": 3876.183,
+ "ask": 3876.818,
  "src": "swissquote",
  "src_label_th": "สปอต FX · Swissquote",
  "src_label_en": "FX spot · Swissquote",
- "updated_utc": "2026-11-12T17:12:06Z",
- "updated_th": "13 พ.ย. 2026 00:12 น. (เวลาไทย)",
- "updated_en": "Nov 13, 2026 00:12 (Thai time)",
- "fetched_at": "2026-11-13T00:12:06.921288+07:00",
+ "updated_utc": "2026-11-12T22:00:00Z",
+ "updated_th": "13 พ.ย. 2026 05:00 น. (เวลาไทย)",
+ "updated_en": "Nov 13, 2026 05:00 (Thai time)",
+ "fetched_at": "2026-11-13T05:44:58.109690+07:00",
  "stale": false,
  "sources": [
   {
    "name": "swissquote",
-   "price": 3872.78,
+   "price": 3876.5,
    "ok": true
   },
   {
    "name": "gold-api",
-   "price": 3875.4,
+   "price": 3878.4,
    "ok": true
   }
  ]

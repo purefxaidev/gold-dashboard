@@ -1,21 +1,20 @@
 {
- "updated": "13 พ.ย. 2026 00:12 น. (เวลาไทย)",
- "price": "3,872.78",
- "bias": "เอียงลง · ขึ้น 18% ลง 82% · ราคา ~3,872.78 · ขาขึ้น 0/5 · ขาลง 4/5 · ไซด์เวย์ 1/5 · ภาพรวมเอียงลง · H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ",
- "indicators": "M5 ไซด์เวย์ · M15 ลง RSI 35.7 · H1 ลง RSI 22.1 · H4 ลง · D1 ลง",
+ "updated": "13 พ.ย. 2026 05:45 น. (เวลาไทย)",
+ "price": "3,876.50",
+ "bias": "เอียงลง · ขึ้น 17% ลง 83% · ราคา ~3,876.5 · ขาขึ้น 0/5 · ขาลง 4/5 · ไซด์เวย์ 1/5 · ภาพรวมเอียงลง · H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ",
+ "indicators": "M5 ไซด์เวย์ · M15 ลง RSI 45.5 · H1 ลง RSI 28.9 · H4 ลง · D1 ลง",
  "resistance": [
-  "3,901.9 (ต้านใกล้)",
-  "3,972.7 (ต้านถัดไป)",
-  "3,974.5 (ต้านไกล)"
+  "3,884.5 (ต้านใกล้)",
+  "3,899.7 (ต้านถัดไป)",
+  "3,970.4 (ต้านไกล)"
  ],
  "support": [
-  "3,860.8 (แนวรับใกล้)",
-  "3,850.8 (แนวรับถัดไป)"
+  "3,850.2 (แนวรับใกล้)"
  ],
  "plans": [
   [
-   "แผนระยะสั้น 00:12 น.",
-   "Bias เอียงลง ขึ้น 18% ลง 82% · ราคา ~3,872.78",
+   "แผนระยะสั้น 05:45 น.",
+   "Bias เอียงลง ขึ้น 17% ลง 83% · ราคา ~3,876.5",
    "รอตามจุดรับ/ต้านด้านล่าง · ไม่ไล่ราคากลางกรอบ",
    "ข้อมูลเพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน"
   ]
@@ -34,9 +33,9 @@
    "https://www.forexfactory.com/calendar?range=oct19.2026-oct20.2026"
   ]
  ],
- "note": "ทองสปอต ~3,872.78 · AI ระยะสั้น เอียงลง (ขึ้น 18% ลง 82%) · ขาขึ้น 0/5 · ขาลง 4/5 · ไซด์เวย์ 1/5 · ภาพรวมเอียงลง · จุดเข้าเป็นเพียงกรอบวิเคราะห์ ไม่ใช่คำแนะนำการลงทุน · ความแม่นยำย้อนหลัง 7 วัน 58.1% / 30 วัน 56%",
- "ai_up_pct": 18,
- "ai_down_pct": 82,
+ "note": "ทองสปอต ~3,876.5 · AI ระยะสั้น เอียงลง (ขึ้น 17% ลง 83%) · ขาขึ้น 0/5 · ขาลง 4/5 · ไซด์เวย์ 1/5 · ภาพรวมเอียงลง · จุดเข้าเป็นเพียงกรอบวิเคราะห์ ไม่ใช่คำแนะนำการลงทุน · ความแม่นยำย้อนหลัง 7 วัน 55.2% / 30 วัน 55.6%",
+ "ai_up_pct": 17,
+ "ai_down_pct": 83,
  "ai_method": "SMC + MTF + RSI/EMA · ถ่วงน้ำหนักอัตโนมัติจากผลย้อนหลัง 4 ชม.",
  "ai_reasons": [
   [
@@ -58,33 +57,33 @@
  ],
  "ev_plans": [
   {
-   "name": "SELL รีเทสต์ 3,901.9",
-   "name_en": "SELL retest 3,901.9",
+   "name": "SELL รีเทสต์ 3,884.5",
+   "name_en": "SELL retest 3,884.5",
    "side": "sell",
-   "entry": 3901.9,
-   "sl": 3914.5,
-   "tp": 3860.8,
+   "entry": 3884.5,
+   "sl": 3897.1,
+   "tp": 3850.2,
    "p_win": 0.62,
    "status": "รอราคากลับมาแตะต้านแล้วกลับตัว ไม่ไล่ขายกลางทาง",
    "status_en": "Wait for a retest of resistance and a turn; do not chase a mid-move sell",
-   "rr": 3.26,
-   "ev": 1.64,
-   "breakeven": 0.235,
+   "rr": 2.72,
+   "ev": 1.31,
+   "breakeven": 0.269,
    "decision": "เข้า"
   },
   {
-   "name": "BUY รีเทสต์ 3,860.8",
-   "name_en": "BUY retest 3,860.8",
+   "name": "BUY รีเทสต์ 3,850.2",
+   "name_en": "BUY retest 3,850.2",
    "side": "buy",
-   "entry": 3860.8,
-   "sl": 3848.2,
-   "tp": 3901.9,
+   "entry": 3850.2,
+   "sl": 3837.6,
+   "tp": 3884.5,
    "p_win": 0.32,
    "status": "รอราคากลับมาแตะรับแล้วเด้ง ไม่ไล่ซื้อกลางทาง",
    "status_en": "Wait for a retest of support and a bounce; do not chase a mid-move buy",
-   "rr": 3.26,
-   "ev": 0.36,
-   "breakeven": 0.235,
+   "rr": 2.72,
+   "ev": 0.19,
+   "breakeven": 0.269,
    "decision": "เข้า"
   }
  ],
@@ -95,28 +94,27 @@
   "interval": "อัปเดตอัตโนมัติ · วิเคราะห์อย่างเดียว (ไม่เผยแพร่พอร์ตสาธารณะ)",
   "interval_en": "Automatic refresh · analysis only (no public portfolio)"
  },
- "updated_en": "Nov 13, 2026 00:12 (Thai time)",
- "price_en": "3,872.78",
- "bias_en": "Lean down · up 18% down 82% · price ~3,872.78 · Up 0/5 · Down 4/5 · Sideways 1/5 · overall leaning down · H1: bearish BOS, downtrend continuing",
- "indicators_en": "M5 sideways · M15 down RSI 35.7 · H1 down RSI 22.1 · H4 down · D1 down",
+ "updated_en": "Nov 13, 2026 05:45 (Thai time)",
+ "price_en": "3,876.50",
+ "bias_en": "Lean down · up 17% down 83% · price ~3,876.5 · Up 0/5 · Down 4/5 · Sideways 1/5 · overall leaning down · H1: bearish BOS, downtrend continuing",
+ "indicators_en": "M5 sideways · M15 down RSI 45.5 · H1 down RSI 28.9 · H4 down · D1 down",
  "resistance_en": [
-  "3,901.9 (nearest resistance)",
-  "3,972.7 (next resistance)",
-  "3,974.5 (further resistance)"
+  "3,884.5 (nearest resistance)",
+  "3,899.7 (next resistance)",
+  "3,970.4 (further resistance)"
  ],
  "support_en": [
-  "3,860.8 (nearest support)",
-  "3,850.8 (next support)"
+  "3,850.2 (nearest support)"
  ],
  "plans_en": [
   [
-   "Short-term plan 00:12",
-   "Bias lean down up 18% down 82% · price ~3,872.78",
+   "Short-term plan 05:45",
+   "Bias lean down up 17% down 83% · price ~3,876.5",
    "Wait for the support/resistance levels below · do not chase mid-range",
    "For education only, not investment advice"
   ]
  ],
- "note_en": "Spot gold ~3,872.78 · short-term AI lean down (up 18% down 82%) · Up 0/5 · Down 4/5 · Sideways 1/5 · overall leaning down · levels are analysis only, not investment advice · rolling accuracy 7d 58.1% / 30d 56%",
+ "note_en": "Spot gold ~3,876.5 · short-term AI lean down (up 17% down 83%) · Up 0/5 · Down 4/5 · Sideways 1/5 · overall leaning down · levels are analysis only, not investment advice · rolling accuracy 7d 55.2% / 30d 55.6%",
  "ai_method_en": "SMC + MTF + RSI/EMA · weights auto-adjusted from 4-hour outcomes",
  "ai_reasons_en": [
   [
@@ -156,41 +154,41 @@
    "tf": "M5",
    "trend": "sideways",
    "label": "ไซด์เวย์",
-   "rsi": 46.8,
-   "ema20": 3874.01,
-   "ema50": 3884.74
+   "rsi": 56.3,
+   "ema20": 3875.19,
+   "ema50": 3876.04
   },
   {
    "tf": "M15",
    "trend": "down",
    "label": "ขาลง",
-   "rsi": 35.7,
-   "ema20": 3888.5,
-   "ema50": 3917.95
+   "rsi": 45.5,
+   "ema20": 3876.95,
+   "ema50": 3891.91
   },
   {
    "tf": "H1",
    "trend": "down",
    "label": "ขาลง",
-   "rsi": 22.1,
-   "ema20": 3930.86,
-   "ema50": 3978.8
+   "rsi": 28.9,
+   "ema20": 3908.18,
+   "ema50": 3958.47
   },
   {
    "tf": "H4",
    "trend": "down",
    "label": "ขาลง",
-   "rsi": 21.4,
-   "ema20": 3992.09,
-   "ema50": 4019.26
+   "rsi": 24.5,
+   "ema20": 3980.07,
+   "ema50": 4011.93
   },
   {
    "tf": "D1",
    "trend": "down",
    "label": "ขาลง",
-   "rsi": 34.8,
-   "ema20": 4023.47,
-   "ema50": 4097.39
+   "rsi": 35.2,
+   "ema20": 4021.81,
+   "ema50": 4095.37
   }
  ],
  "mtf_en": [
@@ -198,41 +196,41 @@
    "tf": "M5",
    "trend": "sideways",
    "label": "Sideways",
-   "rsi": 46.8,
-   "ema20": 3874.01,
-   "ema50": 3884.74
+   "rsi": 56.3,
+   "ema20": 3875.19,
+   "ema50": 3876.04
   },
   {
    "tf": "M15",
    "trend": "down",
    "label": "Downtrend",
-   "rsi": 35.7,
-   "ema20": 3888.5,
-   "ema50": 3917.95
+   "rsi": 45.5,
+   "ema20": 3876.95,
+   "ema50": 3891.91
   },
   {
    "tf": "H1",
    "trend": "down",
    "label": "Downtrend",
-   "rsi": 22.1,
-   "ema20": 3930.86,
-   "ema50": 3978.8
+   "rsi": 28.9,
+   "ema20": 3908.18,
+   "ema50": 3958.47
   },
   {
    "tf": "H4",
    "trend": "down",
    "label": "Downtrend",
-   "rsi": 21.4,
-   "ema20": 3992.09,
-   "ema50": 4019.26
+   "rsi": 24.5,
+   "ema20": 3980.07,
+   "ema50": 4011.93
   },
   {
    "tf": "D1",
    "trend": "down",
    "label": "Downtrend",
-   "rsi": 34.8,
-   "ema20": 4023.47,
-   "ema50": 4097.39
+   "rsi": 35.2,
+   "ema20": 4021.81,
+   "ema50": 4095.37
   }
  ],
  "mtf_align": "ขาขึ้น 0/5 · ขาลง 4/5 · ไซด์เวย์ 1/5 · ภาพรวมเอียงลง",
@@ -244,11 +242,6 @@
    "dp": 5,
    "chg_pct": -0.98,
    "spark": [
-    1.116944,
-    1.11657,
-    1.116819,
-    1.116819,
-    1.117194,
     1.116819,
     1.117194,
     1.116944,
@@ -290,6 +283,11 @@
     1.107788,
     1.106807,
     1.10595,
+    1.105094,
+    1.105339,
+    1.105828,
+    1.106072,
+    1.105828,
     1.10595,
     1.10595
    ],
@@ -297,17 +295,17 @@
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 34.3
+     "rsi": 46.5
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 28.0
+     "rsi": 33.6
     },
     {
      "tf": "H4",
      "trend": "down",
-     "rsi": 28.1
+     "rsi": 28.4
     },
     {
      "tf": "D1",
@@ -316,10 +314,10 @@
     }
    ],
    "bias": "down",
-   "support": 1.10571,
+   "support": 1.10485,
    "resistance": 1.11037,
    "bias_label": "เอียงลง",
-   "setup": "รอขายโซน 1.10981–1.11037 (แนวต้านใกล้สุด)"
+   "setup": "รอขายโซน 1.10982–1.11037 (แนวต้านใกล้สุด)"
   },
   {
    "symbol": "GBPUSD",
@@ -327,11 +325,6 @@
    "dp": 5,
    "chg_pct": -0.84,
    "spark": [
-    1.334864,
-    1.334383,
-    1.334508,
-    1.334276,
-    1.334882,
     1.3349,
     1.335488,
     1.33481,
@@ -373,19 +366,24 @@
     1.324556,
     1.323697,
     1.323907,
+    1.322664,
+    1.322996,
+    1.323662,
+    1.32396,
+    1.323732,
     1.323644,
-    1.323662
+    1.323679
    ],
    "tfs": [
     {
      "tf": "M15",
-     "trend": "down",
-     "rsi": 38.5
+     "trend": "sideways",
+     "rsi": 48.2
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 26.7
+     "rsi": 33.6
     },
     {
      "tf": "H4",
@@ -399,22 +397,17 @@
     }
    ],
    "bias": "down",
-   "support": 1.32235,
+   "support": 1.32224,
    "resistance": 1.32797,
    "bias_label": "เอียงลง",
-   "setup": "รอขายโซน 1.32738–1.32797 (แนวต้านใกล้สุด)"
+   "setup": "รอขายโซน 1.32737–1.32797 (แนวต้านใกล้สุด)"
   },
   {
    "symbol": "USDJPY",
-   "price": 159.658,
+   "price": 159.842,
    "dp": 3,
-   "chg_pct": 0.6,
+   "chg_pct": 0.72,
    "spark": [
-    158.774,
-    158.801,
-    158.728,
-    158.716,
-    158.704,
     158.794,
     158.855,
     158.8,
@@ -456,48 +449,48 @@
     159.861,
     159.896,
     159.589,
-    159.67,
-    159.658
+    159.765,
+    159.832,
+    159.818,
+    159.884,
+    159.821,
+    159.845,
+    159.842
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "sideways",
-     "rsi": 44.2
+     "rsi": 53.6
     },
     {
      "tf": "H1",
-     "trend": "sideways",
-     "rsi": 52.0
+     "trend": "up",
+     "rsi": 57.2
     },
     {
      "tf": "H4",
      "trend": "up",
-     "rsi": 64.9
+     "rsi": 69.7
     },
     {
      "tf": "D1",
      "trend": "up",
-     "rsi": 62.7
+     "rsi": 63.7
     }
    ],
    "bias": "up",
    "support": 159.53,
-   "resistance": 159.838,
+   "resistance": 159.938,
    "bias_label": "เอียงขึ้น",
-   "setup": "รอซื้อโซน 159.530–159.634 (แนวรับใกล้สุด)"
+   "setup": "รอซื้อโซน 159.530–159.623 (แนวรับใกล้สุด)"
   },
   {
    "symbol": "AUDUSD",
-   "price": 0.6809,
+   "price": 0.6808,
    "dp": 5,
-   "chg_pct": -0.88,
+   "chg_pct": -0.9,
    "spark": [
-    0.68686,
-    0.686813,
-    0.68686,
-    0.687096,
-    0.687144,
     0.687474,
     0.688563,
     0.687994,
@@ -539,48 +532,48 @@
     0.681803,
     0.681245,
     0.681153,
-    0.680828,
-    0.680874
+    0.680782,
+    0.680504,
+    0.680596,
+    0.680874,
+    0.681106,
+    0.680782,
+    0.680782
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 35.3
+     "rsi": 42.4
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 24.3
+     "rsi": 29.0
     },
     {
      "tf": "H4",
      "trend": "down",
-     "rsi": 24.6
+     "rsi": 25.1
     },
     {
      "tf": "D1",
      "trend": "down",
-     "rsi": 31.7
+     "rsi": 31.6
     }
    ],
    "bias": "down",
-   "support": 0.68009,
+   "support": 0.68036,
    "resistance": 0.68385,
    "bias_label": "เอียงลง",
-   "setup": "รอขายโซน 0.68344–0.68385 (แนวต้านใกล้สุด)"
+   "setup": "รอขายโซน 0.68351–0.68385 (แนวต้านใกล้สุด)"
   },
   {
    "symbol": "USDCHF",
-   "price": 0.8349,
+   "price": 0.8345,
    "dp": 5,
-   "chg_pct": 1.21,
+   "chg_pct": 1.16,
    "spark": [
-    0.82497,
-    0.8253,
-    0.82489,
-    0.82435,
-    0.82502,
     0.82552,
     0.82547,
     0.82567,
@@ -622,48 +615,48 @@
     0.83404,
     0.83465,
     0.83478,
-    0.83492,
-    0.83491
+    0.83592,
+    0.83566,
+    0.8353,
+    0.83524,
+    0.83527,
+    0.83407,
+    0.83448
    ],
    "tfs": [
     {
      "tf": "M15",
-     "trend": "up",
-     "rsi": 66.6
+     "trend": "sideways",
+     "rsi": 44.9
     },
     {
      "tf": "H1",
      "trend": "up",
-     "rsi": 73.2
+     "rsi": 59.9
     },
     {
      "tf": "H4",
      "trend": "up",
-     "rsi": 72.5
+     "rsi": 69.9
     },
     {
      "tf": "D1",
      "trend": "sideways",
-     "rsi": 63.2
+     "rsi": 62.8
     }
    ],
    "bias": "up",
    "support": 0.83144,
-   "resistance": 0.8354,
+   "resistance": 0.83614,
    "bias_label": "เอียงขึ้น",
-   "setup": "รอซื้อโซน 0.83144–0.83191 (แนวรับใกล้สุด)"
+   "setup": "รอซื้อโซน 0.83144–0.83194 (แนวรับใกล้สุด)"
   },
   {
    "symbol": "USDCAD",
-   "price": 1.4255,
+   "price": 1.4259,
    "dp": 5,
-   "chg_pct": 0.49,
+   "chg_pct": 0.51,
    "spark": [
-    1.41813,
-    1.41886,
-    1.4185,
-    1.4188,
-    1.41857,
     1.4189,
     1.4189,
     1.41964,
@@ -705,119 +698,124 @@
     1.42647,
     1.42614,
     1.42528,
-    1.42551,
-    1.42547
+    1.42577,
+    1.4257,
+    1.42592,
+    1.42562,
+    1.42556,
+    1.42588,
+    1.42586
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "up",
-     "rsi": 52.1
+     "rsi": 54.8
     },
     {
      "tf": "H1",
      "trend": "up",
-     "rsi": 56.5
+     "rsi": 57.9
     },
     {
      "tf": "H4",
      "trend": "up",
-     "rsi": 73.9
+     "rsi": 75.5
     },
     {
      "tf": "D1",
      "trend": "up",
-     "rsi": 68.0
+     "rsi": 68.2
     }
    ],
    "bias": "up",
-   "support": 1.42348,
+   "support": 1.4248,
    "resistance": 1.42632,
    "bias_label": "เอียงขึ้น",
-   "setup": "รอซื้อโซน 1.42348–1.42421 (แนวรับใกล้สุด)"
+   "setup": "รอซื้อโซน 1.42480–1.42553 (แนวรับใกล้สุด)"
   },
   {
    "symbol": "BTCUSD",
-   "price": 71627.0,
+   "price": 71336.0,
    "dp": 0,
-   "chg_pct": -3.16,
+   "chg_pct": -3.55,
    "spark": [
-    73382.0,
-    73678.0,
-    73767.0,
-    73605.0,
-    73698.0,
-    73431.0,
+    73438.0,
     73497.0,
     73541.0,
-    73670.0,
+    73669.0,
     73633.0,
     73828.0,
-    73526.0,
+    73525.0,
     73992.0,
     73638.0,
-    73706.0,
+    73710.0,
     73971.0,
     73915.0,
     73818.0,
-    73720.0,
-    73476.0,
+    73724.0,
+    73484.0,
     73910.0,
     74213.0,
-    74445.0,
+    74437.0,
     74419.0,
     74334.0,
-    74574.0,
-    74304.0,
+    74568.0,
+    74301.0,
     73850.0,
     73928.0,
     73994.0,
-    73620.0,
+    73622.0,
     73712.0,
     73710.0,
-    73643.0,
+    73641.0,
     73494.0,
     73425.0,
     73558.0,
     73502.0,
     73405.0,
     73371.0,
-    72852.0,
+    72858.0,
     72810.0,
     72415.0,
     71548.0,
     71610.0,
     71681.0,
-    71665.0,
-    71627.0
+    71826.0,
+    71679.0,
+    71598.0,
+    71346.0,
+    71462.0,
+    71338.0,
+    71336.0
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 37.6
+     "rsi": 39.1
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 22.4
+     "rsi": 24.4
     },
     {
      "tf": "H4",
      "trend": "down",
-     "rsi": 27.5
+     "rsi": 26.0
     },
     {
      "tf": "D1",
      "trend": "down",
-     "rsi": 30.5
+     "rsi": 29.9
     }
    ],
    "bias": "down",
    "support": 71174.0,
    "resistance": 73924.0,
    "bias_label": "เอียงลง",
-   "setup": "รอขายโซน 73,717–73,924 (แนวต้านใกล้สุด)"
+   "setup": "รอขายโซน 73,696–73,924 (แนวต้านใกล้สุด)"
   }
  ],
  "markets_en": [
@@ -827,11 +825,6 @@
    "dp": 5,
    "chg_pct": -0.98,
    "spark": [
-    1.116944,
-    1.11657,
-    1.116819,
-    1.116819,
-    1.117194,
     1.116819,
     1.117194,
     1.116944,
@@ -873,6 +866,11 @@
     1.107788,
     1.106807,
     1.10595,
+    1.105094,
+    1.105339,
+    1.105828,
+    1.106072,
+    1.105828,
     1.10595,
     1.10595
    ],
@@ -880,17 +878,17 @@
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 34.3
+     "rsi": 46.5
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 28.0
+     "rsi": 33.6
     },
     {
      "tf": "H4",
      "trend": "down",
-     "rsi": 28.1
+     "rsi": 28.4
     },
     {
      "tf": "D1",
@@ -899,10 +897,10 @@
     }
    ],
    "bias": "down",
-   "support": 1.10571,
+   "support": 1.10485,
    "resistance": 1.11037,
    "bias_label": "Bearish",
-   "setup": "Sell zone 1.10981–1.11037 (nearest resistance)"
+   "setup": "Sell zone 1.10982–1.11037 (nearest resistance)"
   },
   {
    "symbol": "GBPUSD",
@@ -910,11 +908,6 @@
    "dp": 5,
    "chg_pct": -0.84,
    "spark": [
-    1.334864,
-    1.334383,
-    1.334508,
-    1.334276,
-    1.334882,
     1.3349,
     1.335488,
     1.33481,
@@ -956,19 +949,24 @@
     1.324556,
     1.323697,
     1.323907,
+    1.322664,
+    1.322996,
+    1.323662,
+    1.32396,
+    1.323732,
     1.323644,
-    1.323662
+    1.323679
    ],
    "tfs": [
     {
      "tf": "M15",
-     "trend": "down",
-     "rsi": 38.5
+     "trend": "sideways",
+     "rsi": 48.2
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 26.7
+     "rsi": 33.6
     },
     {
      "tf": "H4",
@@ -982,22 +980,17 @@
     }
    ],
    "bias": "down",
-   "support": 1.32235,
+   "support": 1.32224,
    "resistance": 1.32797,
    "bias_label": "Bearish",
-   "setup": "Sell zone 1.32738–1.32797 (nearest resistance)"
+   "setup": "Sell zone 1.32737–1.32797 (nearest resistance)"
   },
   {
    "symbol": "USDJPY",
-   "price": 159.658,
+   "price": 159.842,
    "dp": 3,
-   "chg_pct": 0.6,
+   "chg_pct": 0.72,
    "spark": [
-    158.774,
-    158.801,
-    158.728,
-    158.716,
-    158.704,
     158.794,
     158.855,
     158.8,
@@ -1039,48 +1032,48 @@
     159.861,
     159.896,
     159.589,
-    159.67,
-    159.658
+    159.765,
+    159.832,
+    159.818,
+    159.884,
+    159.821,
+    159.845,
+    159.842
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "sideways",
-     "rsi": 44.2
+     "rsi": 53.6
     },
     {
      "tf": "H1",
-     "trend": "sideways",
-     "rsi": 52.0
+     "trend": "up",
+     "rsi": 57.2
     },
     {
      "tf": "H4",
      "trend": "up",
-     "rsi": 64.9
+     "rsi": 69.7
     },
     {
      "tf": "D1",
      "trend": "up",
-     "rsi": 62.7
+     "rsi": 63.7
     }
    ],
    "bias": "up",
    "support": 159.53,
-   "resistance": 159.838,
+   "resistance": 159.938,
    "bias_label": "Bullish",
-   "setup": "Buy zone 159.530–159.634 (nearest support)"
+   "setup": "Buy zone 159.530–159.623 (nearest support)"
   },
   {
    "symbol": "AUDUSD",
-   "price": 0.6809,
+   "price": 0.6808,
    "dp": 5,
-   "chg_pct": -0.88,
+   "chg_pct": -0.9,
    "spark": [
-    0.68686,
-    0.686813,
-    0.68686,
-    0.687096,
-    0.687144,
     0.687474,
     0.688563,
     0.687994,
@@ -1122,48 +1115,48 @@
     0.681803,
     0.681245,
     0.681153,
-    0.680828,
-    0.680874
+    0.680782,
+    0.680504,
+    0.680596,
+    0.680874,
+    0.681106,
+    0.680782,
+    0.680782
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 35.3
+     "rsi": 42.4
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 24.3
+     "rsi": 29.0
     },
     {
      "tf": "H4",
      "trend": "down",
-     "rsi": 24.6
+     "rsi": 25.1
     },
     {
      "tf": "D1",
      "trend": "down",
-     "rsi": 31.7
+     "rsi": 31.6
     }
    ],
    "bias": "down",
-   "support": 0.68009,
+   "support": 0.68036,
    "resistance": 0.68385,
    "bias_label": "Bearish",
-   "setup": "Sell zone 0.68344–0.68385 (nearest resistance)"
+   "setup": "Sell zone 0.68351–0.68385 (nearest resistance)"
   },
   {
    "symbol": "USDCHF",
-   "price": 0.8349,
+   "price": 0.8345,
    "dp": 5,
-   "chg_pct": 1.21,
+   "chg_pct": 1.16,
    "spark": [
-    0.82497,
-    0.8253,
-    0.82489,
-    0.82435,
-    0.82502,
     0.82552,
     0.82547,
     0.82567,
@@ -1205,48 +1198,48 @@
     0.83404,
     0.83465,
     0.83478,
-    0.83492,
-    0.83491
+    0.83592,
+    0.83566,
+    0.8353,
+    0.83524,
+    0.83527,
+    0.83407,
+    0.83448
    ],
    "tfs": [
     {
      "tf": "M15",
-     "trend": "up",
-     "rsi": 66.6
+     "trend": "sideways",
+     "rsi": 44.9
     },
     {
      "tf": "H1",
      "trend": "up",
-     "rsi": 73.2
+     "rsi": 59.9
     },
     {
      "tf": "H4",
      "trend": "up",
-     "rsi": 72.5
+     "rsi": 69.9
     },
     {
      "tf": "D1",
      "trend": "sideways",
-     "rsi": 63.2
+     "rsi": 62.8
     }
    ],
    "bias": "up",
    "support": 0.83144,
-   "resistance": 0.8354,
+   "resistance": 0.83614,
    "bias_label": "Bullish",
-   "setup": "Buy zone 0.83144–0.83191 (nearest support)"
+   "setup": "Buy zone 0.83144–0.83194 (nearest support)"
   },
   {
    "symbol": "USDCAD",
-   "price": 1.4255,
+   "price": 1.4259,
    "dp": 5,
-   "chg_pct": 0.49,
+   "chg_pct": 0.51,
    "spark": [
-    1.41813,
-    1.41886,
-    1.4185,
-    1.4188,
-    1.41857,
     1.4189,
     1.4189,
     1.41964,
@@ -1288,151 +1281,156 @@
     1.42647,
     1.42614,
     1.42528,
-    1.42551,
-    1.42547
+    1.42577,
+    1.4257,
+    1.42592,
+    1.42562,
+    1.42556,
+    1.42588,
+    1.42586
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "up",
-     "rsi": 52.1
+     "rsi": 54.8
     },
     {
      "tf": "H1",
      "trend": "up",
-     "rsi": 56.5
+     "rsi": 57.9
     },
     {
      "tf": "H4",
      "trend": "up",
-     "rsi": 73.9
+     "rsi": 75.5
     },
     {
      "tf": "D1",
      "trend": "up",
-     "rsi": 68.0
+     "rsi": 68.2
     }
    ],
    "bias": "up",
-   "support": 1.42348,
+   "support": 1.4248,
    "resistance": 1.42632,
    "bias_label": "Bullish",
-   "setup": "Buy zone 1.42348–1.42421 (nearest support)"
+   "setup": "Buy zone 1.42480–1.42553 (nearest support)"
   },
   {
    "symbol": "BTCUSD",
-   "price": 71627.0,
+   "price": 71336.0,
    "dp": 0,
-   "chg_pct": -3.16,
+   "chg_pct": -3.55,
    "spark": [
-    73382.0,
-    73678.0,
-    73767.0,
-    73605.0,
-    73698.0,
-    73431.0,
+    73438.0,
     73497.0,
     73541.0,
-    73670.0,
+    73669.0,
     73633.0,
     73828.0,
-    73526.0,
+    73525.0,
     73992.0,
     73638.0,
-    73706.0,
+    73710.0,
     73971.0,
     73915.0,
     73818.0,
-    73720.0,
-    73476.0,
+    73724.0,
+    73484.0,
     73910.0,
     74213.0,
-    74445.0,
+    74437.0,
     74419.0,
     74334.0,
-    74574.0,
-    74304.0,
+    74568.0,
+    74301.0,
     73850.0,
     73928.0,
     73994.0,
-    73620.0,
+    73622.0,
     73712.0,
     73710.0,
-    73643.0,
+    73641.0,
     73494.0,
     73425.0,
     73558.0,
     73502.0,
     73405.0,
     73371.0,
-    72852.0,
+    72858.0,
     72810.0,
     72415.0,
     71548.0,
     71610.0,
     71681.0,
-    71665.0,
-    71627.0
+    71826.0,
+    71679.0,
+    71598.0,
+    71346.0,
+    71462.0,
+    71338.0,
+    71336.0
    ],
    "tfs": [
     {
      "tf": "M15",
      "trend": "down",
-     "rsi": 37.6
+     "rsi": 39.1
     },
     {
      "tf": "H1",
      "trend": "down",
-     "rsi": 22.4
+     "rsi": 24.4
     },
     {
      "tf": "H4",
      "trend": "down",
-     "rsi": 27.5
+     "rsi": 26.0
     },
     {
      "tf": "D1",
      "trend": "down",
-     "rsi": 30.5
+     "rsi": 29.9
     }
    ],
    "bias": "down",
    "support": 71174.0,
    "resistance": 73924.0,
    "bias_label": "Bearish",
-   "setup": "Sell zone 73,717–73,924 (nearest resistance)"
+   "setup": "Sell zone 73,696–73,924 (nearest resistance)"
   }
  ],
- "mtf_updated": "2026-11-13 00:12",
+ "mtf_updated": "2026-11-13 05:45",
  "smc": {
   "XAUUSD": {
    "M15": {
     "order_blocks": [
      {
       "type": "bearish",
-      "top": 3960.91,
-      "bottom": 3952.11,
-      "mitigated": false,
-      "t": 1794469500
-     },
-     {
-      "type": "bearish",
-      "top": 3933.68,
-      "bottom": 3930.08,
+      "top": 3931.4,
+      "bottom": 3927.8,
       "mitigated": false,
       "t": 1794487500
      },
      {
       "type": "bearish",
-      "top": 3906.66,
-      "bottom": 3889.34,
+      "top": 3904.38,
+      "bottom": 3887.06,
       "mitigated": false,
       "t": 1794492900
      },
      {
+      "type": "bearish",
+      "top": 3882.94,
+      "bottom": 3879.0,
+      "mitigated": false,
+      "t": 1794513600
+     },
+     {
       "type": "bullish",
-      "top": 3969.06,
-      "bottom": 3965.06,
+      "top": 3966.78,
+      "bottom": 3962.78,
       "mitigated": true,
       "t": 1794460500
      }
@@ -1440,95 +1438,83 @@
     "fvg": [
      {
       "type": "bearish",
-      "top": 3918.94,
-      "bottom": 3913.09,
+      "top": 3877.74,
+      "bottom": 3871.92,
       "filled": false,
-      "t": 1794489300
-     },
-     {
-      "type": "bearish",
-      "top": 3884.52,
-      "bottom": 3871.96,
-      "filled": false,
-      "t": 1794494700
+      "t": 1794516300
      },
      {
       "type": "bullish",
-      "top": 3863.95,
-      "bottom": 3861.39,
+      "top": 3872.57,
+      "bottom": 3872.02,
       "filled": false,
-      "t": 1794497400
+      "t": 1794519000
+     },
+     {
+      "type": "bullish",
+      "top": 3876.5,
+      "bottom": 3875.92,
+      "filled": false,
+      "t": 1794522600
      }
     ],
     "bos": {
      "dir": "bear",
-     "level": 3882.27,
-     "t": 1794494700
+     "level": 3873.22,
+     "t": 1794516300
     },
     "choch": {
      "dir": "bear",
-     "level": 3965.06,
+     "level": 3962.78,
      "t": 1794465900
     },
     "liquidity": [
      {
-      "type": "equal_highs",
-      "level": 3942.49
-     },
-     {
-      "type": "equal_lows",
-      "level": 3965.0
-     },
-     {
-      "type": "equal_lows",
-      "level": 3968.91
-     },
-     {
       "type": "swing_high",
-      "level": 3906.66
+      "level": 3883.53
      },
      {
       "type": "swing_low",
-      "level": 3864.71
+      "level": 3870.0
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 15,
-     "eq": 3918.42,
-     "hi": 3984.34,
-     "lo": 3852.5
+     "pos_pct": 24,
+     "eq": 3903.94,
+     "hi": 3957.66,
+     "lo": 3850.22
     },
     "last_event": "bos_bear",
-    "price": 3872.78
+    "price": 3876.5
    },
    "H1": {
     "order_blocks": [
      {
       "type": "bearish",
-      "top": 4110.85,
-      "bottom": 4102.31,
+      "top": 4108.57,
+      "bottom": 4100.03,
       "mitigated": false,
       "t": 1794297600
      },
      {
       "type": "bearish",
-      "top": 4046.35,
-      "bottom": 4037.75,
+      "top": 4044.07,
+      "bottom": 4035.47,
       "mitigated": false,
       "t": 1794391200
      },
      {
       "type": "bearish",
-      "top": 3948.84,
-      "bottom": 3938.01,
+      "top": 3946.56,
+      "bottom": 3935.73,
       "mitigated": false,
       "t": 1794477600
      },
      {
       "type": "bearish",
-      "top": 3976.28,
-      "bottom": 3965.06,
+      "top": 3974.0,
+      "bottom": 3962.78,
       "mitigated": true,
       "t": 1794459600
      }
@@ -1536,84 +1522,80 @@
     "fvg": [
      {
       "type": "bearish",
-      "top": 3951.07,
-      "bottom": 3939.89,
+      "top": 4001.6,
+      "bottom": 3999.12,
+      "filled": false,
+      "t": 1794409200
+     },
+     {
+      "type": "bearish",
+      "top": 3948.79,
+      "bottom": 3937.61,
       "filled": false,
       "t": 1794470400
      },
      {
       "type": "bearish",
-      "top": 3928.4,
-      "bottom": 3906.66,
+      "top": 3926.12,
+      "bottom": 3904.38,
       "filled": false,
       "t": 1794488400
-     },
-     {
-      "type": "bearish",
-      "top": 3883.94,
-      "bottom": 3872.57,
-      "filled": false,
-      "t": 1794492000
      }
     ],
     "bos": {
      "dir": "bear",
-     "level": 3921.24,
+     "level": 3918.96,
      "t": 1794488400
     },
     "choch": {
      "dir": "bear",
-     "level": 4020.34,
+     "level": 4018.06,
      "t": 1794405600
     },
     "liquidity": [
      {
       "type": "equal_highs",
-      "level": 4059.26
-     },
-     {
-      "type": "equal_highs",
-      "level": 4116.62
+      "level": 4056.99
      },
      {
       "type": "swing_high",
-      "level": 3949.17
+      "level": 3884.48
      },
      {
       "type": "swing_low",
-      "level": 3852.5
+      "level": 3850.22
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 8,
-     "eq": 3983.16,
-     "hi": 4113.83,
-     "lo": 3852.5
+     "pos_pct": 12,
+     "eq": 3959.09,
+     "hi": 4067.97,
+     "lo": 3850.22
     },
     "last_event": "bos_bear",
-    "price": 3872.25
+    "price": 3876.5
    },
    "H4": {
     "order_blocks": [
      {
       "type": "bearish",
-      "top": 4115.71,
-      "bottom": 4097.33,
+      "top": 4113.43,
+      "bottom": 4095.05,
       "mitigated": false,
       "t": 1794283200
      },
      {
       "type": "bearish",
-      "top": 4057.54,
-      "bottom": 4034.93,
+      "top": 4055.26,
+      "bottom": 4032.65,
       "mitigated": false,
       "t": 1794369600
      },
      {
       "type": "bullish",
-      "top": 4120.93,
-      "bottom": 4074.87,
+      "top": 4118.65,
+      "bottom": 4072.59,
       "mitigated": true,
       "t": 1794196800
      }
@@ -1621,67 +1603,67 @@
     "fvg": [
      {
       "type": "bearish",
-      "top": 3964.94,
-      "bottom": 3959.94,
+      "top": 3962.66,
+      "bottom": 3957.66,
       "filled": false,
       "t": 1794456000
      },
      {
       "type": "bearish",
-      "top": 3951.07,
-      "bottom": 3943.02,
+      "top": 3948.79,
+      "bottom": 3940.74,
       "filled": false,
       "t": 1794470400
      },
      {
       "type": "bearish",
-      "top": 3921.24,
-      "bottom": 3883.88,
+      "top": 3918.96,
+      "bottom": 3884.48,
       "filled": false,
       "t": 1794484800
      }
     ],
     "bos": {
      "dir": "bear",
-     "level": 4007.53,
+     "level": 4005.25,
      "t": 1794398400
     },
     "choch": {
      "dir": "bear",
-     "level": 4031.28,
+     "level": 4029.0,
      "t": 1794326400
     },
     "liquidity": [
      {
       "type": "equal_lows",
-      "level": 4033.28
+      "level": 4027.71
      },
      {
       "type": "equal_lows",
-      "level": 3893.84
+      "level": 3891.55
      },
      {
       "type": "equal_lows",
-      "level": 4060.84
+      "level": 4058.56
      },
      {
       "type": "swing_high",
-      "level": 4057.54
+      "level": 4055.26
      },
      {
       "type": "swing_low",
-      "level": 4007.53
+      "level": 3850.22
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 7,
-     "eq": 3994.32,
-     "hi": 4136.15,
-     "lo": 3852.5
+     "pos_pct": 9,
+     "eq": 3992.05,
+     "hi": 4133.87,
+     "lo": 3850.22
     },
     "last_event": "bos_bear",
-    "price": 3872.25
+    "price": 3876.5
    }
   },
   "EURUSD": {
@@ -1696,10 +1678,10 @@
      },
      {
       "type": "bullish",
-      "top": 1.10926,
-      "bottom": 1.10791,
+      "top": 1.10595,
+      "bottom": 1.10583,
       "mitigated": true,
-      "t": 1794488400
+      "t": 1794514500
      }
     ],
     "fvg": [
@@ -1726,45 +1708,45 @@
      }
     ],
     "bos": {
-     "dir": "bull",
-     "level": 1.10976,
-     "t": 1794478500
+     "dir": "bear",
+     "level": 1.1057,
+     "t": 1794504600
     },
     "choch": {
-     "dir": "bear",
-     "level": 1.10791,
-     "t": 1794494700
+     "dir": "bull",
+     "level": 1.10595,
+     "t": 1794516300
     },
     "liquidity": [
      {
-      "type": "equal_lows",
-      "level": 1.10791
-     },
-     {
-      "type": "equal_lows",
-      "level": 1.10742
+      "type": "equal_highs",
+      "level": 1.10595
      },
      {
       "type": "equal_lows",
       "level": 1.1057
+     },
+     {
+      "type": "equal_lows",
+      "level": 1.10522
      },
      {
       "type": "swing_high",
-      "level": 1.10705
+      "level": 1.10644
      },
      {
       "type": "swing_low",
-      "level": 1.1057
+      "level": 1.10534
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 5,
-     "eq": 1.10816,
+     "pos_pct": 19,
+     "eq": 1.10773,
      "hi": 1.11062,
-     "lo": 1.1057
+     "lo": 1.10485
     },
-    "last_event": "choch_bear",
+    "last_event": "choch_bull",
     "price": 1.10595
    },
    "H1": {
@@ -1834,6 +1816,10 @@
     "liquidity": [
      {
       "type": "equal_lows",
+      "level": 1.10902
+     },
+     {
+      "type": "equal_lows",
       "level": 1.10705
      },
      {
@@ -1841,24 +1827,20 @@
       "level": 1.10742
      },
      {
-      "type": "equal_lows",
-      "level": 1.1057
-     },
-     {
       "type": "swing_high",
       "level": 1.11
      },
      {
       "type": "swing_low",
-      "level": 1.1057
+      "level": 1.10485
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 1,
-     "eq": 1.11554,
-     "hi": 1.12537,
-     "lo": 1.1057
+     "pos_pct": 6,
+     "eq": 1.11353,
+     "hi": 1.12221,
+     "lo": 1.10485
     },
     "last_event": "bos_bear",
     "price": 1.10595
@@ -1940,10 +1922,10 @@
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 1,
-     "eq": 1.11661,
+     "pos_pct": 5,
+     "eq": 1.11619,
      "hi": 1.12752,
-     "lo": 1.1057
+     "lo": 1.10485
     },
     "last_event": "bos_bear",
     "price": 1.10595
@@ -1954,47 +1936,40 @@
     "order_blocks": [
      {
       "type": "bearish",
-      "top": 1.3315,
-      "bottom": 1.33124,
-      "mitigated": false,
-      "t": 1794401100
-     },
-     {
-      "type": "bearish",
       "top": 1.32742,
       "bottom": 1.32668,
       "mitigated": false,
       "t": 1794492900
      },
      {
-      "type": "bearish",
-      "top": 1.32797,
-      "bottom": 1.3273,
+      "type": "bullish",
+      "top": 1.32338,
+      "bottom": 1.32312,
       "mitigated": true,
-      "t": 1794478500
+      "t": 1794511800
      }
     ],
     "fvg": [
-     {
-      "type": "bearish",
-      "top": 1.32668,
-      "bottom": 1.32587,
-      "filled": false,
-      "t": 1794493800
-     },
-     {
-      "type": "bearish",
-      "top": 1.32564,
-      "bottom": 1.32468,
-      "filled": false,
-      "t": 1794494700
-     },
      {
       "type": "bearish",
       "top": 1.32456,
       "bottom": 1.32378,
       "filled": false,
       "t": 1794495600
+     },
+     {
+      "type": "bullish",
+      "top": 1.32293,
+      "bottom": 1.32266,
+      "filled": false,
+      "t": 1794506400
+     },
+     {
+      "type": "bullish",
+      "top": 1.32368,
+      "bottom": 1.32364,
+      "filled": false,
+      "t": 1794522600
      }
     ],
     "bos": {
@@ -2003,41 +1978,33 @@
      "t": 1794494700
     },
     "choch": {
-     "dir": "bear",
-     "level": 1.32695,
-     "t": 1794482100
+     "dir": "bull",
+     "level": 1.32357,
+     "t": 1794512700
     },
     "liquidity": [
      {
       "type": "equal_lows",
-      "level": 1.32666
-     },
-     {
-      "type": "equal_lows",
-      "level": 1.32728
-     },
-     {
-      "type": "equal_lows",
-      "level": 1.32526
+      "level": 1.32277
      },
      {
       "type": "swing_high",
-      "level": 1.32429
+      "level": 1.32396
      },
      {
       "type": "swing_low",
-      "level": 1.32235
+      "level": 1.32286
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 23,
-     "eq": 1.32516,
+     "pos_pct": 25,
+     "eq": 1.32511,
      "hi": 1.32797,
-     "lo": 1.32235
+     "lo": 1.32224
     },
-    "last_event": "bos_bear",
-    "price": 1.32366
+    "last_event": "choch_bull",
+    "price": 1.32368
    },
    "H1": {
     "order_blocks": [
@@ -2118,18 +2085,18 @@
      },
      {
       "type": "swing_low",
-      "level": 1.32235
+      "level": 1.32224
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 6,
-     "eq": 1.3341,
-     "hi": 1.34586,
-     "lo": 1.32235
+     "pos_pct": 7,
+     "eq": 1.33262,
+     "hi": 1.343,
+     "lo": 1.32224
     },
     "last_event": "bos_bear",
-    "price": 1.32366
+    "price": 1.32368
    },
    "H4": {
     "order_blocks": [
@@ -2212,12 +2179,12 @@
     "zone": {
      "name": "discount",
      "pos_pct": 5,
-     "eq": 1.3363,
+     "eq": 1.33625,
      "hi": 1.35026,
-     "lo": 1.32235
+     "lo": 1.32224
     },
     "last_event": "bos_bear",
-    "price": 1.32366
+    "price": 1.32368
    }
   },
   "USDJPY": {
@@ -2231,28 +2198,14 @@
       "t": 1794500100
      },
      {
-      "type": "bullish",
-      "top": 159.683,
-      "bottom": 159.568,
+      "type": "bearish",
+      "top": 159.845,
+      "bottom": 159.789,
       "mitigated": true,
-      "t": 1794492900
+      "t": 1794520800
      }
     ],
     "fvg": [
-     {
-      "type": "bullish",
-      "top": 159.241,
-      "bottom": 159.198,
-      "filled": false,
-      "t": 1794402000
-     },
-     {
-      "type": "bullish",
-      "top": 159.34,
-      "bottom": 159.248,
-      "filled": false,
-      "t": 1794402900
-     },
      {
       "type": "bearish",
       "top": 159.9,
@@ -2268,40 +2221,32 @@
     },
     "choch": {
      "dir": "bear",
-     "level": 159.862,
-     "t": 1794501000
+     "level": 159.796,
+     "t": 1794521700
     },
     "liquidity": [
-     {
-      "type": "equal_lows",
-      "level": 159.594
-     },
      {
       "type": "equal_lows",
       "level": 159.53
      },
      {
-      "type": "equal_lows",
-      "level": 159.56
-     },
-     {
       "type": "swing_high",
-      "level": 160.044
+      "level": 159.898
      },
      {
       "type": "swing_low",
-      "level": 159.303
+      "level": 159.758
      }
     ],
     "zone": {
-     "name": "equilibrium",
-     "pos_pct": 48,
+     "name": "premium",
+     "pos_pct": 73,
      "eq": 159.673,
      "hi": 160.044,
      "lo": 159.303
     },
     "last_event": "choch_bear",
-    "price": 159.658
+    "price": 159.842
    },
    "H1": {
     "order_blocks": [
@@ -2330,6 +2275,13 @@
     "fvg": [
      {
       "type": "bullish",
+      "top": 158.447,
+      "bottom": 158.252,
+      "filled": false,
+      "t": 1794315600
+     },
+     {
+      "type": "bullish",
       "top": 159.012,
       "bottom": 158.967,
       "filled": false,
@@ -2341,13 +2293,6 @@
       "bottom": 159.198,
       "filled": false,
       "t": 1794402000
-     },
-     {
-      "type": "bearish",
-      "top": 159.834,
-      "bottom": 159.699,
-      "filled": false,
-      "t": 1794499200
      }
     ],
     "bos": {
@@ -2367,7 +2312,7 @@
      },
      {
       "type": "swing_high",
-      "level": 160.044
+      "level": 159.898
      },
      {
       "type": "swing_low",
@@ -2376,13 +2321,13 @@
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 82,
-     "eq": 158.955,
+     "pos_pct": 90,
+     "eq": 159.072,
      "hi": 160.044,
-     "lo": 157.866
+     "lo": 158.099
     },
     "last_event": "choch_bear",
-    "price": 159.658
+    "price": 159.842
    },
    "H4": {
     "order_blocks": [
@@ -2465,13 +2410,13 @@
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 87,
+     "pos_pct": 93,
      "eq": 158.501,
      "hi": 160.044,
      "lo": 156.957
     },
     "last_event": "choch_bull",
-    "price": 159.658
+    "price": 159.842
    }
   },
   "AUDUSD": {
@@ -2492,21 +2437,14 @@
       "t": 1794493800
      },
      {
-      "type": "bearish",
-      "top": 0.68297,
-      "bottom": 0.68273,
+      "type": "bullish",
+      "top": 0.68083,
+      "bottom": 0.68078,
       "mitigated": true,
-      "t": 1794486600
+      "t": 1794517200
      }
     ],
     "fvg": [
-     {
-      "type": "bearish",
-      "top": 0.68236,
-      "bottom": 0.6818,
-      "filled": false,
-      "t": 1794494700
-     },
      {
       "type": "bearish",
       "top": 0.6818,
@@ -2515,31 +2453,38 @@
       "t": 1794495600
      },
      {
-      "type": "bearish",
-      "top": 0.68101,
-      "bottom": 0.68087,
+      "type": "bullish",
+      "top": 0.68069,
+      "bottom": 0.68064,
       "filled": false,
-      "t": 1794502800
+      "t": 1794513600
+     },
+     {
+      "type": "bearish",
+      "top": 0.68097,
+      "bottom": 0.68083,
+      "filled": false,
+      "t": 1794521700
      }
     ],
     "bos": {
-     "dir": "bear",
-     "level": 0.68203,
-     "t": 1794494700
+     "dir": "bull",
+     "level": 0.68092,
+     "t": 1794519900
     },
     "choch": {
-     "dir": "bear",
-     "level": 0.68278,
-     "t": 1794488400
+     "dir": "bull",
+     "level": 0.68078,
+     "t": 1794515400
     },
     "liquidity": [
      {
       "type": "equal_highs",
-      "level": 0.68157
+      "level": 0.68306
      },
      {
-      "type": "equal_lows",
-      "level": 0.68484
+      "type": "equal_highs",
+      "level": 0.68157
      },
      {
       "type": "equal_lows",
@@ -2547,22 +2492,22 @@
      },
      {
       "type": "swing_high",
-      "level": 0.68157
+      "level": 0.6812
      },
      {
       "type": "swing_low",
-      "level": 0.68009
+      "level": 0.68069
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 16,
-     "eq": 0.68256,
-     "hi": 0.68502,
+     "pos_pct": 18,
+     "eq": 0.68197,
+     "hi": 0.68385,
      "lo": 0.68009
     },
-    "last_event": "bos_bear",
-    "price": 0.68087
+    "last_event": "bos_bull",
+    "price": 0.68078
    },
    "H1": {
     "order_blocks": [
@@ -2643,18 +2588,18 @@
      },
      {
       "type": "swing_low",
-      "level": 0.68009
+      "level": 0.68036
      }
     ],
     "zone": {
      "name": "discount",
      "pos_pct": 6,
-     "eq": 0.68662,
-     "hi": 0.69315,
+     "eq": 0.68575,
+     "hi": 0.69142,
      "lo": 0.68009
     },
     "last_event": "bos_bear",
-    "price": 0.68087
+    "price": 0.68078
    },
    "H4": {
     "order_blocks": [
@@ -2683,13 +2628,6 @@
     "fvg": [
      {
       "type": "bearish",
-      "top": 0.69113,
-      "bottom": 0.6871,
-      "filled": false,
-      "t": 1794312000
-     },
-     {
-      "type": "bearish",
       "top": 0.68724,
       "bottom": 0.68658,
       "filled": false,
@@ -2701,6 +2639,13 @@
       "bottom": 0.68554,
       "filled": false,
       "t": 1794398400
+     },
+     {
+      "type": "bearish",
+      "top": 0.68176,
+      "bottom": 0.68157,
+      "filled": false,
+      "t": 1794484800
      }
     ],
     "bos": {
@@ -2732,7 +2677,7 @@
      },
      {
       "type": "swing_low",
-      "level": 0.6847
+      "level": 0.68009
      }
     ],
     "zone": {
@@ -2743,7 +2688,7 @@
      "lo": 0.68009
     },
     "last_event": "bos_bear",
-    "price": 0.68087
+    "price": 0.68078
    }
   },
   "USDCHF": {
@@ -2757,50 +2702,50 @@
       "t": 1794492900
      },
      {
+      "type": "bearish",
+      "top": 0.83564,
+      "bottom": 0.83528,
+      "mitigated": false,
+      "t": 1794518100
+     },
+     {
       "type": "bullish",
-      "top": 0.8322,
-      "bottom": 0.83191,
+      "top": 0.83534,
+      "bottom": 0.83509,
       "mitigated": true,
-      "t": 1794483900
+      "t": 1794516300
      }
     ],
     "fvg": [
-     {
-      "type": "bullish",
-      "top": 0.83043,
-      "bottom": 0.8299,
-      "filled": false,
-      "t": 1794402900
-     },
-     {
-      "type": "bullish",
-      "top": 0.83153,
-      "bottom": 0.83084,
-      "filled": false,
-      "t": 1794404700
-     },
      {
       "type": "bullish",
       "top": 0.83329,
       "bottom": 0.83283,
       "filled": false,
       "t": 1794493800
+     },
+     {
+      "type": "bearish",
+      "top": 0.83542,
+      "bottom": 0.83522,
+      "filled": false,
+      "t": 1794519900
      }
     ],
     "bos": {
      "dir": "bull",
-     "level": 0.8333,
-     "t": 1794493800
+     "level": 0.8354,
+     "t": 1794504600
     },
     "choch": {
-     "dir": "bull",
-     "level": 0.83234,
-     "t": 1794485700
+     "dir": "bear",
+     "level": 0.83509,
+     "t": 1794520800
     },
     "liquidity": [
      {
-      "type": "equal_lows",
-      "level": 0.8318
+      "type": "equal_highs",
+      "level": 0.83564
      },
      {
       "type": "equal_lows",
@@ -2808,26 +2753,26 @@
      },
      {
       "type": "equal_lows",
-      "level": 0.83217
+      "level": 0.83511
      },
      {
       "type": "swing_high",
-      "level": 0.8354
+      "level": 0.83564
      },
      {
       "type": "swing_low",
-      "level": 0.83397
+      "level": 0.83365
      }
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 89,
-     "eq": 0.83325,
-     "hi": 0.8354,
+     "pos_pct": 67,
+     "eq": 0.83362,
+     "hi": 0.83614,
      "lo": 0.8311
     },
-    "last_event": "bos_bull",
-    "price": 0.83491
+    "last_event": "choch_bear",
+    "price": 0.83448
    },
    "H1": {
     "order_blocks": [
@@ -2856,13 +2801,6 @@
     "fvg": [
      {
       "type": "bullish",
-      "top": 0.82895,
-      "bottom": 0.82884,
-      "filled": false,
-      "t": 1794391200
-     },
-     {
-      "type": "bullish",
       "top": 0.83153,
       "bottom": 0.82987,
       "filled": false,
@@ -2874,6 +2812,13 @@
       "bottom": 0.8333,
       "filled": false,
       "t": 1794492000
+     },
+     {
+      "type": "bearish",
+      "top": 0.83512,
+      "bottom": 0.83448,
+      "filled": false,
+      "t": 1794520800
      }
     ],
     "bos": {
@@ -2893,7 +2838,7 @@
      },
      {
       "type": "swing_high",
-      "level": 0.8354
+      "level": 0.83614
      },
      {
       "type": "swing_low",
@@ -2902,13 +2847,13 @@
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 97,
-     "eq": 0.82639,
-     "hi": 0.8354,
-     "lo": 0.81737
+     "pos_pct": 90,
+     "eq": 0.82812,
+     "hi": 0.83614,
+     "lo": 0.8201
     },
     "last_event": "bos_bull",
-    "price": 0.83491
+    "price": 0.83448
    },
    "H4": {
     "order_blocks": [
@@ -2998,13 +2943,13 @@
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 98,
-     "eq": 0.82406,
-     "hi": 0.8354,
+     "pos_pct": 93,
+     "eq": 0.82443,
+     "hi": 0.83614,
      "lo": 0.81272
     },
     "last_event": "bos_bull",
-    "price": 0.83491
+    "price": 0.83448
    }
   },
   "USDCAD": {
@@ -3046,35 +2991,35 @@
     },
     "liquidity": [
      {
-      "type": "equal_lows",
-      "level": 1.42525
+      "type": "equal_highs",
+      "level": 1.42618
      },
      {
       "type": "equal_lows",
-      "level": 1.42495
+      "level": 1.425
      },
      {
       "type": "equal_lows",
-      "level": 1.42485
+      "level": 1.4248
      },
      {
       "type": "swing_high",
-      "level": 1.42718
+      "level": 1.4262
      },
      {
       "type": "swing_low",
-      "level": 1.4248
+      "level": 1.4251
      }
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 66,
+     "pos_pct": 74,
      "eq": 1.42464,
      "hi": 1.42718,
      "lo": 1.4221
     },
     "last_event": "choch_bull",
-    "price": 1.42547
+    "price": 1.42586
    },
    "H1": {
     "order_blocks": [
@@ -3143,10 +3088,6 @@
     "liquidity": [
      {
       "type": "equal_highs",
-      "level": 1.4136
-     },
-     {
-      "type": "equal_highs",
       "level": 1.42096
      },
      {
@@ -3155,22 +3096,22 @@
      },
      {
       "type": "swing_high",
-      "level": 1.42718
+      "level": 1.42616
      },
      {
       "type": "swing_low",
-      "level": 1.4221
+      "level": 1.4248
      }
     ],
     "zone": {
      "name": "premium",
      "pos_pct": 77,
-     "eq": 1.42005,
+     "eq": 1.42105,
      "hi": 1.43,
-     "lo": 1.4101
+     "lo": 1.4121
     },
     "last_event": "choch_bull",
-    "price": 1.42547
+    "price": 1.42586
    },
    "H4": {
     "order_blocks": [
@@ -3232,7 +3173,7 @@
     "liquidity": [
      {
       "type": "equal_lows",
-      "level": 1.40035
+      "level": 1.4005
      },
      {
       "type": "equal_lows",
@@ -3244,22 +3185,22 @@
      },
      {
       "type": "swing_high",
-      "level": 1.43
+      "level": 1.42718
      },
      {
       "type": "swing_low",
-      "level": 1.4101
+      "level": 1.4221
      }
     ],
     "zone": {
      "name": "premium",
-     "pos_pct": 88,
+     "pos_pct": 89,
      "eq": 1.4113,
      "hi": 1.43,
      "lo": 1.3926
     },
     "last_event": "bos_bull",
-    "price": 1.42548
+    "price": 1.42586
    }
   },
   "BTCUSD": {
@@ -3267,97 +3208,89 @@
     "order_blocks": [
      {
       "type": "bearish",
-      "top": 73537.0,
+      "top": 73536.0,
       "bottom": 73317.0,
       "mitigated": false,
       "t": 1794478500
      },
      {
       "type": "bearish",
-      "top": 72928.0,
+      "top": 72929.0,
       "bottom": 72765.0,
       "mitigated": false,
       "t": 1794487500
      },
      {
       "type": "bearish",
-      "top": 72673.0,
-      "bottom": 72446.0,
+      "top": 72624.0,
+      "bottom": 72352.0,
       "mitigated": false,
-      "t": 1794490200
+      "t": 1794489300
      },
      {
       "type": "bearish",
-      "top": 73523.0,
-      "bottom": 73419.0,
+      "top": 71407.0,
+      "bottom": 71308.0,
       "mitigated": true,
-      "t": 1794473100
+      "t": 1794515400
      }
     ],
     "fvg": [
      {
       "type": "bearish",
-      "top": 73302.0,
-      "bottom": 73201.0,
+      "top": 71757.0,
+      "bottom": 71727.0,
       "filled": false,
-      "t": 1794482100
+      "t": 1794508200
      },
      {
       "type": "bearish",
-      "top": 73188.0,
-      "bottom": 72876.0,
+      "top": 71712.0,
+      "bottom": 71691.0,
       "filled": false,
-      "t": 1794483000
+      "t": 1794509100
      },
      {
       "type": "bearish",
-      "top": 72765.0,
-      "bottom": 72624.0,
+      "top": 71459.0,
+      "bottom": 71415.0,
       "filled": false,
-      "t": 1794488400
+      "t": 1794520800
      }
     ],
     "bos": {
      "dir": "bear",
-     "level": 72203.0,
-     "t": 1794492900
+     "level": 71346.0,
+     "t": 1794516300
     },
     "choch": {
      "dir": "bear",
      "level": 74395.0,
-     "t": 1794432600
+     "t": 1794433500
     },
     "liquidity": [
      {
       "type": "equal_highs",
-      "level": 73530.0
-     },
-     {
-      "type": "equal_lows",
-      "level": 73500.0
-     },
-     {
-      "type": "equal_lows",
-      "level": 73429.0
+      "level": 73536.0
      },
      {
       "type": "swing_high",
-      "level": 72113.0
+      "level": 71551.0
      },
      {
       "type": "swing_low",
-      "level": 71430.0
+      "level": 71258.0
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 16,
-     "eq": 72554.0,
-     "hi": 73933.0,
+     "pos_pct": 7,
+     "eq": 72384.0,
+     "hi": 73594.0,
      "lo": 71174.0
     },
     "last_event": "bos_bear",
-    "price": 71627.0
+    "price": 71336.0
    },
    "H1": {
     "order_blocks": [
@@ -3371,20 +3304,20 @@
      {
       "type": "bearish",
       "top": 75871.0,
-      "bottom": 75632.0,
+      "bottom": 75635.0,
       "mitigated": false,
       "t": 1794160800
      },
      {
       "type": "bearish",
       "top": 73570.0,
-      "bottom": 73338.0,
+      "bottom": 73336.0,
       "mitigated": false,
       "t": 1794466800
      },
      {
       "type": "bearish",
-      "top": 73789.0,
+      "top": 73788.0,
       "bottom": 73616.0,
       "mitigated": true,
       "t": 1794452400
@@ -3400,14 +3333,14 @@
      },
      {
       "type": "bearish",
-      "top": 72683.0,
-      "bottom": 72490.0,
+      "top": 72682.0,
+      "bottom": 72485.0,
       "filled": false,
       "t": 1794488400
      },
      {
       "type": "bearish",
-      "top": 72203.0,
+      "top": 72193.0,
       "bottom": 71637.0,
       "filled": false,
       "t": 1794492000
@@ -3415,30 +3348,30 @@
     ],
     "bos": {
      "dir": "bear",
-     "level": 73326.0,
+     "level": 73325.0,
      "t": 1794481200
     },
     "choch": {
      "dir": "bear",
-     "level": 73500.0,
+     "level": 73494.0,
      "t": 1794459600
     },
     "liquidity": [
      {
-      "type": "equal_highs",
-      "level": 74725.0
+      "type": "equal_lows",
+      "level": 74257.0
      },
      {
       "type": "equal_lows",
-      "level": 74254.0
+      "level": 73414.0
      },
      {
       "type": "equal_lows",
-      "level": 73316.0
+      "level": 73317.0
      },
      {
       "type": "swing_high",
-      "level": 74718.0
+      "level": 74724.0
      },
      {
       "type": "swing_low",
@@ -3447,34 +3380,34 @@
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 12,
-     "eq": 73034.0,
-     "hi": 74894.0,
+     "pos_pct": 5,
+     "eq": 72953.0,
+     "hi": 74732.0,
      "lo": 71174.0
     },
     "last_event": "bos_bear",
-    "price": 71627.0
+    "price": 71336.0
    },
    "H4": {
     "order_blocks": [
      {
       "type": "bearish",
       "top": 76095.0,
-      "bottom": 75781.0,
+      "bottom": 75782.0,
       "mitigated": false,
       "t": 1794139200
      },
      {
       "type": "bearish",
-      "top": 74683.0,
+      "top": 74684.0,
       "bottom": 73837.0,
       "mitigated": false,
       "t": 1794412800
      },
      {
       "type": "bearish",
-      "top": 74903.0,
-      "bottom": 74439.0,
+      "top": 74902.0,
+      "bottom": 74436.0,
       "mitigated": true,
       "t": 1794283200
      }
@@ -3482,14 +3415,14 @@
     "fvg": [
      {
       "type": "bearish",
-      "top": 80149.0,
-      "bottom": 76898.0,
+      "top": 80145.0,
+      "bottom": 76896.0,
       "filled": false,
       "t": 1793880000
      },
      {
       "type": "bearish",
-      "top": 73326.0,
+      "top": 73325.0,
       "bottom": 73049.0,
       "filled": false,
       "t": 1794470400
@@ -3504,67 +3437,63 @@
     ],
     "bos": {
      "dir": "bear",
-     "level": 73307.0,
+     "level": 73310.0,
      "t": 1794470400
     },
     "choch": {
      "dir": "bear",
-     "level": 75467.0,
+     "level": 75460.0,
      "t": 1794168000
     },
     "liquidity": [
      {
       "type": "equal_highs",
-      "level": 76116.0
+      "level": 81701.0
      },
      {
-      "type": "equal_lows",
-      "level": 76289.0
-     },
-     {
-      "type": "equal_lows",
-      "level": 73620.0
+      "type": "equal_highs",
+      "level": 76124.0
      },
      {
       "type": "swing_high",
-      "level": 74718.0
+      "level": 74724.0
      },
      {
       "type": "swing_low",
-      "level": 73307.0
+      "level": 71174.0
      }
     ],
     "zone": {
      "name": "discount",
-     "pos_pct": 5,
-     "eq": 76126.0,
-     "hi": 81078.0,
+     "pos_pct": 2,
+     "eq": 76125.0,
+     "hi": 81076.0,
      "lo": 71174.0
     },
     "last_event": "bos_bear",
-    "price": 71627.0
+    "price": 71336.0
    }
   }
  },
  "smc_notes": {
-  "XAUUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (8% ของกรอบ) · OB ฝั่งขาย 3,938.01-3,948.84 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
-  "EURUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (1% ของกรอบ) · OB ฝั่งขาย 1.10951-1.11062 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
-  "GBPUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (6% ของกรอบ) · OB ฝั่งขาย 1.32700-1.32797 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
-  "USDJPY": "H1: เปลี่ยนโครงสร้างเป็นลง (CHoCH) · ราคาอยู่โซนแพง (premium) ระวังไล่ซื้อ (82% ของกรอบ) · OB ฝั่งซื้อ 158.825-158.936 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
+  "XAUUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (12% ของกรอบ) · OB ฝั่งขาย 3,935.73-3,946.56 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
+  "EURUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (6% ของกรอบ) · OB ฝั่งขาย 1.10951-1.11062 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
+  "GBPUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (7% ของกรอบ) · OB ฝั่งขาย 1.32700-1.32797 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
+  "USDJPY": "H1: เปลี่ยนโครงสร้างเป็นลง (CHoCH) · ราคาอยู่โซนแพง (premium) ระวังไล่ซื้อ (90% ของกรอบ) · OB ฝั่งซื้อ 158.825-158.936 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
   "AUDUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (6% ของกรอบ) · OB ฝั่งขาย 0.68283-0.68385 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
-  "USDCHF": "H1: ทะลุโครงสร้างขึ้น (BOS) แนวโน้มขึ้นต่อ · ราคาอยู่โซนแพง (premium) ระวังไล่ซื้อ (97% ของกรอบ) · OB ฝั่งซื้อ 0.83110-0.83185 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
+  "USDCHF": "H1: ทะลุโครงสร้างขึ้น (BOS) แนวโน้มขึ้นต่อ · ราคาอยู่โซนแพง (premium) ระวังไล่ซื้อ (90% ของกรอบ) · OB ฝั่งซื้อ 0.83110-0.83185 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
   "USDCAD": "H1: เปลี่ยนโครงสร้างเป็นขึ้น (CHoCH) · ราคาอยู่โซนแพง (premium) ระวังไล่ซื้อ (77% ของกรอบ) · OB ฝั่งซื้อ 1.41220-1.41402 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด",
-  "BTCUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (12% ของกรอบ) · OB ฝั่งขาย 73,338-73,570 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด"
+  "BTCUSD": "H1: หลุดโครงสร้างลง (BOS) แนวโน้มลงต่อ · ราคาอยู่โซนถูก (discount) ระวังไล่ขาย (5% ของกรอบ) · OB ฝั่งขาย 73,336-73,570 ยังไม่ถูกทดสอบ · FVG ค้าง 3 จุด"
  },
  "smc_notes_en": {
-  "XAUUSD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (8% of range) · untested bearish OB 3,938.01-3,948.84 · 3 open FVG",
-  "EURUSD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (1% of range) · untested bearish OB 1.10951-1.11062 · 3 open FVG",
-  "GBPUSD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (6% of range) · untested bearish OB 1.32700-1.32797 · 3 open FVG",
-  "USDJPY": "H1: CHoCH to bearish · price in premium zone, avoid chasing buys (82% of range) · untested bullish OB 158.825-158.936 · 3 open FVG",
+  "XAUUSD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (12% of range) · untested bearish OB 3,935.73-3,946.56 · 3 open FVG",
+  "EURUSD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (6% of range) · untested bearish OB 1.10951-1.11062 · 3 open FVG",
+  "GBPUSD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (7% of range) · untested bearish OB 1.32700-1.32797 · 3 open FVG",
+  "USDJPY": "H1: CHoCH to bearish · price in premium zone, avoid chasing buys (90% of range) · untested bullish OB 158.825-158.936 · 3 open FVG",
   "AUDUSD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (6% of range) · untested bearish OB 0.68283-0.68385 · 3 open FVG",
-  "USDCHF": "H1: bullish BOS, uptrend continuing · price in premium zone, avoid chasing buys (97% of range) · untested bullish OB 0.83110-0.83185 · 3 open FVG",
+  "USDCHF": "H1: bullish BOS, uptrend continuing · price in premium zone, avoid chasing buys (90% of range) · untested bullish OB 0.83110-0.83185 · 3 open FVG",
   "USDCAD": "H1: CHoCH to bullish · price in premium zone, avoid chasing buys (77% of range) · untested bullish OB 1.41220-1.41402 · 3 open FVG",
-  "BTCUSD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (12% of range) · untested bearish OB 73,338-73,570 · 3 open FVG"
+  "BTCUSD": "H1: bearish BOS, downtrend continuing · price in discount zone, avoid chasing sells (5% of range) · untested bearish OB 73,336-73,570 · 3 open FVG"
  },
  "correlations": {
   "H1": {
@@ -3582,101 +3511,101 @@
    "matrix": [
     [
      1.0,
-     -0.22,
-     0.2,
-     0.27,
-     -0.41,
-     0.43,
-     -0.31,
+     -0.2,
+     0.17,
+     0.23,
+     -0.38,
+     0.36,
+     -0.3,
      -0.11,
-     0.37
+     0.33
     ],
     [
-     -0.22,
+     -0.2,
      1.0,
      -0.97,
-     -0.89,
-     0.63,
-     -0.55,
-     0.85,
+     -0.9,
+     0.64,
+     -0.5,
+     0.83,
      0.57,
-     -0.3
+     -0.21
     ],
     [
-     0.2,
+     0.17,
      -0.97,
      1.0,
      0.86,
-     -0.58,
-     0.51,
-     -0.8,
-     -0.45,
-     0.28
+     -0.57,
+     0.46,
+     -0.78,
+     -0.44,
+     0.18
     ],
     [
-     0.27,
-     -0.89,
+     0.23,
+     -0.9,
      0.86,
      1.0,
-     -0.58,
-     0.56,
+     -0.6,
+     0.48,
      -0.82,
-     -0.59,
-     0.34
+     -0.58,
+     0.2
     ],
     [
-     -0.41,
-     0.63,
-     -0.58,
-     -0.58,
+     -0.38,
+     0.64,
+     -0.57,
+     -0.6,
      1.0,
-     -0.25,
-     0.68,
-     0.49,
+     -0.26,
+     0.67,
+     0.51,
      -0.14
     ],
     [
-     0.43,
-     -0.55,
-     0.51,
-     0.56,
-     -0.25,
+     0.36,
+     -0.5,
+     0.46,
+     0.48,
+     -0.26,
      1.0,
-     -0.41,
+     -0.33,
      -0.43,
-     0.27
+     0.16
     ],
     [
-     -0.31,
-     0.85,
-     -0.8,
+     -0.3,
+     0.83,
+     -0.78,
      -0.82,
-     0.68,
-     -0.41,
+     0.67,
+     -0.33,
      1.0,
-     0.5,
-     -0.19
+     0.46,
+     -0.08
     ],
     [
      -0.11,
      0.57,
-     -0.45,
-     -0.59,
-     0.49,
+     -0.44,
+     -0.58,
+     0.51,
      -0.43,
-     0.5,
+     0.46,
      1.0,
-     -0.27
+     -0.24
     ],
     [
-     0.37,
-     -0.3,
-     0.28,
-     0.34,
+     0.33,
+     -0.21,
+     0.18,
+     0.2,
      -0.14,
-     0.27,
-     -0.19,
-     -0.27,
+     0.16,
+     -0.08,
+     -0.24,
      1.0
     ]
    ],
@@ -3698,98 +3627,98 @@
     [
      1.0,
      -0.39,
-     -0.16,
+     -0.17,
      -0.18,
      0.25,
      -0.13,
-     0.11,
+     0.12,
      0.07,
-     0.43
+     0.44
     ],
     [
      -0.39,
      1.0,
      0.17,
-     0.18,
+     0.17,
      0.02,
      -0.01,
-     -0.02,
+     -0.01,
      0.11,
      -0.14
     ],
     [
-     -0.16,
+     -0.17,
      0.17,
      1.0,
      0.89,
-     -0.42,
+     -0.43,
      0.58,
      -0.61,
-     -0.62,
-     -0.05
+     -0.63,
+     -0.04
     ],
     [
      -0.18,
-     0.18,
+     0.17,
      0.89,
      1.0,
-     -0.44,
+     -0.45,
      0.62,
      -0.65,
      -0.63,
-     -0.06
+     -0.05
     ],
     [
      0.25,
      0.02,
-     -0.42,
-     -0.44,
+     -0.43,
+     -0.45,
      1.0,
-     -0.4,
-     0.41,
+     -0.41,
+     0.42,
      0.45,
-     0.11
+     0.1
     ],
     [
      -0.13,
      -0.01,
      0.58,
      0.62,
-     -0.4,
+     -0.41,
      1.0,
      -0.39,
      -0.63,
-     -0.09
+     -0.08
     ],
     [
-     0.11,
-     -0.02,
+     0.12,
+     -0.01,
      -0.61,
      -0.65,
-     0.41,
+     0.42,
      -0.39,
      1.0,
-     0.57,
+     0.58,
      0.02
     ],
     [
      0.07,
      0.11,
-     -0.62,
+     -0.63,
      -0.63,
      0.45,
      -0.63,
-     0.57,
+     0.58,
      1.0,
      0.07
     ],
     [
-     0.43,
+     0.44,
      -0.14,
+     -0.04,
      -0.05,
-     -0.06,
-     0.11,
-     -0.09,
+     0.1,
+     -0.08,
      0.02,
      0.07,
      1.0
@@ -3799,26 +3728,25 @@
   }
  },
  "correlations_notes": [
-  "H1: ทองกับดอลลาร์สัมพันธ์กันน้อย (DXY -0.22)",
-  "H1: ทองไปทางเดียวกับ AUDUSD มากที่สุด (+0.43) และสวนทาง USDJPY มากที่สุด (-0.41) · 50 แท่ง",
+  "H1: ทองกับดอลลาร์สัมพันธ์กันน้อย (DXY -0.20)",
+  "H1: ทองไปทางเดียวกับ AUDUSD มากที่สุด (+0.36) และสวนทาง USDJPY มากที่สุด (-0.38) · 50 แท่ง",
   "D1: ทองเคลื่อนสวนทางดอลลาร์ (DXY -0.39) ดอลลาร์อ่อน ทองมักขึ้น",
-  "D1: ทองไปทางเดียวกับ BTCUSD มากที่สุด (+0.43) และสวนทาง DXY มากที่สุด (-0.39) · 50 แท่ง"
+  "D1: ทองไปทางเดียวกับ BTCUSD มากที่สุด (+0.44) และสวนทาง DXY มากที่สุด (-0.39) · 50 แท่ง"
  ],
  "correlations_notes_en": [
-  "H1: gold and the US dollar are only weakly related (DXY -0.22)",
-  "H1: gold moves most with AUDUSD (+0.43) and most against USDJPY (-0.41) · 50 bars",
+  "H1: gold and the US dollar are only weakly related (DXY -0.20)",
+  "H1: gold moves most with AUDUSD (+0.36) and most against USDJPY (-0.38) · 50 bars",
   "D1: gold is moving opposite the US dollar (DXY -0.39); a weaker dollar tends to lift gold",
-  "D1: gold moves most with BTCUSD (+0.43) and most against DXY (-0.39) · 50 bars"
+  "D1: gold moves most with BTCUSD (+0.44) and most against DXY (-0.39) · 50 bars"
  ],
- "price_num": 3872.78,
+ "price_num": 3876.5,
  "res_nums": [
-  3901.9,
-  3972.7,
-  3974.5
+  3884.5,
+  3899.7,
+  3970.4
  ],
  "sup_nums": [
-  3860.8,
-  3850.8
+  3850.2
  ],
  "edge": {
   "total": {
@@ -3852,26 +3780,26 @@
    "All 0 trades: win None%, net +0.00 USC over 0 trading day(s) · Small sample; results can change a lot, do not over-trust them",
    "Average R not available yet: older records have no SL at entry; sl will be recorded on every trade from now on"
   ],
-  "updated": "2026-11-13 00:12"
+  "updated": "2026-11-13 05:45"
  },
  "spot": {
-  "price": 3872.78,
+  "price": 3876.5,
   "src": "swissquote",
-  "updated_th": "13 พ.ย. 2026 00:12 น. (เวลาไทย)",
-  "updated_en": "Nov 13, 2026 00:12 (Thai time)",
-  "bid": 3872.463,
-  "ask": 3873.098
+  "updated_th": "13 พ.ย. 2026 05:00 น. (เวลาไทย)",
+  "updated_en": "Nov 13, 2026 05:00 (Thai time)",
+  "bid": 3876.183,
+  "ask": 3876.818
  },
  "accuracy": {
-  "acc_7d": 58.1,
-  "acc_30d": 56.0,
-  "n_7d": 31,
-  "n_30d": 234,
+  "acc_7d": 55.2,
+  "acc_30d": 55.6,
+  "n_7d": 29,
+  "n_30d": 232,
   "horizon_minutes": 240,
   "learns": true,
   "label_th": "โมเดลเรียนรู้จากผลจริงโดยอัตโนมัติ",
   "label_en": "The model learns automatically from results",
-  "updated": "2026-11-13 00:12"
+  "updated": "2026-11-13 05:45"
  },
- "built": "2026-11-13 00:12"
+ "built": "2026-11-13 05:45"
 }
