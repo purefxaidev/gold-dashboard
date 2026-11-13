@@ -44,7 +44,8 @@ jobs:
           set -e
           python3 spot.py
           python3 perf.py || echo "perf skipped"
-          python3 trade_plan.py || echo "trade plan skipped"
+          python3 trade_plan.py --events events.json || echo "trade plan skipped"
+          python3 plan_history.py --plan trade_plan.json --spot spot.json --history plan_history.json || echo "plan history skipped"
           python3 thai_gold.py --out thai_gold.json || echo "thai gold skipped"
           python3 mtf.py || echo "mtf skipped"
           python3 smc.py || echo "smc skipped"
@@ -68,7 +69,7 @@ jobs:
         run: |
           git config user.name "purefxaidev"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data.json view.json index.html candles.json spot.json perf.json trade_plan.json thai_gold.json levels.json spdr.json ai_context.txt \
+          git add data.json view.json index.html candles.json spot.json perf.json trade_plan.json plan_history.json thai_gold.json levels.json spdr.json ai_context.txt \
             history/predictions.jsonl history/weights.json history/accuracy.json \
             history/news_impact.jsonl history/trade_journal.jsonl history/feargreed.jsonl \
             news.json news.html events.json cot.json feargreed.json compare.json brief.json dollar.json share/*.png || true
