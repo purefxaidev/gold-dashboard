@@ -12,7 +12,7 @@
 <meta property="og:title" content="PUREGOLD AI · XAUUSD gold analysis"><meta property="og:description" content="Live gold price, support/resistance, AI confidence and EV trade plans in Thai and English."><meta property="og:type" content="website"><meta property="og:image" content="https://dashboard.purefxai.store/icon-512.png"><meta property="og:locale" content="th_TH"><meta property="og:locale:alternate" content="en_US">
 <link rel="alternate" hreflang="th" href="https://dashboard.purefxai.store/?lang=th"><link rel="alternate" hreflang="en" href="https://dashboard.purefxai.store/?lang=en"><link rel="alternate" hreflang="x-default" href="https://dashboard.purefxai.store/">
 <script src="i18n.js"></script>
-<script src="sharecard.js?v=20261111thai1"></script>
+<script src="sharecard.js?v=20261113thai2"></script>
 <script src="gkey.js"></script>
 <script src="pgai.js"></script>
 <link rel="icon" type="image/svg+xml" href="logo.svg"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="theme-color" content="#0a0b10">
@@ -59,9 +59,11 @@ html.pg-mobile .c4,html.pg-mobile .c5,html.pg-mobile .c6,html.pg-mobile .c7,html
 .tp-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 8px}
 .tp-title{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:700;margin-right:auto}
 .tp-side,.tp-status{display:inline-flex;align-items:center;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800;border:1px solid #333}
-.tp-side.sell,.tp-status.sl,.tp-status.cancelled{color:#ff4d6d;border-color:rgba(255,77,109,.4)}
-.tp-side.buy,.tp-status.in,.tp-status.tp1{color:#22e39a;border-color:rgba(34,227,154,.4)}
-.tp-side.wait,.tp-status.wait{color:#f5c542;border-color:rgba(245,197,66,.4)}
+.tp-side.sell,.tp-status.sl,.tp-status.cancelled,.tp-zone-cell.sell .k{color:#ff4d6d;border-color:rgba(255,77,109,.4)}
+.tp-side.buy,.tp-status.in,.tp-status.tp1,.tp-zone-cell.buy .k{color:#22e39a;border-color:rgba(34,227,154,.4)}
+.tp-side.wait,.tp-status.wait,.tp-zone-cell.wait .k{color:#f5c542;border-color:rgba(245,197,66,.4)}
+.tp-zone-cell .k{font-weight:800}
+#tgSrc.stale,.tg-stale{color:#f5c542}
 .tp-thesis{margin:0 0 10px;font-size:14px;line-height:1.45}
 .tp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px 12px;margin:0 0 10px}
 .tp-grid .k,.tp-inv,.tp-meta,.tp-disc{font-size:11px;color:var(--mut);font-weight:600}
@@ -329,7 +331,7 @@ html.pg-embed .wrap{padding-top:10px}
 
 
 <section class="card c12">
- <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/></svg> ราคาทองไทยวันนี้ (บาทละ) <small id="tgSrc">ราคาทองไทย · อัปเดตทุก 30 วินาที</small></h2>
+ <h2><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/></svg> ราคาทองไทยวันนี้ (บาทละ) <small id="tgSrc">ราคาทองไทย</small></h2>
  <div class="tg" id="tg"><div class="mut">กำลังโหลด…</div></div>
 </section>
 
@@ -518,12 +520,12 @@ function paintTradePlan(px) {
   const disc = th ? (plan.disclaimer_th || "เพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน ใช้ SL เสมอ") : (plan.disclaimer_en || "");
   body.innerHTML = `<div class="tp-head">
       <div class="tp-title">${th ? "แผนเทรด" : "Trade plan"}</div>
-      <span class="tp-side ${side}">${th ? (plan.side_th || "รอ") : (plan.side_en || "WAIT")}</span>
+      <span class="tp-side ${side}">${entryZoneLabel(side, th)}</span>
       <span class="tp-status ${st.id}">${th ? st.th : st.en}</span>
     </div>
     <p class="tp-thesis">${esc(thesis)}</p>
     <div class="tp-grid">
-      <div><span class="k">${th ? "จุดเข้า" : "Entry"}</span><span class="v">${entry}</span></div>
+      <div class="tp-zone-cell ${side}"><span class="k">${entryZoneLabel(side, th)}</span><span class="v">${entry}</span></div>
       <div><span class="k">SL</span><span class="v">${plan.sl != null ? fmtPlanPx(plan.sl) : "—"}</span></div>
       ${tps}
     </div>
@@ -779,23 +781,103 @@ async function pollPrice() {
   if (L3 && L3.orb && Math.abs((L3.lastPx || 0) - live.price) > .5) { L3.lastPx = live.price; build3d(); }
 }
 
-const TG_NAME = {HSH: "ทองคำแท่ง", REF: "ทองคำแท่งอ้างอิง", JEWEL: "ทองรูปพรรณ"};
-async function pollThai() {
-  try {
-    const r = await fetch("https://apicheckprice.huasengheng.com/api/values/getprice/", {cache: "no-store"});
-    const a = await r.json(); thaiGold = a; window.thaiGold = a;
-    const has9999 = a.some(x => String(x.GoldCode).startsWith("99"));
-    $("tg").innerHTML = a.map(x => {
-      const ch = Number(x.BuyChange || 0); const cc = ch > 0 ? "up" : ch < 0 ? "dn" : "mut";
-      const t = String(x.TimeUpdate || "").slice(11, 16);
-      return `<div class="tgi"><b>${esc(TG_NAME[x.GoldType] || x.GoldType)} ${esc(x.GoldCode)}%</b>
-      <div class="row"><span>รับซื้อ</span><span class="v">${esc(x.Buy)}</span></div>
-      <div class="row"><span>ขายออก</span><span class="v">${esc(x.Sell)}</span></div>
-      <div class="row" style="margin-top:6px"><span class="${cc}">${ch > 0 ? "▲ +" : ch < 0 ? "▼ " : "• "}${fmt(ch, 0)}</span><span>${esc(t)} น.</span></div></div>`;
-    }).join("") + (has9999 ? "" : `<div class="tgi mut" style="font-size:12px;display:flex;align-items:center">ทอง 99.99% : แหล่งข้อมูลสาธารณะยังไม่เปิดให้ดึง</div>`);
-    $("tgSrc").textContent = "ที่มา: ราคาทองไทย · " + esc((a[0] && a[0].StrTimeUpdate) || "") + " · รีเฟรช 30 วินาที";
-  } catch (e) { $("tgSrc").textContent = "โหลดราคาทองไทยไม่สำเร็จ จะลองใหม่"; }
+
+function entryZoneLabel(side, th) {
+  const s = String(side || "wait").toLowerCase();
+  if (s === "buy") return th ? "โซนซื้อ · BUY" : "Buy zone · BUY";
+  if (s === "sell") return th ? "โซนขาย · SELL" : "Sell zone · SELL";
+  return th ? "รอ · WAIT" : "Wait · WAIT";
 }
+function parseBaht(v) {
+  if (v == null || v === "") return null;
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  const n = Number(String(v).replace(/,/g, "").replace(/[^\d.-]/g, ""));
+  return Number.isFinite(n) ? n : null;
+}
+function officialThaiFromFeed(arr) {
+  const list = Array.isArray(arr) ? arr : [];
+  const ref = list.find(x => String(x.GoldType || "").toUpperCase() === "REF");
+  const jewel = list.find(x => String(x.GoldType || "").toUpperCase() === "JEWEL");
+  if (!ref && !jewel) return null;
+  const t = (ref || jewel).TimeUpdate || "";
+  const hm = String(t).slice(11, 16);
+  return {
+    as_of: t, as_of_hm: hm,
+    as_of_th: hm ? "อัปเดตล่าสุด " + hm : "อัปเดตล่าสุด —",
+    as_of_en: hm ? "Updated " + hm : "Updated —",
+    fetched_at: new Date().toISOString(),
+    source_label_th: "ราคาทองไทย", source_label_en: "Thai gold",
+    bar: ref ? { buy: parseBaht(ref.Buy), sell: parseBaht(ref.Sell), change: parseBaht(ref.BuyChange) } : null,
+    jewelry: jewel ? { buy: parseBaht(jewel.Buy), sell: parseBaht(jewel.Sell), change: parseBaht(jewel.BuyChange) } : null
+  };
+}
+function thaiIsStale(doc) {
+  if (!doc) return true;
+  const now = Date.now();
+  const fetched = Date.parse(doc.fetched_at || "") || 0;
+  const asof = Date.parse(doc.as_of || "") || 0;
+  if (fetched && now - fetched > 20 * 60 * 1000) return true;
+  if (asof && now - asof > 18 * 60 * 60 * 1000) return true;
+  return false;
+}
+function fmtThb(n) {
+  return n == null || !Number.isFinite(Number(n)) ? "—" : Number(n).toLocaleString("en-US", { maximumFractionDigits: 0 });
+}
+function renderOfficialThai(doc, lang) {
+  const el = $("tg"); const src = $("tgSrc");
+  if (!el) return;
+  if (!doc || (!doc.bar && !doc.jewelry)) {
+    el.innerHTML = `<div class="mut">${lang === "en" ? "Could not load Thai gold prices" : "โหลดราคาทองไทยไม่สำเร็จ"}</div>`;
+    return;
+  }
+  window.__THAI_GOLD = doc;
+  const th = lang !== "en";
+  const stale = thaiIsStale(doc);
+  const items = [
+    [th ? "ทองคำแท่ง 96.5%" : "Gold bar 96.5%", doc.bar],
+    [th ? "ทองรูปพรรณ 96.5%" : "Jewelry 96.5%", doc.jewelry]
+  ];
+  el.innerHTML = items.map(([name, p]) => {
+    if (!p || (p.buy == null && p.sell == null)) return "";
+    const ch = Number(p.change);
+    const has = Number.isFinite(ch);
+    const cc = has ? (ch > 0 ? "up" : ch < 0 ? "dn" : "mut") : "mut";
+    const chg = has ? ((ch > 0 ? "▲ +" : ch < 0 ? "▼ " : "• ") + fmtThb(Math.abs(ch))) : "—";
+    return `<div class="tgi">
+      <b>${name}</b>
+      <div class="row"><span>${th ? "รับซื้อ" : "Buy-back"}</span><span class="v">${fmtThb(p.buy)}</span></div>
+      <div class="row"><span>${th ? "ขายออก" : "Sell"}</span><span class="v">${fmtThb(p.sell)}</span></div>
+      <div class="row" style="margin-top:6px"><span class="chg ${cc}">${chg}</span></div>
+    </div>`;
+  }).join("");
+  if (src) {
+    const stamp = th ? (doc.as_of_th || (doc.as_of_hm ? "อัปเดตล่าสุด " + doc.as_of_hm : "")) : (doc.as_of_en || (doc.as_of_hm ? "Updated " + doc.as_of_hm : ""));
+    src.textContent = (th ? "ที่มา: ราคาทองไทย · " : "Source: Thai gold · ") + stamp + (stale ? (th ? " · ล่าช้า" : " · delayed") : "");
+    src.classList.toggle("stale", stale);
+  }
+}
+async function pollThai() {
+  let jsonDoc = null, feedDoc = null;
+  try {
+    const r = await fetch("thai_gold.json?t=" + Date.now(), { cache: "no-store" });
+    if (r.ok) {
+      const j = await r.json();
+      if (j && (j.bar || j.jewelry)) jsonDoc = j;
+    }
+  } catch (e) {}
+  try {
+    const r = await fetch("https://apicheckprice.huasengheng.com/api/values/getprice/", { cache: "no-store" });
+    if (r.ok) feedDoc = officialThaiFromFeed(await r.json());
+  } catch (e) {}
+  let doc = jsonDoc || feedDoc;
+  if (jsonDoc && feedDoc && feedDoc.bar && jsonDoc.bar) {
+    const same = Math.abs((feedDoc.bar.buy || 0) - (jsonDoc.bar.buy || 0)) < 1 && Math.abs((feedDoc.bar.sell || 0) - (jsonDoc.bar.sell || 0)) < 1;
+    if (!same) doc = feedDoc; // new announcement arrived before the JSON refresh
+    else doc = jsonDoc; // keep official as-of / revision
+  }
+  renderOfficialThai(doc, EN() ? "en" : "th");
+}
+
 
 let lastSig = "";
 async function pollData() {
