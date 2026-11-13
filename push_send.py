@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from trade_plan import format_alert_text
 
 BKK = ZoneInfo("Asia/Bangkok")
 SECRETS = Path(os.environ.get("PG_VAPID_FILE", "/home/box/secrets/vapid.json"))
@@ -102,8 +103,29 @@ def build_event_payload(plan: dict, hist: dict | None, prev_key: str) -> dict | 
         hm = h1.get("as_of_hm") or ""
         body = h1.get("note_th") or ("แท่ง H1 ปิดยืนยันแล้ว" + ((" " + hm) if hm else ""))
         kind = "confirm"
-    if not body:
+    if not body and not plan:
         return None
+    try:
+        import sys
+        from pathlib import Path
+        # format_alert_text already imported
+        px = None
+        for cand in ((plan or {}).get("spot"), (hist or {}).get("open", {}) and None):
+            try:
+                if cand is not None:
+                    px = float(cand)
+                    break
+            except (TypeError, ValueError, AttributeError):
+                pass
+        if px is None:
+            px = 0
+        extra = body or ""
+        built = format_alert_text(plan or {}, px, "th", extra)
+        body = built["short"]
+        kind = built.get("kind") or kind
+    except Exception:
+        if not body:
+            return None
     return {"title": "PureGold", "body": body, "url": url, "lang": "th", "kind": kind}
 
 
