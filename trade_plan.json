@@ -8,7 +8,7 @@
   "title_en": "SELL zone 3,988.2–4,000.8",
   "thesis_th": "เอียงลงต่ำกว่า S1 · รอราคาย่อขึ้นโซน 3,994.5 (S3) จึงพิจารณาขาย",
   "thesis_en": "Tilt down, below S1 · Wait for a pullback into 3,994.5 (S3) before considering a sell",
-  "spot": 3908.72,
+  "spot": 3909.54,
   "entry": 3994.5,
   "entry_low": 3988.2,
   "entry_high": 4000.8,
@@ -20,23 +20,30 @@
   "tps": [
     {
       "n": 1,
-      "price": 3976.5,
-      "label": "เป้าส่วนขยาย",
-      "label_en": "Extension",
-      "rr": 1.18
+      "price": 3909.0,
+      "label": "สวิงโลว์",
+      "label_en": "Swing low",
+      "rr": 5.59
     },
     {
       "n": 2,
-      "price": 3958.5,
+      "price": 3891.0,
+      "label": "เป้าส่วนขยาย",
+      "label_en": "Extension",
+      "rr": 6.76
+    },
+    {
+      "n": 3,
+      "price": 3873.0,
       "label": "เป้าส่วนขยาย 2",
       "label_en": "Extension 2",
-      "rr": 2.35
+      "rr": 7.94
     }
   ],
   "invalidation": 4077.1,
   "invalidation_th": "ยกเลิกแผนถ้าราคาขึ้นผ่าน 4,077.1",
   "invalidation_en": "Cancel if price trades above 4,077.1",
-  "rr_tp1": 1.18,
+  "rr_tp1": 5.59,
   "timeframe": "H1–D1",
   "timeframe_th": "รายชั่วโมงถึงรายวัน",
   "timeframe_en": "H1 to daily",
@@ -45,9 +52,9 @@
   "bias_en": "Tilt down, below S1",
   "atr": 18.0,
   "approach": "from_below",
-  "updated": "2026-11-13T11:20:42.813401+07:00",
-  "updated_th": "13 พ.ย. 2026 11:20:42 น. เวลาไทย",
-  "updated_en": "13 Nov 2026 11:20:42 Bangkok",
+  "updated": "2026-11-13T11:24:46.668222+07:00",
+  "updated_th": "13 พ.ย. 2026 11:24:46 น. เวลาไทย",
+  "updated_en": "13 Nov 2026 11:24:46 Bangkok",
   "disclaimer_th": "เพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน ใช้ SL เสมอ",
   "disclaimer_en": "Education only — not investment advice. Always use a stop loss.",
   "spot_source": "swissquote"
