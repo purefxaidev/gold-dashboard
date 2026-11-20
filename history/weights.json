@@ -1,65 +1,65 @@
 {
- "updated": "2026-11-20 15:41",
+ "updated": "2026-11-21 00:19",
  "horizon_minutes": 240,
  "calibration": {
-  "slope": 0.8785714285714286,
+  "slope": 0.8896551724137931,
   "intercept": 0.0
  },
  "signals": {
   "mtf_net": {
-   "weight": 1.0858,
-   "hit": 128,
-   "n": 242
+   "weight": 1.0873,
+   "hit": 129,
+   "n": 243
   },
   "mtf_m15": {
-   "weight": 1.0565,
+   "weight": 1.0626,
    "hit": 10,
    "n": 19
   },
   "mtf_h1": {
-   "weight": 1.0545,
-   "hit": 90,
-   "n": 177
+   "weight": 1.0567,
+   "hit": 91,
+   "n": 178
   },
   "mtf_h4": {
-   "weight": 1.0782,
-   "hit": 94,
-   "n": 179
+   "weight": 1.0803,
+   "hit": 95,
+   "n": 180
   },
   "mtf_d1": {
-   "weight": 1.15,
-   "hit": 143,
-   "n": 249
+   "weight": 1.1513,
+   "hit": 144,
+   "n": 250
   },
   "rsi_m15": {
-   "weight": 0.9811,
-   "hit": 11,
-   "n": 25
+   "weight": 0.9841,
+   "hit": 12,
+   "n": 26
   },
   "rsi_h1": {
-   "weight": 1.0659,
+   "weight": 1.0641,
    "hit": 105,
-   "n": 207
+   "n": 208
   },
   "ema_h1": {
-   "weight": 1.0914,
-   "hit": 149,
-   "n": 280
+   "weight": 1.0926,
+   "hit": 150,
+   "n": 281
   },
   "smc_choch_h1": {
-   "weight": 0.8683,
-   "hit": 12,
-   "n": 28
+   "weight": 0.8902,
+   "hit": 13,
+   "n": 29
   },
   "smc_bos_h1": {
-   "weight": 1.1196,
-   "hit": 16,
-   "n": 28
+   "weight": 1.1298,
+   "hit": 17,
+   "n": 29
   },
   "smc_zone": {
-   "weight": 1.048,
+   "weight": 1.0339,
    "hit": 13,
-   "n": 28
+   "n": 29
   }
  }
 }
