@@ -1,0 +1,73 @@
+{
+ "samples": [
+  {
+   "key": "2026-11-13T11:31:00+07:00#11",
+   "as_of": "2026-11-13T11:31:00+07:00",
+   "buy": 62500,
+   "sell": 62700,
+   "xau": 3910.58,
+   "usdthb": 33.82,
+   "ratio": 1.000788,
+   "origin": "history"
+  },
+  {
+   "key": "2026-11-13T15:56:00+07:00#23",
+   "as_of": "2026-11-13T15:56:00+07:00",
+   "buy": 62400,
+   "sell": 62600,
+   "xau": 3895.19,
+   "usdthb": 33.88,
+   "ratio": 1.001361,
+   "origin": "history"
+  },
+  {
+   "key": "2026-11-13T16:04:00+07:00#24",
+   "as_of": "2026-11-13T16:04:00+07:00",
+   "buy": 62450,
+   "sell": 62650,
+   "xau": 3900.42,
+   "usdthb": 33.87,
+   "ratio": 1.001114,
+   "origin": "history"
+  },
+  {
+   "key": "2026-11-16T12:57:00+07:00#22",
+   "as_of": "2026-11-16T12:57:00+07:00",
+   "buy": 61500,
+   "sell": 61700,
+   "xau": 3850.245,
+   "usdthb": 33.85,
+   "ratio": 0.999347,
+   "origin": "history"
+  },
+  {
+   "key": "2026-11-19T09:37:00+07:00#3",
+   "as_of": "2026-11-19T09:37:00+07:00",
+   "buy": 60050,
+   "sell": 60250,
+   "xau": 3732.77,
+   "usdthb": 33.94,
+   "ratio": 1.003865,
+   "origin": "history"
+  },
+  {
+   "key": "2026-11-20T15:40:00+07:00#77",
+   "as_of": "2026-11-20T15:40:00+07:00",
+   "buy": 57500,
+   "sell": 57700,
+   "xau": 3585.95,
+   "usdthb": 33.9,
+   "ratio": 1.001847,
+   "origin": "history"
+  }
+ ],
+ "note": "history seeds: official prints paired with a Swissquote spot tick within 10 min and the Yahoo USD/THB 5m bar",
+ "weekend_gap": {
+  "computed_at": "2026-11-21T06:43:35+07:00",
+  "weeks": 48,
+  "median_pct": 0.369,
+  "p80_pct": 0.943,
+  "source": "COMEX GC=F daily bars (Yahoo Finance), 1 year"
+ },
+ "updated_at": "2026-11-21T06:43:35+07:00"
+}
