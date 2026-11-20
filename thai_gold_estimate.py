@@ -253,6 +253,14 @@ def main(argv=None) -> int:
                 "error_baht": err_mid, "error_raw_baht": round(pend.get("mid_raw", 0) - (o_buy + o_sell) / 2, 1), "model": pend.get("model"),
             })
             acc["events"] = acc["events"][-500:]
+    # log of official prints seen from now on (for the intraday timeline on the site)
+    log = acc.setdefault("official_log", [])
+    if o_buy and o_sell and (not log or log[-1].get("key") != o_key):
+        pt2 = parse_dt((pend or {}).get("at"))
+        pre = bool(pend and pt2 and o_asof and pt2 <= o_asof + timedelta(minutes=5) and (o_asof - pt2) <= timedelta(minutes=15))
+        log.append({"key": o_key, "as_of": iso(o_asof), "revision": o_rev, "buy": o_buy, "sell": o_sell,
+                    "est_buy": pend["buy"] if pre else None, "est_sell": pend["sell"] if pre else None})
+        del log[:-60]
     acc["pending"] = {"at": iso(t_now), "buy": est_buy, "sell": est_sell, "mid_raw": round(est_mid_raw, 1), "model": model["id"]}
     ev = acc["events"]
     errs = [abs(e["error_baht"]) for e in ev]
@@ -265,6 +273,7 @@ def main(argv=None) -> int:
         "within_100_pct": round(sum(1 for x in errs if x <= 100) / len(errs) * 100, 1) if errs else None,
         "recent": ev[-12:],
     }
+    prints = [{k: v for k, v in x.items() if k != "key"} for x in acc.get("official_log", [])[-24:]]
 
     def age(t):
         return round((t_now - t).total_seconds()) if t else None
@@ -305,6 +314,7 @@ def main(argv=None) -> int:
         },
         "deviation": dev,
         "accuracy": stats,
+        "prints": prints,
         "disclaimer_th": "เพื่อการศึกษา ไม่ใช่คำแนะนำการลงทุน ราคาประเมินไม่ใช่ราคาซื้อขายจริง",
     }
     calib["updated_at"] = iso(t_now)
