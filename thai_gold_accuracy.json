@@ -1,9 +1,23 @@
 {
  "since": "2026-11-21T06:43:35+07:00",
- "events": [],
- "last_official_key": "2026-11-21T09:11:00+07:00#1",
+ "events": [
+  {
+   "official_as_of": "2026-11-22T09:09:00+07:00",
+   "revision": 1,
+   "official_buy": 56950.0,
+   "official_sell": 57150.0,
+   "est_at": "2026-11-22T09:13:27+07:00",
+   "est_buy": 56750.0,
+   "est_sell": 56950.0,
+   "est_mid_raw": 56838.1,
+   "error_baht": -200.0,
+   "error_raw_baht": -211.9,
+   "model": "weekend"
+  }
+ ],
+ "last_official_key": "2026-11-22T09:09:00+07:00#1",
  "pending": {
-  "at": "2026-11-22T09:13:27+07:00",
+  "at": "2026-11-22T09:20:00+07:00",
   "buy": 56750.0,
   "sell": 56950.0,
   "mid_raw": 56838.1,
@@ -27,6 +41,15 @@
    "sell": 57150.0,
    "est_buy": null,
    "est_sell": null
+  },
+  {
+   "key": "2026-11-22T09:09:00+07:00#1",
+   "as_of": "2026-11-22T09:09:00+07:00",
+   "revision": 1,
+   "buy": 56950.0,
+   "sell": 57150.0,
+   "est_buy": 56750.0,
+   "est_sell": 56950.0
   }
  ]
 }
