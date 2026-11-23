@@ -1,9 +1,48 @@
 {
   "started_at": "2026-11-13T20:59:46.850831+07:00",
-  "updated_at": "2026-11-23T08:04:07.584649+07:00",
+  "updated_at": "2026-11-23T15:56:54.930099+07:00",
   "source_note_th": "เริ่มนับผลจากรอบนี้ ไม่มีประวัติย้อนหลัง และไม่ได้สร้างผลลัพธ์สมมติ",
   "source_note_en": "Counted from this run onward. There is no backfilled history, and no results are invented.",
-  "open": null,
+  "open": {
+    "id": "361f234fe2f6",
+    "opened_at": "2026-11-23T15:56:54.930099+07:00",
+    "side": "buy",
+    "side_th": "ซื้อ",
+    "side_en": "BUY",
+    "entry": 3613.0,
+    "entry_low": 3609.2,
+    "entry_high": 3616.8,
+    "sl": 3603.7,
+    "tps": [
+      {
+        "n": 1,
+        "price": 3660.0,
+        "rr": 5.07
+      },
+      {
+        "n": 2,
+        "price": 3761.8,
+        "rr": 16.06
+      },
+      {
+        "n": 3,
+        "price": 3879.2,
+        "rr": 28.73
+      }
+    ],
+    "invalidation": 3603.7,
+    "title_th": "ซื้อโซน 3,609.2–3,616.8",
+    "title_en": "BUY zone 3,609.2–3,616.8",
+    "status": "open",
+    "outcome": null,
+    "r": null,
+    "reason_th": "",
+    "reason_en": "",
+    "closed_at": null,
+    "last_price": 3613.88,
+    "last_check": "2026-11-23T15:56:54.930099+07:00",
+    "reached": []
+  },
   "closed": [
     {
       "id": "d18b68861f3e",
